@@ -1,0 +1,56 @@
+/* -*- C -*- */
+/*
+ * Copyright 2009 Free Software Foundation, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+#include "fftw-spu.h"
+#include "../fftw-cell.h"
+
+#include <gcell/gc_declare_proc.h>
+#include <gcell/spu/gc_user.h>
+
+static void
+gcs_fftw(const gc_job_direct_args_t *input __attribute__((unused)),
+	 gc_job_direct_args_t *output __attribute__((unused)),
+	 const gc_job_ea_args_t *eaa)
+{
+  struct spu_context *ctx = (struct spu_context *) eaa->arg[0].ls_addr;
+
+  switch (ctx->op) {
+  case FFTW_SPE_DFT:
+    X(spu_do_dft)(&ctx->u.dft);
+    break;
+    
+  case FFTW_SPE_TRANSPOSE:
+    X(spu_do_transpose)(&ctx->u.transpose);
+    break;
+    
+  case FFTW_SPE_COPY:
+    X(spu_do_copy)(&ctx->u.copy);
+    break;
+
+  case FFTW_SPE_EXIT:
+    return;
+  }
+}
+
+#ifdef FFTW_SINGLE
+GC_DECLARE_PROC(gcs_fftw, "fftwf");
+#else
+GC_DECLARE_PROC(gcs_fftw, "fftw");
+#endif

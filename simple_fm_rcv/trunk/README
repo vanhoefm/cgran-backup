@@ -1,0 +1,25 @@
+This is a "simple" (ha!) FM Stereo receiver.
+
+To install:
+
+make install
+
+This installs all the relevant pieces in $HOME/bin rather than in the system paths.
+
+You'll need to make sure that your PATH variable includes $HOME/bin
+Your PYTHONPATH (again in your .bashrc) should include $HOME/bin
+
+You start the app using simple_fm_rcv, which relies on a .py file that is
+  produced by pulling simple_fm_rcv.grc into gnuradio-companion and
+  doing a "build".  The flowgraph by default disables RDS, and uses
+  an osmo-rtl source.  If you're using UHD, disable the osmosdr source
+  and the couple of blocks after it, and enable the UHD source.  Once you've
+  modified the simple_fm_rcv.grc, and built it from within GRC, do a "make install".
+
+The simple_fm_rcv takes a "--help option".
+
+This assumes that you've installed the gr-osmosdr stuff into your Gnu Radio
+  environment.  The current version of build-gnuradio does this for you.
+
+
+

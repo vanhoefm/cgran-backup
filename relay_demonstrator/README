@@ -1,0 +1,89 @@
+OPENRD
+======
+
+OpenRelayDemonstrator is a platform for the evaluation of cooperative relaying
+strategies. It is being developed at Linköping University, Sweden as part of
+the RAMCOORAN project (Resource Allocation and Multi-node Cooperation in Radio
+Access Networks).
+
+Contact: Anton Blad <anton.blad@liu.se>
+
+COMPILE AND RUN
+===============
+
+GNU Radio is required. It must be built with qtgui. OpenRD is tested with GNU
+Radio 3.4.2. It might work with other 3.4.x and newer releases. It does not
+work with 3.3.x and earlier.
+
+Checkout and compile using the following commands:
+
+$ svn co https://www.cgran.org/svn/projects/relay_demonstrator
+$ cd relay_demonstrator/trunk
+$ ./bootstrap
+$ ./configure
+$ make
+
+Optional:
+$ make check
+
+APPLICATIONS
+============
+
+OpenRD contains two setup configurations: the two-node setup and the relaying
+setup. The two-node setup is intended as a simple setup to verify that the
+basic functionality is working, whereas the relaying setup is a three-node
+setup with uni-directional communication from a source to a destination with
+the aid of a relay.
+
+In both applications, the destination node shows a GUI with received spectra,
+constellation diagrams, estimated SNR and bit error rate. For the relaying
+setup, the source and the relay transmit simultaneously in different channels,
+and the destination shows the bit error rate using the source transmission
+only, and using cooperation between the source and the relay. However, since
+the cooperation uses twice the resources, these results are not directly
+comparable.
+
+LINK MEDIUM
+===========
+
+OpenRD provides an abstraction of the link medium, which can use either TCP
+sockets with a channel emulation, or radio communications using USRPs. The
+link medium to use is specified in a configuration file, and to the
+applications the medium is transparent. Three link media are supported:
+* socket: Communication over TCP sockets.
+* wired: Baseband communication using USRP and LFTX/LFRX daughterboards.
+* wireless: RF communication using USRP and RFX2400 daughterboards.
+
+During development, the USRP 1 has been used. Using other USRP versions will
+require some adaptations of link abstraction layer. Using the software with
+other daughterboards will also require some small adjustments of the code.
+
+The link media require different configuration options: hosts and ports for
+the socket medium, and USRP serial number and carrier frequency for the wired
+and wireless media. The parameters are specified in the configuration file.
+
+TWO-NODE SETUP
+==============
+
+The two-node setup consists of a source node and a destination node. To run
+the application, enter the src/twonode directory, copy twonode.cfg.template
+to twonode.cfg, then run srcnode.py, destnode.py and channels.py using
+"./start_unit file.py"
+
+RELAYING SETUP
+==============
+
+The relaying setup consists of a source node, relay node, and a destination
+node. To run the application, enter the src/relay directory, copy
+relay.cfg.template to relay.cfg, then run srcnode.py, relaynode.py,
+destnode.py, and channels.py using "./start_unit file.py"
+
+DOCUMENTATION
+=============
+
+A technical design document can be built in the docs/design directory.
+Building the documentation requires LaTeX and transfig.
+
+If doxygen is available, a documentation of the C++ classes is built in the
+docs directory.
+

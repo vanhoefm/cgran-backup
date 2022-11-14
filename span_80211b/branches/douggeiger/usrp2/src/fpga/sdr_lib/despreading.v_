@@ -1,0 +1,37 @@
+
+
+
+
+module despreading(clk, reset, datai_in, dataq_in, datai_out, dataq_out, strobe_in, strobe_out);
+input clk, reset;
+input [15:0] datai_in, dataq_in;
+input strobe_in;
+output [15:0] datai_out, dataq_out;
+output strobe_out;
+
+
+wire FIRstrobe;
+wire [15:0] FIRdatai, FIRdataq;
+
+   
+BarkerFIR BarkerFIRi(
+	.clk(clk),
+	.reset_n(~reset),
+	.ast_sink_data(datai_in),
+	.ast_sink_valid(strobe_in),
+	.ast_source_data(FIRdatai),
+	.ast_source_valid(FIRstrobe),
+);
+	
+BarkerFIR BarkerFIRq(
+	.clk(clk),
+	.reset_n(~reset),
+	.ast_sink_data(dataq_in),
+	.ast_sink_valid(strobe_in),
+	.ast_source_data(FIRdataq),
+);
+
+peakfinder peakfinderi(.clk(clk), .reset(reset), .data_conv(FIRdatai), .strobe_in(FIRstrobe), .strobe_out(strobe_out), .maxdata(datai_out));
+peakfinder peakfinderq(.clk(clk), .reset(reset), .data_conv(FIRdataq), .strobe_in(FIRstrobe), .maxdata(dataq_out));
+
+endmodule

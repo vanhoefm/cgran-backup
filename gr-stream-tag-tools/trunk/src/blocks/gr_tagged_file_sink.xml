@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Tagged File Sink
+###################################################
+ -->
+<block>
+    <name>Tagged File Sink</name>
+    <key>gr_tagged_file_sink</key>
+    <category>/Sinks</category>
+    <import>from gnuradio import gr</import>
+    <make>gr.tagged_file_sink($type.size, $samp_rate)</make>
+    <param>
+        <name>Input Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option>
+            <name>Complex</name>
+            <key>complex</key>
+            <opt>size:gr.sizeof_gr_complex</opt>
+        </option>
+        <option>
+            <name>Float</name>
+            <key>float</key>
+            <opt>size:gr.sizeof_float</opt>
+        </option>
+        <option>
+            <name>Int</name>
+            <key>int</key>
+            <opt>size:gr.sizeof_int</opt>
+        </option>
+        <option>
+            <name>Short</name>
+            <key>short</key>
+            <opt>size:gr.sizeof_short</opt>
+        </option>
+        <option>
+            <name>Byte</name>
+            <key>byte</key>
+            <opt>size:gr.sizeof_char</opt>
+        </option>
+    </param>
+    <param>
+        <name>Sample Rate</name>
+        <key>samp_rate</key>
+        <value>samp_rate</value>
+        <type>real</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>$type</type>
+        <vlen>1</vlen>
+    </sink>
+</block>

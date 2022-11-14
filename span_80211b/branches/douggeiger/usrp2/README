@@ -1,0 +1,9 @@
+Implementation of Full-Bandwidth 802.11b Receiver v1.0
+
+place the usrp_std_d2.rbf file in: /usr/local/share/usrp/rev4. The RBF file is the bit stream to re-program the FPGA.
+
+Replace previous .py files with these new ones in the BBN directory: gr-bbn/src/examples:  
+*bbn_80211b.py 
+*bbn_80211b_rx.py 
+
+if you have any quastion please don't hesitate to contact me: mhfirooz@yahoo.com

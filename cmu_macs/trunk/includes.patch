@@ -1,0 +1,63 @@
+Index: usrp/host/lib/inband/Makefile.am
+===================================================================
+--- usrp/host/lib/inband/Makefile.am	(revision 8309)
++++ usrp/host/lib/inband/Makefile.am	(working copy)
+@@ -57,6 +57,7 @@
+ 	usrp_server.cc			\
+ 	usrp_tx.cc			\
+ 	usrp_tx_stub.cc			\
++	db_flexrf_mimo.cc \
+ 	usrp_usb_interface.cc		
+ 
+ libusrp_inband_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+@@ -73,12 +74,7 @@
+ 	usrp_server.h			\
+ 	usrp_tx.h			\
+ 	usrp_tx_stub.h			\
+-	usrp_usb_interface.h
+-
+-noinst_HEADERS =      			\
+-	qa_inband.h			\
+-	qa_inband_packet_prims.h	\
+-	qa_inband_usrp_server.h		\
++	db_flexrf_mimo.h \
+ 	symbols_usrp_channel.h		\
+ 	symbols_usrp_interface_cs.h	\
+ 	symbols_usrp_low_level_cs.h	\
+@@ -86,8 +82,14 @@
+ 	symbols_usrp_rx_cs.h		\
+ 	symbols_usrp_server_cs.h	\
+ 	symbols_usrp_tx.h		\
+-	symbols_usrp_tx_cs.h
++	symbols_usrp_tx_cs.h \
++	usrp_usb_interface.h
+ 
++noinst_HEADERS =      			\
++	qa_inband.h			\
++	qa_inband_packet_prims.h	\
++	qa_inband_usrp_server.h		
++
+ # ------------------------------------------------------------------------
+ # Build the qa code in its own library
+ 
+Index: usrp/host/apps-inband/Makefile.am
+===================================================================
+--- usrp/host/apps-inband/Makefile.am	(revision 8309)
++++ usrp/host/apps-inband/Makefile.am	(working copy)
+@@ -41,11 +41,14 @@
+ 	test_usrp_inband_underrun	\
+ 	read_packets
+ 
+-noinst_HEADERS =			\
++#noinst_HEADERS =			\
++#	ui_nco.h			\
++#	ui_sincos.h	
++
++include_HEADERS = \
+ 	ui_nco.h			\
+ 	ui_sincos.h	
+ 
+-
+ test_usrp_inband_ping_SOURCES 	= test_usrp_inband_ping.cc 
+ test_usrp_inband_ping_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
+ 

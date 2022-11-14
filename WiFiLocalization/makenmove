@@ -1,0 +1,85 @@
+#!/bin/tcsh
+
+# makenmove: A script for separating the source files into 3 directories and building them all.
+# Note: Each of the xx_build directories can be moved wherever you want after script is run
+# and the original source will still be here
+# Also: right now the Makefile is used for both solver and simulator ("build everything in this folder")
+
+# Directory for BBN code on this machine!
+set BBN_DIRECTORY=/home/sdruser/bbn80211
+set BBN_DEST_DIRECTORY=$BBN_DIRECTORY/gr-bbn/src/bbn
+
+# Get rid of object files and recreate the directories we need
+rm -r obj
+mkdir obj
+cd obj
+mkdir backup
+mkdir simulator
+mkdir solver
+cd ..
+
+
+echo 'Move backup "~" files so they are out of the way'
+echo '"no match" is OK and does not indicate a problem here'
+mv -f src/simulator/*~ obj/backup
+mv -f include/simulator/*~ obj/backup
+mv -f src/solver/*~ obj/backup
+mv -f include/solver/*~ obj/backup
+mv -f src/sensor/*~ obj/backup
+mv -f include/sensor/*~ obj/backup
+mv -f src/shared/*~ obj/backup
+mv -f include/shared/*~ obj/backup
+
+echo 'Copy over simulator files'
+cp include/simulator/*.h obj/simulator
+cp src/simulator/* obj/simulator
+cp include/common/*.h obj/simulator
+cp src/common/* obj/simulator
+cp include/shared/*.h obj/simulator
+cp src/shared/* obj/simulator
+
+echo 'Copy over solver files'
+cp include/solver/*.h obj/solver
+cp src/solver/* obj/solver
+cp include/common/*.h obj/solver
+cp src/common/* obj/solver
+cp include/shared/*.h obj/solver
+cp src/shared/* obj/solver
+
+echo 'Copy over sensor files to the BBN directory'
+cp include/sensor/* $BBN_DEST_DIRECTORY
+cp src/sensor/* $BBN_DEST_DIRECTORY
+cp include/common/*.h $BBN_DEST_DIRECTORY
+cp src/common/*.c* $BBN_DEST_DIRECTORY
+
+
+# Now build everything!
+# Executables go in the root NRL code directory
+
+echo 'Building Simulator'
+cd obj/simulator
+make
+if (-e a.out) then
+  mv a.out nrlsimulator
+  cp nrlsimulator ../..
+  echo 'Simulator built successfully'
+else
+  echo 'Could not build simulator'
+endif
+cd ../..
+
+echo 'Building Solver'
+cd obj/solver
+make
+if (-e a.out) then
+  mv a.out nrlsolver
+  cp nrlsolver ../..
+  echo 'Solver built successfully'
+else
+  echo 'Could not build solver'
+endif
+cd ../..
+
+echo 'Please cd to' $BBN_DIRECTORY '/gr-bbn and run the following:'
+echo './configure	make	sudo make install'
+

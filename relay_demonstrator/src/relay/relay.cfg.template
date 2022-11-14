@@ -1,0 +1,291 @@
+# Setup section. Contains type of setup and equipment used.
+[Setup]
+
+# Type of setup.
+# twonode: Uni-directional communication between two nodes
+# relay:   Uni-directional communication between two nodes using optional 
+#          relaying through a third node
+setup = relay
+
+# Type of communication link.
+# socket:   TCP sockets
+# wired:    USRP using LFTX/LFRX and wires
+# wireless: USRP using RFX and antennas
+link = socket
+
+# Rate of communication link in complex samples per second. If link is 
+# wired or wireless, this setting determines the decimation/interpolation
+# factors of the USRP, and is restricted to the following values:
+# rate (interpolation/decimation)
+#  250000 (512/256)
+#  500000 (256/128)
+# 1000000 (128/64)
+# 2000000 (64/32)
+# The sum of the rates of all communication channels using a USRP on one 
+# computer is limited to 8 Msps (32MB/s).
+rate = 45600
+
+
+# The mode section contains parameters on how the setup is used: relaying
+# strategy and type of measurement.
+[Modes]
+
+# Type of source data.
+# zero:    Data containing only zeroes.
+# counter: Deterministic data where all packets are equal.
+# random:  Deterministic random data. (not implemented)
+# file:    Data read from file. (not implemented)
+# packet:  Transmission control of variable-sized user data. Using CRC, each
+#          sent data block is guaranteed to be either received error-free or
+#          not at all.
+source_data = counter
+
+# Relaying strategy.
+# none: Only direct data transmission.
+# aaf:  Amplify-and-forward (in essence Remodulate-and-forward).
+# daf:  Decode-and-forward. (not implemented)
+relaying = aaf
+
+# Type of analysis to do. This setting is not considered when 
+# source_data == packet.
+# none: No analysis.
+# ber:  Compute bit error rate and block error rate.
+analysis = ber
+
+# Type of channel to model (when link == socket or wired).
+# ideal:    Ideal channel.
+# awgn:     AWGN channel.
+# rayleigh: Rayleigh channel. (not implemented)
+channel = awgn
+
+# When source_data == packet, application specifies the type of communication
+# link.
+# univideo: Uni-directional video link
+#application = univideo
+
+
+# The interface section contains user interface settings
+[Interface]
+
+# Run-time control of variables, such as transmission power, channel
+# parameters and receiver tuning.
+# none:    No control.
+# console: Each program has an individual console.
+# remote:  Control through a TCP socket. (not implemented)
+control = console
+
+# Sets the user interface of the relay.
+# none: No UI.
+# text: Textual UI.
+# gui:  Graphical UI.
+relayui = gui
+
+# Sets the user interface of the destination.
+# none: No UI.
+# text: Textual UI.
+# gui:  Graphical UI.
+destui = gui
+
+
+# The parameter section contains transmission parameters.
+[Parameters]
+
+# Number of bits in source packets. This must be an integer multiple of the
+# number of data bits (n) in each frame. n is dependent on the framing and
+# the frame size.
+# framing == none: n = frame_size
+# framing == simple: n = frame_size - 64
+# framing == gsm: n = frame_size - 28
+block_size = 456
+
+# Error correction code.
+# none: No ECC.
+# ldpc: Low-density parity-check code. (not implemented)
+coding = none
+
+# Framing of data. See technical document for details on frame types.
+# none:   No framing.
+# simple: Simple framing.
+# gsm:    GSM-like framing.
+framing = gsm
+
+# Number of bits in a frame.
+frame_size = 142
+
+# Modulation type.
+# bpsk: BPSK modulation.
+# qpsk: QPSK modulation. (not implemented)
+modulation = bpsk
+
+# Number of samples per symbol. Must be an integer at least 2. At least 4 is
+# needed for accurate symbol synchronization.
+symbol_length = 4
+
+# For given values of the parameters, the usable data rate can be given as:
+# data_rate = rate/symbol_length*bits_per_symbol*data_bits/frame_size/(1+sync_blocks*data_bits/frame_size),
+# where
+#
+# for bpsk: bits_per_symbol = 1
+# for qpsk: bits_per_symbol = 2
+#
+# for framing == none:
+#   data_bits = frame_size
+#   sync_blocks = 0
+# for framing == simple:
+#   data_bits = frame_size - 64
+#   sync_blocks = 0
+# for framing == gsm:
+#   data_bits = frame_size - 28
+#   sync_blocks = 1
+
+
+# Socket configuration section, used when link == socket. Each program uses
+# a section Socket_unit%d, where %d is hard-coded. See technical document for
+# details on the setups.
+#
+# For setup == twonode:
+#   unit1 is source node (0 inputs), connects to channel node (0)
+#   unit2 is channel node (1 input), connects to destination node (0)
+#   unit3 is destination node (1 input)
+#
+# For setup == relay:
+#   unit1 is source node (0 inputs), 
+#     connects to relay node (1) and channel node (0)
+#   unit2 is relay node (2 inputs),
+#     connects to channel node (1) and destination node (0)
+#   unit3 is destination node (2 inputs)
+#   unit4 is channel node (2 inputs),
+#     connects to relay node (0), and destination node (1)
+
+# This configuration is for the relay setup, all nodes running at localhost
+
+# Source node
+[Socket_unit1]
+host = localhost
+numrx = 0
+numtx = 2
+# Connect to SD channel:
+txhost_0 = localhost
+txport_0 = 15011
+# Connect to SR channel:
+txhost_1 = localhost
+txport_1 = 15030
+
+# Relay node
+[Socket_unit2]
+host = localhost
+numrx = 2
+numtx = 2
+# Relay:
+rxport_0 = 15010
+# SD channel:
+rxport_1 = 15011
+# Connect to RD channel:
+txhost_0 = localhost
+txport_0 = 15031
+# Connect to destination (direct):
+txhost_1 = localhost
+txport_1 = 15020
+
+# Destination node
+[Socket_unit3]
+host = localhost
+numrx = 2
+numtx = 0
+# Destination (direct):
+rxport_0 = 15020
+# Destination (relay):
+rxport_1 = 15021
+
+# Channel node
+[Socket_unit4]
+host = localhost
+numrx = 2
+numtx = 2
+# SR channel:
+rxport_0 = 15030
+# RD channel:
+rxport_1 = 15031
+# Connect to relay:
+txhost_0 = localhost
+txport_0 = 15010
+# Connect to destination (relay):
+txhost_1 = localhost
+txport_1 = 15021
+
+
+# Wired configuration section, used when link == wired. See technical 
+# document for details on the setups. Each program uses a section 
+# Wired_unit%d, where %d is hard-coded. These sections specify the serial
+# number of the USRP unit used.
+[Wired]
+
+# The carrier frequency used, should be in the LFTX/LFRX tuning range.
+carrier = 1000000
+
+# The transmitter power to use, in dBm. This setting only controls the
+# digital scaling of the signal.
+txpower = -10
+
+# Source node
+[Wired_unit1]
+# set to USRP serial number
+serial = 0 
+
+# Relay node
+[Wired_unit2]
+# set to USRP serial number
+serial = 0
+
+# Destination node
+[Wired_unit3]
+# set to USRP serial number
+serial = 0
+
+# Channel node
+[Wired_unit4]
+# set to USRP serial number
+serial = 0
+
+
+# Wireless configuration section, used when link == wireless. See technical
+# document for details on the setups. Each program uses a section 
+# Wireless_unit%d, where %d is hard-coded. These sections specify the serial
+# number of the USRP unit used.
+[Wireless]
+
+# The carrier frequency used, should be in the RFX tuning range.
+carrier = 2410000000
+
+# The offset of the relay transmission in FD mode
+relayoffset = 40000000
+
+# The transmitter power to use, in dBm. This setting only controls the
+# digital scaling of the signal.
+txpower = -10
+
+# Source node
+[Wireless_unit1]
+# set to USRP serial number
+serial = 0
+
+# Relay node
+[Wireless_unit2]
+# set to USRP serial number
+serial = 0
+
+# Destination node
+[Wireless_unit3]
+# set to USRP serial number
+serial = 0
+
+
+# Initial channel settings, used when link == socket or wired
+[Channel]
+
+# Initial AWGN settings, used when channel == awgn or rayleigh. The values
+# are in dBfs.
+sd_awgn = -20
+sr_awgn = -100
+rd_awgn = -100
+

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+src=@abs_top_srcdir@/src/lib
+py=@abs_top_srcdir@/src/python
+
+PYTHONPATH="$src:$src/openrd/.libs:$src/openrd/sigplotsrc/.libs:$py:$PYTHONPATH"
+
+export PYTHONPATH
+
+ok=yes
+
+if [ $# -eq 0 ]; then
+	files=@srcdir@/qa_*.py
+else
+	files="$@"
+fi
+
+ok=yes
+for file in $files
+do
+	echo "Running ${file}"
+	if ! $file; then
+		ok=no
+	fi  
+done
+
+if [ $ok = yes ]; then
+	exit 0
+else
+	exit 1
+fi
+

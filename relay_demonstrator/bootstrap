@@ -1,0 +1,24 @@
+#!/bin/bash
+
+rm -fr config.cache autom4te*.cache
+
+./generate-swig-am . src/lib/openrd
+./generate-swig-am . src/lib/openrd/sigplotsrc
+
+echo "Running aclocal"
+aclocal -I config
+
+echo "Running autoconf"
+autoconf
+
+echo "Running autoheader"
+autoheader
+
+echo "Running libtoolize"
+libtoolize --automake -c -f
+
+echo "Running automake"
+automake --add-missing -c -f -Wno-portability
+
+echo "Finished. Now run \"./configure && make\""
+

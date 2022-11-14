@@ -1,0 +1,10 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"del mtb\n"),
+    vrmeme:update({mono_tone,"ampl"},""),
+    vrmeme:update({mono_tone,"freq"},""),
+    vrmeme:update({mono_tone,"last"},"kill"),
+    {html,"ok"}.
+</erl>
+</html>

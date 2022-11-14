@@ -1,0 +1,17 @@
+gnuplot.py: This is the one most likely to be useful.  It basically
+takes a gr_complex dump file (using a gr.file_sink) and converts it
+into a gnuplot readable ".dat" file.  The function proc does the
+conversion using Python's nifty struct class.  There is also a
+gnuplot_stuff procedure that can be used to pipe results to gnuplot.
+
+
+nrt_graph.py:  This is the original GUI I used for Space VPN
+demonstration last year.  It spins up a GUI and logs some data to it
+as well as plotting data in "real-time" to gnuplot.
+
+
+I hope this helps.  Make sure to do a sanity check on them to make
+sure they are doing what you expect.
+
+Gnuplot like this:
+ plot [0:3000] "out.dat" using 1:2 title 'real', "out.dat" using 1:3 title 'imag'

@@ -1,0 +1,499 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1227648992.24</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>rx_freq</key>
+      <value>2300.05</value>
+      <min>2300</min>
+      <max>2305</max>
+      <step>0.05</step>
+    </var>
+    <var>
+      <key>rx_sym_rate</key>
+      <value>128e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>rx_decimation</key>
+      <value>124</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>rx_max_dev</key>
+      <value>60e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>rx_doppler_max</key>
+      <value>50e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>rx_gain_mu</key>
+      <value>0.4</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>tx_freq</key>
+      <value>10e6</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>tx_sym_rate</key>
+      <value>9600</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>tx_interpolation</key>
+      <value>512</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>13</x_coordinate>
+      <y_coordinate>8</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Aprizesat3/4 Groundstation</param>
+        <param>Ed Criscuolo</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Derandomize</tag>
+      <id>Derandomize0</id>
+      <x_coordinate>1138</x_coordinate>
+      <y_coordinate>360</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>2^17+2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Sink</tag>
+      <id>HDLC Router Sink0</id>
+      <x_coordinate>1387</x_coordinate>
+      <y_coordinate>369</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>17</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Binary Slicer</tag>
+      <id>Binary Slicer0</id>
+      <x_coordinate>1025</x_coordinate>
+      <y_coordinate>156</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>NRZI to NRZ</tag>
+      <id>NRZI to NRZ0</id>
+      <x_coordinate>1267</x_coordinate>
+      <y_coordinate>149</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Low Pass Filter</tag>
+      <id>Low Pass Filter1</id>
+      <x_coordinate>663</x_coordinate>
+      <y_coordinate>87</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>2</param>
+        <param>1</param>
+        <param>64e6/$rx_decimation</param>
+        <param>$rx_sym_rate - $rx_sym_rate/32</param>
+        <param>$rx_sym_rate/32</param>
+        <param>1</param>
+        <param>1</param>
+        <param>6.76</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Chunks to Symbols</tag>
+      <id>Chunks to Symbols0</id>
+      <x_coordinate>696</x_coordinate>
+      <y_coordinate>547</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>1</param>
+        <param>-1,1</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Root Raised Cosine</tag>
+      <id>Root Raised Cosine0</id>
+      <x_coordinate>501</x_coordinate>
+      <y_coordinate>715</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>2</param>
+        <param>1</param>
+        <param>1</param>
+        <param>128e6/$tx_interpolation</param>
+        <param>$tx_sym_rate</param>
+        <param>1</param>
+        <param>floor((128e6/$tx_interpolation)/$tx_sym_rate)*4</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Multiply Constant</tag>
+      <id>Multiply Constant0</id>
+      <x_coordinate>174</x_coordinate>
+      <y_coordinate>767</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+        <param>5000</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Frequency Modulator</tag>
+      <id>Frequency Modulator0</id>
+      <x_coordinate>320</x_coordinate>
+      <y_coordinate>566</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>(pi/2)/((128e6/$tx_interpolation)/$tx_sym_rate)</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>354</x_coordinate>
+      <y_coordinate>13</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>The upper graph is the downlink Rx. It flows left to right.</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note1</id>
+      <x_coordinate>394</x_coordinate>
+      <y_coordinate>474</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>The lower graph is the uplink Tx. It flows right to left.</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Clock Recovery</tag>
+      <id>Clock Recovery0</id>
+      <x_coordinate>821</x_coordinate>
+      <y_coordinate>334</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>(64e6/$rx_decimation)/$rx_sym_rate</param>
+        <param>(.25*$rx_gain_mu*$rx_gain_mu)</param>
+        <param>.5</param>
+        <param>$rx_gain_mu</param>
+        <param>(64e6/$rx_decimation)/$rx_sym_rate - floor((64e6/$rx_decimation)/$rx_sym_rate)</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink0</id>
+      <x_coordinate>1022</x_coordinate>
+      <y_coordinate>6</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Rx Demod</param>
+        <param>floor(64e6/$rx_decimation)</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00001</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>USRP Sink</tag>
+      <id>USRP Sink0</id>
+      <x_coordinate>31</x_coordinate>
+      <y_coordinate>505</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+        <param>0</param>
+        <param>2</param>
+        <param>$tx_freq</param>
+        <param>$tx_interpolation</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Source</tag>
+      <id>HDLC Router Source0</id>
+      <x_coordinate>1366</x_coordinate>
+      <y_coordinate>545</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>17</param>
+        <param>10.0.0.1</param>
+        <param>10.0.0.2</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>NRZ to NRZI</tag>
+      <id>NRZ to NRZI0</id>
+      <x_coordinate>1175</x_coordinate>
+      <y_coordinate>763</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Digital Upsampler</tag>
+      <id>Digital Upsampler0</id>
+      <x_coordinate>871</x_coordinate>
+      <y_coordinate>753</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>$tx_sym_rate</param>
+        <param>128e6/$tx_interpolation</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Randomize</tag>
+      <id>Randomize0</id>
+      <x_coordinate>1052</x_coordinate>
+      <y_coordinate>553</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>2^17+2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>USRP Source</tag>
+      <id>USRP Source0</id>
+      <x_coordinate>18</x_coordinate>
+      <y_coordinate>88</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+        <param>0</param>
+        <param>2</param>
+        <param>floor($rx_freq)*1e6</param>
+        <param>$rx_decimation</param>
+        <param>104</param>
+        <param>0</param>
+        <param>2</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Quadrature Demodulator</tag>
+      <id>Quadrature Demodulator0</id>
+      <x_coordinate>496</x_coordinate>
+      <y_coordinate>366</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>($rx_sym_rate*2)/(2*pi*$rx_max_dev)</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>FFT Sink</tag>
+      <id>FFT Sink0</id>
+      <x_coordinate>302</x_coordinate>
+      <y_coordinate>-23</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+        <param>S-Band Spectrum</param>
+        <param>floor(64e6/$rx_decimation)</param>
+        <param>5</param>
+        <param>95</param>
+        <param>512</param>
+        <param>15</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Freq Xlating FIR Filter</tag>
+      <id>Freq Xlating FIR Filter0</id>
+      <x_coordinate>151</x_coordinate>
+      <y_coordinate>334</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+        <param>0</param>
+        <param>64e6/$rx_decimation</param>
+        <param>($rx_freq-floor($rx_freq))*-1e6</param>
+        <param>1</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Low Pass Filter</tag>
+      <id>Low Pass Filter0</id>
+      <x_coordinate>300</x_coordinate>
+      <y_coordinate>90</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>2</param>
+        <param>64e6/$rx_decimation</param>
+        <param>$rx_sym_rate+$rx_doppler_max -$rx_sym_rate/32</param>
+        <param>$rx_sym_rate/32</param>
+        <param>1</param>
+        <param>1</param>
+        <param>6.76</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>Freq Xlating FIR Filter0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>USRP Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Low Pass Filter0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Freq Xlating FIR Filter0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Quadrature Demodulator0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Low Pass Filter0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Low Pass Filter1</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Quadrature Demodulator0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Clock Recovery0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Low Pass Filter1</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Binary Slicer0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Clock Recovery0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Derandomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Binary Slicer0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>NRZI to NRZ0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Derandomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>HDLC Router Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>NRZI to NRZ0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>USRP Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Multiply Constant0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Multiply Constant0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Frequency Modulator0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Frequency Modulator0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Root Raised Cosine0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Root Raised Cosine0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Chunks to Symbols0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Chunks to Symbols0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Digital Upsampler0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Clock Recovery0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>NRZ to NRZI0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>HDLC Router Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Randomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>NRZ to NRZI0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Digital Upsampler0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Randomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>FFT Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Freq Xlating FIR Filter0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

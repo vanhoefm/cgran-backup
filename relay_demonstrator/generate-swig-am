@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if test $# -lt 1; then
+  echo "Generates \${srcdir}/Makefile.swig.gen from \${top_srcdir}/Makefile.swig.gen.t"
+  echo "usage: $0 top_srcdir swig-sources-dir ..."
+  exit 1
+fi
+
+top_srcdir="$1"
+shift
+
+while test $# -gt 0; do
+  dir="$1"
+  ifiles=`grep TOP_SWIG_IFILES ${dir}/Makefile.am | sed 's/[[:space:]]*TOP_SWIG_IFILES[[:space:]=]*//'`
+  echo "Generating ${dir}/Makefile.swig.gen"
+  rm -f ${dir}/Makefile.swig.gen
+  touch ${dir}/Makefile.swig.gen
+  for TFILE in ${ifiles}; do
+    TNAME=`python -c "import os.path as op; (dN, fN) = op.split ('$TFILE'); (fbN, fE) = op.splitext (fN); print fbN;"`
+    sed -e "s|@NAME@|$TNAME|g;" < ${top_srcdir}/Makefile.swig.gen.t >> ${dir}/Makefile.swig.gen
+    echo "" >> ${dir}/Makefile.swig.gen
+  done
+  if test ! -f ${dir}/Makefile.swig.gen; then
+    echo "Failure generating ${dir}/Makefile.swig.gen."
+  fi
+  shift
+done
+

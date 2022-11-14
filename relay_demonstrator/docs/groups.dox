@@ -1,0 +1,6 @@
+/** \defgroup prim Primitive classes and functions */
+/** \defgroup primblk Primitive processing blocks */
+/** \defgroup sigblk Signal processing blocks */
+/** \defgroup sigmeta Signal meta data structures */
+/** \defgroup mode Operating modes and parameters */
+

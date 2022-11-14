@@ -1,0 +1,59 @@
+<html>
+<erl>
+
+out(Arg) ->
+    case vrk:http_meth(Arg) of
+	'POST' ->
+	    case postvar(Arg,"action") of
+
+		{ok,"init"} ->
+		    vrk:execute(Arg,"import mono_tone"),
+		    vrk:execute(Arg,"mtb = mono_tone.my_top_block()"),
+		    vrmeme:insert({mono_tone,"ampl"},"0.1"),
+		    vrmeme:insert({mono_tone,"freq"},"1000.0"),
+		    vrmeme:insert({mono_tone,"last"},"init"),
+		    {html,f("ok",[])};
+
+		{ok,"start"} ->
+		    vrk:execute(Arg,"mtb.start()"),
+		    vrmeme:update({mono_tone,"last"},"start"),
+		    {html,f("ok",[])};
+
+		{ok,"stop"} ->
+		    vrk:execute(Arg,"mtb.stop()"),
+		    vrk:execute(Arg,"mtb.wait()"),
+		    vrmeme:update({mono_tone,"last"},"stop"),
+		    {html,f("ok",[])};
+
+		{ok,"kill"} ->
+		    vrk:execute(Arg,"del mtb"),
+		    vrmeme:delete({mono_tone,"ampl"}),
+		    vrmeme:delete({mono_tone,"freq"}),
+		    vrmeme:update({mono_tone,"last"},"kill"),
+		    {html,f("ok",[])};
+		
+		{ok,"vary"} ->
+		    {ok,Param} = postvar(Arg,"param"),
+		    {ok,Value} = postvar(Arg,"value"),
+		    vrk:execute(Arg,"mtb.set_"++Param++"("++Value++")"),
+		    vrmeme:update({mono_tone,Param},Value),
+		    {html,f("ok",[])};
+		
+		_ ->
+		    {status,400}
+	    
+	    end;
+
+	'GET' ->
+	    {ok,Param} = queryvar(Arg,"param"),
+	    case vrmeme:lookup({mono_tone,Param}) of
+		[{_,Value}] ->
+		    {html,f("~p",[Value])};
+		_ ->
+		    {status,404}
+	    end
+
+    end.
+
+</erl>
+</html>

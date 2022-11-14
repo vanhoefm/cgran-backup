@@ -1,0 +1,38 @@
+#
+# Copyright 2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
+
+How to add IT++ features to this module
+---------------------------------------
+First of all, have a look at the existing examples. IT++ is usually well
+documented, so adding new features should not be difficult. There are some
+caveats:
+
+* Conversion between IT++ and GR types can range from trivial to annoying.
+  Take special care with complex streams: IT++ uses complex<double> types,
+  and GR uses complex<float>.
+  bvecs, for example, can directly be converted.
+* IT++ is not thread safe. When operating on IT++ objects, insert mutexes
+  or other thread protection mechanisms.
+* IT++ does not always check input arguments. If you want the new blocks to
+  to run nicely and stably, add some argument checks yourself in the
+  constructor (Example: itpp_hamming.cc).
+

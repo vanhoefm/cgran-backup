@@ -1,0 +1,42 @@
+Spectral Estimation Toolbox for GNU Radio
+=========================================
+
+This toolbox enhances GNU Radio with features for spectral estimation.
+
+
+Python usage:
+-------------
+
+Run
+>>> from gnuradio import gr,specest
+to get access to the features.
+
+E.g. specest.welch() gives you a processing block to use Welch's method for nonparametric
+spectral estimation.
+
+
+Specific Documentation:
+-----------------------
+Can be found in the Doxygen docblocks.
+
+
+Feature list:
+-------------
+specest_welch: Non-parametric spectral estimation using Welch's method. All major
+               parameters can be changed, thus implicitly making Bartlett's method
+               or any other Periodogram-based estimation available.
+
+
+
+Roadmap:
+--------
+Here's stuff we'd like to have, and might implement if and when we feel like it:
+- Maximum Likelihood approximations (Stoica, Thomson Multitaper)
+- Parametric stuff based on the Yule-Walker equations
+
+Collaborators welcome :)
+
+
+
+
+

@@ -1,0 +1,14 @@
+<html>
+<erl>
+out(Arg) ->
+    case vrk:http_meth(Arg) of
+	'GET' ->
+	    case vrmeme:lookup({mono_tone,"last"}) of
+		[{_,Value}] -> {html,Value};
+		_ -> {status,404}
+	    end;
+	_ ->
+	    {status,400}
+    end.
+</erl>
+</html>

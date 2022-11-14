@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1226810763.14</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>samp_rate</key>
+      <value>100e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>20</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Default Flow Graph</param>
+        <param>Your Name</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>100</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Fill this flow graph</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float2</id>
+      <x_coordinate>546</x_coordinate>
+      <y_coordinate>490</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>Vector Source</tag>
+      <id>Vector Source0</id>
+      <x_coordinate>33</x_coordinate>
+      <y_coordinate>169</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>4</param>
+        <param>0, 1,1,1,1,1,1,0</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float0</id>
+      <x_coordinate>552</x_coordinate>
+      <y_coordinate>105</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float1</id>
+      <x_coordinate>541</x_coordinate>
+      <y_coordinate>316</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>Randomize</tag>
+      <id>Randomize0</id>
+      <x_coordinate>210</x_coordinate>
+      <y_coordinate>303</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>2^17 + 2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Derandomize</tag>
+      <id>Derandomize0</id>
+      <x_coordinate>317</x_coordinate>
+      <y_coordinate>472</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>2^17 + 2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink0</id>
+      <x_coordinate>780</x_coordinate>
+      <y_coordinate>56</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Original Bitstream</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00005</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink1</id>
+      <x_coordinate>777</x_coordinate>
+      <y_coordinate>264</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Randomized</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00005</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink2</id>
+      <x_coordinate>778</x_coordinate>
+      <y_coordinate>437</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Derandomized</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00005</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>Randomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Vector Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Derandomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Randomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>UChar to Float2</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Derandomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink2</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float2</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>UChar to Float1</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Randomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>UChar to Float0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Vector Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink1</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float1</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

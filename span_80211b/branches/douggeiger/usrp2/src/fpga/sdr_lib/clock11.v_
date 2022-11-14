@@ -1,0 +1,25 @@
+
+
+module clock11(clk, reset, strobe_in, out);
+input clk;
+input reset;
+input strobe_in;
+output out;
+
+
+reg [4:0] counter;
+
+assign out = ~|counter;
+
+always @(posedge clk)
+begin
+   if (reset == 1'b1)
+	 counter <= 5'b11111;
+   else if (strobe_in == 1'b1)
+	 counter <= counter - 1;
+   else
+     counter <= counter;
+end
+
+
+endmodule

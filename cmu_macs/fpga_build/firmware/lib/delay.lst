@@ -1,0 +1,195 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Nov 10 2006)
+                              4 ; This file generated Wed Jan 23 16:41:18 2008
+                              5 ;--------------------------------------------------------
+                              6 	.module delay
+                              7 	.optsdcc -mmcs51 --model-small
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _mdelay
+                             13 	.globl _udelay
+                             14 ;--------------------------------------------------------
+                             15 ; special function registers
+                             16 ;--------------------------------------------------------
+                             17 	.area RSEG    (DATA)
+                             18 ;--------------------------------------------------------
+                             19 ; special function bits
+                             20 ;--------------------------------------------------------
+                             21 	.area RSEG    (DATA)
+                             22 ;--------------------------------------------------------
+                             23 ; overlayable register banks
+                             24 ;--------------------------------------------------------
+                             25 	.area REG_BANK_0	(REL,OVR,DATA)
+   0000                      26 	.ds 8
+                             27 ;--------------------------------------------------------
+                             28 ; internal ram data
+                             29 ;--------------------------------------------------------
+                             30 	.area DSEG    (DATA)
+                             31 ;--------------------------------------------------------
+                             32 ; overlayable items in internal ram 
+                             33 ;--------------------------------------------------------
+                             34 	.area OSEG    (OVR,DATA)
+                             35 ;--------------------------------------------------------
+                             36 ; indirectly addressable internal ram data
+                             37 ;--------------------------------------------------------
+                             38 	.area ISEG    (DATA)
+                             39 ;--------------------------------------------------------
+                             40 ; bit data
+                             41 ;--------------------------------------------------------
+                             42 	.area BSEG    (BIT)
+                             43 ;--------------------------------------------------------
+                             44 ; paged external ram data
+                             45 ;--------------------------------------------------------
+                             46 	.area PSEG    (PAG,XDATA)
+                             47 ;--------------------------------------------------------
+                             48 ; external ram data
+                             49 ;--------------------------------------------------------
+                             50 	.area XSEG    (XDATA)
+                             51 ;--------------------------------------------------------
+                             52 ; external initialized ram data
+                             53 ;--------------------------------------------------------
+                             54 	.area HOME    (CODE)
+                             55 	.area GSINIT0 (CODE)
+                             56 	.area GSINIT1 (CODE)
+                             57 	.area GSINIT2 (CODE)
+                             58 	.area GSINIT3 (CODE)
+                             59 	.area GSINIT4 (CODE)
+                             60 	.area GSINIT5 (CODE)
+                             61 	.area GSINIT  (CODE)
+                             62 	.area GSFINAL (CODE)
+                             63 	.area CSEG    (CODE)
+                             64 ;--------------------------------------------------------
+                             65 ; global & static initialisations
+                             66 ;--------------------------------------------------------
+                             67 	.area HOME    (CODE)
+                             68 	.area GSINIT  (CODE)
+                             69 	.area GSFINAL (CODE)
+                             70 	.area GSINIT  (CODE)
+                             71 ;--------------------------------------------------------
+                             72 ; Home
+                             73 ;--------------------------------------------------------
+                             74 	.area HOME    (CODE)
+                             75 	.area CSEG    (CODE)
+                             76 ;--------------------------------------------------------
+                             77 ; code
+                             78 ;--------------------------------------------------------
+                             79 	.area CSEG    (CODE)
+                             80 ;------------------------------------------------------------
+                             81 ;Allocation info for local variables in function 'udelay1'
+                             82 ;------------------------------------------------------------
+                             83 ;------------------------------------------------------------
+                             84 ;	delay.c:27: udelay1 (void) _naked
+                             85 ;	-----------------------------------------
+                             86 ;	 function udelay1
+                             87 ;	-----------------------------------------
+   0000                      88 _udelay1:
+                             89 ;	naked function: no prologue.
+                             90 ;	delay.c:31: _endasm;
+                             91 ;	genInline
+                             92 	 ; lcall that got us here took 4 bus cycles
+   0000 22                   93 	        ret ; 4 bus cycles
+                             94 ;	Peephole 300	removed redundant label 00101$
+                             95 ;	naked function: no epilogue.
+                             96 ;------------------------------------------------------------
+                             97 ;Allocation info for local variables in function 'udelay'
+                             98 ;------------------------------------------------------------
+                             99 ;usecs                     Allocated to registers r2 
+                            100 ;------------------------------------------------------------
+                            101 ;	delay.c:38: udelay (unsigned char usecs)
+                            102 ;	-----------------------------------------
+                            103 ;	 function udelay
+                            104 ;	-----------------------------------------
+   0001                     105 _udelay:
+                    0002    106 	ar2 = 0x02
+                    0003    107 	ar3 = 0x03
+                    0004    108 	ar4 = 0x04
+                    0005    109 	ar5 = 0x05
+                    0006    110 	ar6 = 0x06
+                    0007    111 	ar7 = 0x07
+                    0000    112 	ar0 = 0x00
+                    0001    113 	ar1 = 0x01
+                            114 ;	genReceive
+   0001 AA 82               115 	mov	r2,dpl
+                            116 ;	delay.c:40: do {
+                            117 ;	genAssign
+   0003                     118 00101$:
+                            119 ;	delay.c:41: udelay1 ();
+                            120 ;	genCall
+   0003 12s00r00            121 	lcall	_udelay1
+                            122 ;	delay.c:42: } while (--usecs != 0);
+                            123 ;	genMinus
+                            124 ;	genMinusDec
+                            125 ;	genCmpEq
+                            126 ;	gencjneshort
+                            127 ;	Peephole 112.b	changed ljmp to sjmp
+                            128 ;	Peephole 198.b	optimized misc jump sequence
+                            129 ;	Peephole 257	optimized decrement with compare
+   0006 DA FB               130 	djnz	r2,00101$
+                            131 ;	Peephole 200.b	removed redundant sjmp
+                            132 ;	Peephole 300	removed redundant label 00108$
+                            133 ;	Peephole 300	removed redundant label 00109$
+                            134 ;	Peephole 300	removed redundant label 00104$
+   0008 22                  135 	ret
+                            136 ;------------------------------------------------------------
+                            137 ;Allocation info for local variables in function 'mdelay1'
+                            138 ;------------------------------------------------------------
+                            139 ;------------------------------------------------------------
+                            140 ;	delay.c:54: mdelay1 (void) _naked
+                            141 ;	-----------------------------------------
+                            142 ;	 function mdelay1
+                            143 ;	-----------------------------------------
+   0009                     144 _mdelay1:
+                            145 ;	naked function: no prologue.
+                            146 ;	delay.c:65: _endasm;
+                            147 ;	genInline
+   0009 90 FB 50            148 	        mov dptr,#(-1200 & 0xffff)
+   000C                     149 002$:
+   000C A3                  150 	        inc dptr ; 3 bus cycles
+   000D E5 82               151 	        mov a, dpl ; 2 bus cycles
+   000F 45 83               152 	        orl a, dph ; 2 bus cycles
+   0011 70 F9               153 	        jnz 002$ ; 3 bus cycles
+   0013 22                  154 	        ret
+                            155 ;	Peephole 300	removed redundant label 00101$
+                            156 ;	naked function: no epilogue.
+                            157 ;------------------------------------------------------------
+                            158 ;Allocation info for local variables in function 'mdelay'
+                            159 ;------------------------------------------------------------
+                            160 ;msecs                     Allocated to registers r2 r3 
+                            161 ;------------------------------------------------------------
+                            162 ;	delay.c:69: mdelay (unsigned int msecs)
+                            163 ;	-----------------------------------------
+                            164 ;	 function mdelay
+                            165 ;	-----------------------------------------
+   0014                     166 _mdelay:
+                            167 ;	genReceive
+   0014 AA 82               168 	mov	r2,dpl
+   0016 AB 83               169 	mov	r3,dph
+                            170 ;	delay.c:71: do {
+                            171 ;	genAssign
+   0018                     172 00101$:
+                            173 ;	delay.c:72: mdelay1 ();
+                            174 ;	genCall
+   0018 12s00r09            175 	lcall	_mdelay1
+                            176 ;	delay.c:73: } while (--msecs != 0);
+                            177 ;	genMinus
+                            178 ;	genMinusDec
+   001B 1A                  179 	dec	r2
+   001C BA FF 01            180 	cjne	r2,#0xff,00108$
+   001F 1B                  181 	dec	r3
+   0020                     182 00108$:
+                            183 ;	genCmpEq
+                            184 ;	gencjneshort
+                            185 ;	Peephole 112.b	changed ljmp to sjmp
+                            186 ;	Peephole 198.a	optimized misc jump sequence
+   0020 BA 00 F5            187 	cjne	r2,#0x00,00101$
+   0023 BB 00 F2            188 	cjne	r3,#0x00,00101$
+                            189 ;	Peephole 200.b	removed redundant sjmp
+                            190 ;	Peephole 300	removed redundant label 00109$
+                            191 ;	Peephole 300	removed redundant label 00110$
+                            192 ;	Peephole 300	removed redundant label 00104$
+   0026 22                  193 	ret
+                            194 	.area CSEG    (CODE)
+                            195 	.area CONST   (CODE)

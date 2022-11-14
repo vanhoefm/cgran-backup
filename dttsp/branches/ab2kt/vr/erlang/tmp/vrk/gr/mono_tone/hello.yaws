@@ -1,0 +1,7 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"print 'hello'"),
+    {html,"ok"}.
+</erl>
+</html>

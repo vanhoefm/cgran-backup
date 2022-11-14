@@ -1,0 +1,344 @@
+Aprizesat3/4 Groundstation SDR              11/24/2008
+
+    by
+
+
+Edward Criscuolo
+Chesapeake Software Systems
+ed@chessie.com
+
+
+
+Table of Contents
+
+    1. Overview
+    2. Files
+    3. Installation
+    4. Operation
+    5. Detailed Flowgraph Description
+
+
+Section 1: Overview
+
+This directory contains the files that implement a software
+defined radio (SDR) groundstation receiver and transmitter
+for the Aprizesat3/4 satellites.  It utilizes the open-source
+GnuRadio SDR software (Rel 3.1.3), the open-source Gnu Radio
+Companion (rel. 0.70) flowgraph builder GUI, and the 
+Universal Software Radio Peripheral (USRP) version 1.
+
+The Aprizesat 3 & 4 satellites use the Internet Protocol 
+(IP) for all data transfers to and from the spacecraft.
+Typically, this is done with the ssh and scp protocols,
+which are TCP-based, but other protocols are possible,
+including UDP-based ones.
+
+The link-layer protocol that is used on the RF-links is
+the IETF standard for IP encapsulation in MultiProtocol
+over Frame Relay (MPoFR).  This is a serial bitstream
+protocol that employs HDLC for the framing mechanism.
+HDLC defines an 8-bit flag pattern for frame sync, and
+a trailing 16-bit CRC for error detection.  MPoFR adds
+a 4-byte header at the front of the frame. In addition, 
+the entire frame, excluding the sync marker, is subjected
+to a "bit stuffing" operation which inserts extra '0' bits
+into the bitstream as needed in order to eliminate the 
+possibility of the sync pattern appearing in the data.
+This "bit stuffing" is undone when the frame is received.
+
+The Physical-layer RF-link is implemented using S-band
+on the downlink at 128 kbits/sec. The uplink uses VHF
+at 9600 bits/sec. Both employ GMSK modulation.
+
+The GnuRadio open-source software library is a collection 
+of digital signal processing "blocks" written in C++ that 
+execute on a general purpose processor, and a scripting 
+language (Python) that is used to connect the blocks 
+together into a signal-processing "flowgraph".  The 
+Gnu Radio Companion (GRC) is a tool for graphically 
+constructing Gnu Radio flowgraphs by dragging and 
+connecting boxes and lines.
+
+The Universal Software Radio Peripheral (USRP) is
+a generalized hardware platform for performing the 
+high-speed analog-to-digital and digital-to-analog
+conversions, an well as the digital down and 
+up-conversions between IF/RF and baseband frequencies.
+It interfaces this data to the GnuRadio's general
+purpose processor via a USB2.0 interface port. The
+USRP also contains RF daughterboards for handling higher
+RF frequencies, such as S-band.
+
+While GnuRadio has a rich library of processing blocks,
+it has some limitations, the primary one being that 
+most of them operate on "streams" of homogeneous data.
+It is not oriented to processing flows of heterogeneous
+variable-length packets. In addition, most of the blocks 
+work with digitized analog data, rather than directly 
+with digital data.
+
+As a result of these limitations, it was necessary to 
+create seven new processing blocks in C++ and integrate 
+these into GnuRadio and GRC.  Five of these blocks 
+provide simple digital data processing, such as conversion
+between NRZI and NRZ data representation.  The other two
+implement the full HDLC link-layer processing. One of
+these encapsulates IP packets into the frames that are 
+sent out on the uplink, and the other one decodes the 
+frames that are captured on the downlink and injects
+their IP packet payload into the host computer's
+network stack. In effect, they implement a pseudo
+point-to-point network interface on the computer's
+network stack.
+ 
+
+Section 2: Files
+
+Groundstation     - All the new groundstation SW
+   ModifiedFiles     - Modified GR files
+      Custom.py         - GRC change
+      general.i         - gnuradio-core change
+      Makefile.am       - gnuradio-core change
+   NewBlocks                  - New GR processing blocks
+      gr_derandomize_bb.cc
+      gr_derandomize_bb.h
+      gr_derandomize_bb.i
+      gr_digital_upsampler_bb.cc
+      gr_digital_upsampler_bb.h
+      gr_digital_upsampler_bb.i
+      gr_hdlc_router_sink_b.cc
+      gr_hdlc_router_sink_b.h
+      gr_hdlc_router_sink_b.i
+      gr_hdlc_router_source_b.cc
+      gr_hdlc_router_source_b.h
+      gr_hdlc_router_source_b.i
+      gr_nrzi_to_nrz_bb.cc
+      gr_nrzi_to_nrz_bb.h
+      gr_nrzi_to_nrz_bb.i
+      gr_nrz_to_nrzi_bb.cc
+      gr_nrz_to_nrzi_bb.h
+      gr_nrz_to_nrzi_bb.i
+      gr_randomize_bb.cc
+      gr_randomize_bb.h
+      gr_randomize_bb.i
+   TestPrograms               - HDLC validation programs & data
+   xml-files                  - GRC flowgraphs
+      aprize-rx-tx.grc.png    - Screen capture of flowgraph
+      aprize-rx-tx.grc.xml    - Full groundstation flowgraph
+      TestFlowgraphs          - Various testing flowgraphs
+   InstallNewBlocks           - Blocks install script
+   ReadMe.FIRST               - General ReadMe
+   ReadMe.GnuRadio            - GR install ReadMe
+   UninstallNewBlocks         - Blocks uninstall script
+
+
+Section 3: Installation
+
+First, Gnuradio and GRC need to be installed.  The 
+detailed instructions for this are in the file 
+"ReadMe.GnuRadio".  These are similar to those
+found on the Gnu Radio wiki site, with some
+additions and corrections.
+
+Once GnuRadio and GRC are installed and tested, the
+new processing blocks must be installed into
+GnuRadio. This is accomplished by cd'ing into the
+Groundstation directory and invoking the "InstallNewBlocks"
+script.  This script takes a single argument that is
+the full path to the location of the GnuRadio 3.1.3
+software.  When run, it makes symbolic links in the
+GnuRadio tree that point back to the files in 
+~/Groundstation/NewBlocks. It also replaces certain
+GnuRadio files with modified ones after making backup 
+copies. Once this install is done, you must cd to the 
+root of the GnuRadio 3.1.3 software and perform:
+  $ make
+  $ make check
+  $ sudo make install
+
+The new blocks must also be installed into GRC.
+This is accomplished as follows:
+  $cd ~/GRC/grc_0.70/src/SignalBlockDefs
+  $mv Custom.py Custom.py.bak
+  $cp ~/Groundstation/ModifiedFiles/Custom.py .
+
+
+The new processing blocks can be uninstalled by 
+running "UninstallNewBlocks".  This will remove
+the symbolic links and restore the original
+versions of the modified files. Again, it is
+necessary to run:
+  $ make
+  $ make check
+  $ sudo make install
+
+
+
+
+Section 4: Operation
+
+The network functions in the two new router blocks
+both require root privilege.  This is accomplished
+by invoking GRC with root privilege:
+  $cd ~/GRC/grc_0.70/src
+  $sudo ./Editor.py
+Once GRC is running, use the "File" menu to open the 
+groundstation flowgraph that is located in 
+~/Groundstation/xml-files/aprize-rx-tx.grc.xml.
+The flowgraph is then run by clicking on the 
+"gears" icon.
+
+
+
+Section 5: Detailed Flowgraph Description
+
+The receiver flowgraph consists of ten signal
+processing blocks arranged in sequence like a
+string of pearls. Variables are used to set the
+frequency, symbol rate, decimation factor, 
+maximum deviation, maximum doppler shift, and
+gain Mu (used for clock recovery). The ten 
+blocks are:
+
+USRP Source
+    This is the device driver interface to the USRP and
+    it's DBS Rx receiver daughtercard.  It tunes the 
+    receiver to the desired frequency, captures samples at 
+    64 megasamples/sec, decimates them by the 
+    decimation factor that is specified, and outputs
+    a complex data stream (I & Q) that is centered at
+    a frequency of zero.
+
+Frequency Xlating FIR Filter
+    This block is used to fine-tune the center frequency
+    of the baseband signal.  It is needed because the 
+    DBS Rx can only tune in steps of one megahertz.
+
+Low Pass Filter
+    This filter performs the role of an "IF Bandwidth Filter"
+    in a conventional radio. It limits the width of the
+    captured signal to the data's bandwidth plus an allowance
+    for doppler shift, in order to minimize the amount of
+    noise going into the demodulator.
+
+Quadrature Demodulator
+    This block performs the FM demodulation function, 
+    taking in a complex I & Q signal, and outputting
+    real stream of soft-bits at the sampling rate.
+
+Low Pass Filter
+    This second low-pass filter coresponds to the 
+    "video" filter in a conventional radio, limiting
+    the sample stream to the data's bandwidth, but
+    still at the sampling rate.
+
+Clock Recovery
+    The clock recovery block functions somewhat like
+    the bitsync in a conventional radio system. Its
+    primary function is to recover the clock associated
+    with the data stream.  Unlike a hardware bitsync,
+    it does not actually output the clock signal
+    directly.  Instead, it resamples the data stream 
+    at the recovered clock rate.  This produces a 
+    stream of soft-bits that has one sample per bit.
+
+Binary Slicer
+    The binary slicer takes in a stream of soft-bits
+    and outputs a stream of hard-bits.  The 1-0 decision
+    point is at the zero crossing.  The hard-bits are in
+    an unpacked format, with one bit per byte, in the 
+    low-order position.
+
+Derandomize
+    The derandomize block implements a derandomizer,
+    using a generalized linear-feedback shift register 
+    (glfsr), with the "Tap Mask" parameter specifying 
+    the taps on the shift register.  For example, the 
+    value to specify bits 17 and 12 can be entered 
+    as "2^17 + 2^12".
+
+NRZI To NRZ
+    This block converts the bitstream from an NRZI 
+    representation into an NRZ representation.
+
+HDLC Router Sink
+    This block consumes the bitstream, finds and decodes
+    hdlc frames, and injects their IP packet payload 
+    into the host computer's network stack.  The frame
+    must have a valid CRC, be addressed to the correct 
+    DLCI, and be carrying an IP packet in order to get
+    fully processed onto the network stack.
+
+
+The transmitter flowgraph consists of nine signal
+processing blocks, also connected in a simple linear
+string. Variables are used to set the frequency, 
+symbol rate, and interpolation factor.  The
+nine blocks are:
+
+HDLC Router Source
+   This block uses a tun/tap driver to create a 
+   pseudo network point-to-point device. The IP
+   address associated with this "device" is one of
+   the block's parameters.  The IP address of the
+   device at the far end of this pseudo point-to-point
+   link is another parameter.  IP packets that are
+   addressed to this remote address are automatically 
+   routed to this "device". The block receives these
+   packets, encapsulates them in an HDLC frame using
+   MultiProtocol over Frame Relay, and outputs it as
+   an unpacked bitstream, with one bit per byte.
+   When no IP packets are pending for transfer, the
+   block outputs a continuous stream of HDLC "flag"
+   bytes (0x7E), also 1 bit per byte.
+
+NRZ To NRZI
+   This block converts the unpacked bitstream from 
+   an NRZ representation into an NRZI representation.
+
+Randomize
+    The randomize block implements a randomizer,
+    using a generalized linear-feedback shift register 
+    (glfsr), with the "Tap Mask" parameter specifying 
+    the taps on the shift register.  For example, the 
+    value to specify bits 17 and 12 can be entered 
+    as "2^17 + 2^12".
+
+Digital Upsampler
+   The digital upsampler resamples the binary bitstream
+   up to a higher rate. Since it works directly with the
+   digital bitstream, it is much more CPU efficient 
+   than using an interpolator followed by a low-pass
+   filter.
+
+Chunks To Symbols
+   This block simply maps the 0s and 1s of the bitstream
+   into an real stream with values of -1.0 and +1.0
+
+Root Raised Cosine
+   This block implements a filter that reduces the 
+   bandwidth of the raw transitions, producing the
+   "rounded" bit transitions that are characteristic
+   of a GMSK signal.
+
+Frequency Modulator
+   This block converts the real input stream into
+   a frequency-modulated complex stream (I & Q) at
+   a center frequency of zero.
+
+Multiply Constant
+   This block simply raises the maximum value of the
+   of the samples from around 1 to around 5000, because 
+   the USRP Sink block requires a signal amplitude
+   between 5000 and 8000. 
+
+USRP Sink
+    This is the device driver interface to the USRP and
+    it's LFTx transmitter daughtercard.  It takes the 
+    zero-frequency-centered complex baseband signal, 
+    upsamples by the interpolation factor, and upconverts 
+    it to the specified frequency.  The LFTx daughtercard 
+    has a limit of 32 MHz, so an external mixer and 
+    oscillator is required to get the output up to the 
+    VHF band.
+

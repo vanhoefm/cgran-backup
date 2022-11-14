@@ -1,0 +1,23 @@
+-------------Received Packet-------------
+Source MAC is: MAC address:
+fe:dc:ba:01:23:00
+Time recieved at sensor: 1103211383 seconds and 5.929e+08 nanoseconds
+RSSI is -35
+Sensor location: { 3 4 5 }
+-----------------------------------------
+-------------Received Packet-------------
+Source MAC is: MAC address:
+fe:dc:ba:01:23:00
+-------------Received Packet-------------
+Source MAC is: MAC address:
+fe:dc:ba:01:23:00
+-------------Received Packet-------------
+Source MAC is: MAC address:
+fe:dc:ba:01:23:00
+Time recieved at sensor: 1103650688 seconds and 817824000 nanoseconds
+RSSI is -35
+Sensor location: { 3 4 5 }
+-----------------------------------------
+-------------Received Packet-------------
+Source MAC is: MAC address:
+fe:dc:ba:01:23:00

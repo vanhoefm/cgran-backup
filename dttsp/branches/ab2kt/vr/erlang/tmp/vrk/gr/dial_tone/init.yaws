@@ -1,0 +1,9 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"import dial_tone"),
+    vrk:execute(Arg,"dtb = dial_tone.my_top_block()"),
+    vrmeme:insert({dial_tone,"last"},"init"),
+    {html,"ok"}.
+</erl>
+</html>

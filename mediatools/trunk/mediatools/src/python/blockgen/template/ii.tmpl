@@ -1,0 +1,22 @@
+/* -*- c++ -*- */
+
+%include "gnuradio.i"
+%include "typemaps.i"
+
+%{
+#include "####HEADER####"
+%}
+
+// ----------------------------------------------------------------
+GR_SWIG_BLOCK_MAGIC(####MODULE####,####SHORT####);
+####SPTR#### ####MAKE#### (####CONARGLISTWITHTYPES####);
+class ####FULL#### : public ####SUPER####
+{
+private:
+  ####FULL####(####CONARGLISTWITHTYPES####);
+public:
+  ####METHODPROTOLIST####
+};
+// ----------------------------------------------------------------
+
+

@@ -1,0 +1,26 @@
+#ifndef ####DEFINE####
+#define ####DEFINE####
+
+#include <gr_block.h>
+#include <gr_sync_block.h>
+
+class ####FULL####;
+
+typedef boost::shared_ptr<####FULL####> ####SPTR####;
+
+####SPTR#### ####MAKE####(####CONARGLISTWITHTYPES####);
+
+class ####FULL#### : public ####SUPER####
+{
+private:
+    friend ####SPTR#### ####MAKE#### (####CONARGLISTWITHTYPES####);
+    ####FULL#### (####CONARGLISTWITHTYPES####);  
+
+public:
+    ~####FULL#### ();  
+    int ####WORK####;
+####METHODPROTOLIST####
+};
+
+#endif 
+

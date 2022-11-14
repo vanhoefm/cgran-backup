@@ -1,0 +1,7 @@
+#!/usr/bin/tcsh
+
+# SVN update script
+rm -rf obj
+rm -rf *~
+svn add --force *
+

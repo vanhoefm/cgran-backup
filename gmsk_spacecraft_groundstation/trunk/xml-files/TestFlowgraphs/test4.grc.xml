@@ -1,0 +1,343 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1226885115.34</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>samp_rate</key>
+      <value>512e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>symbol_rate</key>
+      <value>256e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>xmit_gain</key>
+      <value>5000</value>
+      <min>0</min>
+      <max>5000</max>
+      <step>50.0</step>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>20</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Default Flow Graph</param>
+        <param>Your Name</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>100</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Fill this flow graph</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>NRZ to NRZI</tag>
+      <id>NRZ to NRZI0</id>
+      <x_coordinate>1158</x_coordinate>
+      <y_coordinate>455</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Source</tag>
+      <id>HDLC Router Source0</id>
+      <x_coordinate>1377</x_coordinate>
+      <y_coordinate>439</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>17</param>
+        <param>10.0.0.1</param>
+        <param>10.0.0.2</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Derandomize</tag>
+      <id>Derandomize0</id>
+      <x_coordinate>936</x_coordinate>
+      <y_coordinate>223</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>2^17+2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Sink</tag>
+      <id>HDLC Router Sink0</id>
+      <x_coordinate>1407</x_coordinate>
+      <y_coordinate>235</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>17</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>GMSK Demodulator</tag>
+      <id>GMSK Demodulator0</id>
+      <x_coordinate>626</x_coordinate>
+      <y_coordinate>197</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>$samp_rate/$symbol_rate</param>
+        <param>0.05</param>
+        <param>0.5</param>
+        <param>0.005</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>FFT Sink</tag>
+      <id>FFT Sink0</id>
+      <x_coordinate>202</x_coordinate>
+      <y_coordinate>667</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+        <param>Xmit Spectrum</param>
+        <param>$samp_rate</param>
+        <param>20</param>
+        <param>20</param>
+        <param>512</param>
+        <param>15</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Unpacked to Packed</tag>
+      <id>Unpacked to Packed0</id>
+      <x_coordinate>667</x_coordinate>
+      <y_coordinate>448</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>0</param>
+        <param>1</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Randomize</tag>
+      <id>Randomize0</id>
+      <x_coordinate>930</x_coordinate>
+      <y_coordinate>446</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>2^17+2^12</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float0</id>
+      <x_coordinate>700</x_coordinate>
+      <y_coordinate>575</y_coordinate>
+      <rotation>180</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>GMSK Modulator</tag>
+      <id>GMSK Modulator0</id>
+      <x_coordinate>424</x_coordinate>
+      <y_coordinate>452</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>$samp_rate/$symbol_rate</param>
+        <param>0.35</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Multiply Constant</tag>
+      <id>Multiply Constant0</id>
+      <x_coordinate>68</x_coordinate>
+      <y_coordinate>318</y_coordinate>
+      <rotation>90</rotation>
+      <params>
+        <param>0</param>
+        <param>$xmit_gain</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Low Pass Filter</tag>
+      <id>Low Pass Filter0</id>
+      <x_coordinate>266</x_coordinate>
+      <y_coordinate>173</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>1</param>
+        <param>$samp_rate</param>
+        <param>$samp_rate/2</param>
+        <param>($samp_rate/2)/32</param>
+        <param>1</param>
+        <param>1</param>
+        <param>6.76</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float1</id>
+      <x_coordinate>1131</x_coordinate>
+      <y_coordinate>84</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>NRZI to NRZ</tag>
+      <id>NRZI to NRZ0</id>
+      <x_coordinate>1171</x_coordinate>
+      <y_coordinate>233</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink0</id>
+      <x_coordinate>450</x_coordinate>
+      <y_coordinate>689</y_coordinate>
+      <rotation>180</rotation>
+      <params>
+        <param>1</param>
+        <param>Randomized Tx Bitstream</param>
+        <param>$symbol_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00001</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink1</id>
+      <x_coordinate>1361</x_coordinate>
+      <y_coordinate>33</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Rx Bitstream</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00001</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>Derandomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>GMSK Demodulator0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>NRZI to NRZ0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Derandomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>HDLC Router Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>NRZI to NRZ0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Randomize0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>NRZ to NRZI0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>NRZ to NRZI0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>HDLC Router Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>GMSK Demodulator0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Low Pass Filter0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>FFT Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>GMSK Modulator0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Unpacked to Packed0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Randomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>GMSK Modulator0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Unpacked to Packed0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>UChar to Float0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Randomize0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Multiply Constant0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>GMSK Modulator0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Low Pass Filter0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Multiply Constant0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink1</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float1</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>UChar to Float1</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>NRZI to NRZ0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

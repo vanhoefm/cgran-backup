@@ -1,0 +1,395 @@
+		       The Virtual Radio Kernel
+		       ========================
+		  Frank Brickle <brickle@pobox.com>
+	  Copyright (C) 2008 by the Free Software Foundation
+			 Licensed under GPLv3
+				   
+========================================================================
+I. Overview
+===========
+
+The Virtual Radio Kernel is a set of interacting software components
+intended to serve as the "connecting tissue" among heterogeneous
+pieces of hardware and software which implement Software Defined
+Radios. It provides a simple and direct way to organize command and
+control from the lowest-level components to the highest system
+functions. One of the main goals is to enable existing software and
+hardware to be incorporated into a larger system with minimal
+modification, in such a way that any component can be viewed from the
+standpoint of user applications in a uniform way.
+
+By far the largest part of the VR Kernel is implemented in Erlang/OTP,
+a language and operating environment developed specifically for
+creating large, error-tolerant, concurrent systems for
+mission-critical telecommunications applications. Originally created
+and deployed some decades ago, Erlang/OTP has been gaining increasing
+attention as an especially appropriate vehicle for a broad range of
+robust distributed applications.
+
+One consequence of adopting Erlang/OTP as a platform for the VR Kernel
+has been the ability to provide rich functionality with a surprisingly
+small amound of source code. The most basic system, which is capable
+of incorporating both GNU Radio and the DttSP SDR core simultaneously,
+comprises about 2000 lines.
+
+At the present time, the whole system is capable in principle of
+running (and being distributed across) most of the major operating
+systems (Linux, BSD, Mac OS X, Windows. It has *not* been wrung out
+exhaustively on all those platforms.
+
+An important thing to keep in mind about Erlang is that it is built
+around many concurrent lightweight processes that communicate by
+message passing. In consequence, the VR Kernel system is basically
+indifferent to whether the major components live on one or many hosts.
+Its design is based on the assumption that components will *not*
+necessarily share anything other than a network.
+
+A further important concept is the distinction between *nodes* and
+*processes* in Erlang.  A node is a full-blown Erlang virtual
+machine. A process is an independent concurrent element running on a
+node. A system of networked computers is capable of supporting many
+nodes. A single node is capable of supporting thousands of
+processes. A process running on one node is can be permitted to run
+and interact transparently with processes on other nodes. Thanks to
+the message-passing structure and the complete absence of any other
+global data, issues like mutual exclusion and deadlock can effectively
+be ignored in designing systems.
+
+Basic Structure
+---------------
+
+As the name implies, the heart of the VR Kernel is an application
+which mediates between clients and SDR components. From the client
+side, the SDR components are presented as resources in a structured
+namespace. On the implementation side, each component is endowed with
+its own proxy, which serves as its interface to the rest of the
+system. There can be multiple instances of a VR Kernel in a system.
+At present, proxies are provided for GNU Radio and for sdr-core, a
+standalone SDR DSP process included in DttSP.
+
+The client-side protocol is a lot like, and in fact *is*, HTTP,
+implementing a RESTful interface. One key component of the Kernel is a
+powerful embedded HTTP server. Thus SDR resources are represented as
+URIs. The Kernel is responsible for accepting conventional HTTP
+requests (largely GET and POST) for resources like, say, the frequency
+control of a GNU radio receiver program, and transforming the request
+into an action, say, changing the frequency on that receiver. It does
+so by sending appropriate messages to the receiver's proxy, and
+nominally reporting back to the requesting client. In broad outline,
+then, the kernel is responsible for
+(1) implementing the RESTful namespace (URIs) which constitutes the
+clients' view of the SDR system, and
+(2) translating client-side interactions with the RESTful resources
+into commands peculiar to each of the implementation-side
+components.
+
+The Kernel is implemented as an Erlang/OTP server called vrk, using
+the yaws webserver as an embedded subprocess. Input and output
+transformations are implemented as further submodules in the yaws
+webserver. These modules can be modified and reconfigured dynamically
+under control of the master vrk process. Each vrk server is capable of
+implementing several logical kernels by itself, on top of being able
+to coexist with other vrk instances on the same system.
+
+A running Kernel is given one or more associated pools of storage for
+(key, value) pairs, which can be made persistent if necessary. A pool
+is maintained by a small separate server process, another Erlang/OTP
+server called vrmeme. This server is globally accessible to other
+Erlang nodes and processes.
+
+Clients can be just about any kind of program. A client can be as simple
+as an interactive shell running a command-line program like curl, or
+it can be as complicated as a full-up AJAX-based browser application.
+The result is that client applications are assumed to be distributed,
+platform-independent, and hot-swappable.
+
+A typical system is depicted in sysdiag.pdf.
+
+----------------------------
+Layout of the current distro
+----------------------------
+
+In the vr/erlang directory top level:
+* vrk -- the VR Kernel proper.
+* vrmeme -- small (key, value) server
+* rest_rew -- library module implementing the RESTful namespace
+* grape -- proxy to GNU Radio
+* ducpin -- proxy to sdr-core
+* rawxfer -- lightweight remote file transfer utility
+
+In the vr/tmp/vrk directory:
+* gr -- implementations of interfaces to GNU Radio programs
+* gr/mono_tone -- example implementation of interface to GNU Radio
+"mono_tone" program
+* gr/mono_tone/*.yaws -- example implementations of individual GNU Radio
+commands to mono_tone
+* sdr-core -- implementation of raw interface to DttSP sdr-core
+
+In the vr/lw directory:
+* exec_server.py -- executive for GNU Radio programs. The grape proxy
+is coupled to this server.
+* mono_tone.py -- example GNU Radio program
+* dial_tone.py -- example GNU Radio program
+
+In general, components that affect either the RESTful transformation
+or the proxy commands would be installed as library modules in vr/erlang.
+The Kernel can be reconfigured for these modules dynamically by calls to
+vrk:set_parms(). As a rule, RESTful transformations are carried out
+by a single arg_rewrite module, while output specialization is carried
+out either by individual .yaws files, or by one or more appmod modules.
+See the References section for more information.
+
+Documentation for the individual modules can be found in the doc
+subdirectories in vr/erlang.
+
+========================================================================
+II. Installation
+================
+
+In this initial distribution, a significant number of large supporting
+components need to be installed manually:
+* Erlang/OTP
+* Yaws
+* DttSP
+* GNU Radio
+* (Python)
+
+Although it adds to the inevitable startup headaches, we recommend
+downloading and installing the latest releases of each of these
+subsystems. Prebuilt versions often carry default configuration
+settings which can conflict with VR defaults and create very elusive
+debugging problems. Also, all of these packages are under intensive
+development and enhancement. The prebuilt packages often lag one or
+more generations behind even current stable releases. Faxien is
+particularly glaring in this respect.
+
+----------
+Erlang/OTP
+----------
+
+The Erlang/OTP system can be got in three ways:
+(1) As a prebuilt package for a common Linux distro such as Ubuntu,
+(2) As part of a complete installation using faxien,
+(3) By downloading and building from scratch.
+
+(1) and (2) are easy, and (2) also brings in yaws. However the
+versions provided are most of the time not the latest releases.
+
+.................
+Prebuilt packages
+.................
+Typical example: under Ubuntu, using synaptic or apt-get,
+install at least the erlang and erlang-manpages packages.
+
+......
+Faxien
+......
+See
+http://www.erlware.org/tools/faxien
+
+.................
+Build from source
+.................
+See
+http://ciarang.com/posts/compiling-erlang-on-ubuntu
+
+----
+Yaws
+----
+
+As with Erlang/OTP, prebuilt packages can be installed either with
+a distro package manager or with faxien.
+
+To build from source, see
+http://yaws.hyber.org/index.yaws
+
+-----
+DttSP
+-----
+
+See
+https://www.cgran.org/wiki/DttSP
+
+---------
+GNU Radio
+---------
+
+See
+http://gnuradio.org/trac/wiki
+
+If necessary, Python is installed as part of the GNU Radio installation
+procedure.
+
+========================================================================
+III. Operation
+==============
+
+--------------------------
+Make everything executable
+--------------------------
+
+* Run make in dttsp/branches/ab2kt/vr/erlang. This builds all the
+Erlang VR executable files.
+
+* If yaws was installed from source, this line:
+code:add_path("/usr/local/lib/yaws/ebin").
+should be added to $HOME/.erlang
+
+* In $HOME/.bashrc, add
+export ERL_LIBS=<path to the local working copy of the svn VR erlang
+directory>
+
+--------------------------------
+Start up the GNU Radio executive
+--------------------------------
+
+Fire up a shell. cd to the vr/lw directory. Run
+python exec_server.py
+You should then see
+Ready on host localhost port 18617
+
+------------------------------
+Start up the Erlang components
+------------------------------
+
+Fire up another shell. cd to the vr/erlang directory. Run
+erl -pa grape/ebin rawxfer/ebin rest_rew/ebin vrk/ebin vrmeme/ebin
+
+Then:
+grape:start_link().
+	You should see a line like
+	{ok,<0.33.0>}
+	in this shell, and lines like
+	Connected by ('127.0.0.1', 38292)
+	Being handled by 13194
+	in the shell running the GNU Radio executive
+vrmeme:start_link().
+	You should see something like
+	{ok,<0.37.0>}
+vrk:start_link().
+	producing
+	=INFO REPORT==== 30-Dec-2008::16:37:17 ===
+	Yaws: Listening to 0.0.0.0:18464 for servers
+	 - http://localhost:18464 under tmp/vrk
+	 {ok,<0.39.0>}
+
+The system is now set up and ready to be exercised.
+
+-----------------------------
+Running the browser interface
+-----------------------------
+
+* Set your browser to http://localhost:18464/gr/mono_tone/console
+You will see a column of buttons and text entry fields:
+init
+start
+frequency [] apply
+amplitude [] apply
+stop
+kill
+
+To begin, press init. The browser should show a page that just says
+"ok". Use the Back button on the browser to show the console page
+again. [Updating the display without refreshing the page is a
+javascript exercise for the reader.]
+
+In the shell running the GNU Radio executive you should see something
+like:
+13560: got 'import mono_tone'
+13560: got 'mtb = mono_tone.my_top_block()'
+
+Now press start. In a moment you should hear a 1kHz tone, and
+13560: got 'mtb.start()'
+from the GR executive.
+
+Now press stop. Lather. Rinse. Repeat. The frequency (in Hz) can be
+changed via the frequency field, likewise the amplitude (a value
+between 0 and 1). The kill button carries out a complete teardown of
+the GNU Radio program without terminating the executive. To restart
+after kill, press init again.
+
+* In another tab, you can pull up
+http://localhost:18464/gr/dial_tone/console
+This controls execution of another GNU Radio demo program in parallel.
+
+
+--------------------------------
+Running a command line interface
+--------------------------------
+
+If the curl program is installed, the same kinds of operations as
+on the console pages can be carried out from a shell. For example,
+to initialize the mono_tone demo program, run
+curl http://localhost:18464/gr/mono_tone/init
+
+Then to start, run
+curl http://localhost:18464/gr/mono_tone/start
+etc.
+
+To set the frequency to 261.625 Hz, run
+curl -d "value=261.625" http://localhost:18464/gr/mono_tone/freq
+
+To fetch the current amplitude, run
+curl http://localhost:18464/gr/mono_tone/ampl
+
+In these cases the returned data consists of complete HTTP responses
+which would otherwise be filtered out by a browser.
+
+----------------
+Running sdr-core
+----------------
+
+Most of the steps for running DttSP/sdr-core, either instead of or
+alongside GNU Radio, are the same. Where GNU Radio relies on
+exec_server.py, DttSP runs sdr-core. Where the GNU Radio proxy is
+grape, the sdr-core proxy is ducpin. Routing to the correct proxy and
+server is coded in rest_rew.erl.
+
+========================================================================
+IV. References
+==============
+
+The following links have all proved helpful in navigating OTP and yaws.
+
+http://20bits.com/articles/erlang-a-generalized-tcp-server
+http://21ccw.blogspot.com/2008/06/migrating-native-erlang-interface-to.html
+http://armstrongonsoftware.blogspot.com/2006/09/why-i-often-implement-things-from.html
+http://beebole.com/blog/erlang/how-to-quickly-set-up-ubuntu-804-loaded-with-erlang-mochiweb-and-nginx
+http://blog.socklabs.com/2008/02/embedded_applications_with_yaw
+http://blog.socklabs.com/2008/04/a_restful_web_service_demo_in
+http://blog.tornkvist.org/blog.yaws?id=1204795540185281
+http://bob.pythonmac.org/archives/2007/12/17/using-the-mochiweb-project-skeleton
+http://cean.process-one.net/packages/index.yaws?action=all
+http://code.activestate.com/recipes/534162
+http://code.google.com/p/ktuo/wiki/Usage
+http://code.google.com/p/webmachine
+http://communitivity.blogspot.com/2008/02/how-torun-yaws-embedded.html
+http://communitivity.blogspot.com/2008/02/how-torun-yaws-embedded-pt-2.html
+http://erlangish.blogspot.com/2007/01/released-ktuo-011.html
+http://erlsoft.org/modules/erlmedia
+http://etnt.blogspot.com
+http://forum.trapexit.org/mailinglists/viewtopic.php?p=22717&highlight=&sid=d334a1e77017f0cec0daa186586b61a1
+http://forum.trapexit.org/viewtopic.php?p=33507#33507
+http://humani.st/scalable-web-apps-erlang-python
+http://humani.st/talking-to-erlang
+http://jerith.za.net/writings/erlangsockettut.html
+http://pragdave.pragprog.com/pragdave/2007/04/testfirst_word_.html
+http://skillsmatter.com/podcast/erlang/eunit-lightweight-unit-testing-for-erlang
+http://spawnlink.com/articles/an-introduction-to-gen_server-erlybank
+http://spawnlink.com/articles/tag/otp-introduction
+http://trapexit.org/Building_a_Non-blocking_TCP_server_using_OTP_principles
+http://trapexit.org/Category:CookBook
+http://web.mit.edu/erlang_vR11B-5/arch/sun4x_510/lib/erlang/doc/design_principles/gen_server.html
+http://www.builderau.com.au/program/soa/Working-with-dictionaries-in-Erlang/0,339024614,339283220,00.htm
+http://www.duomark.com/erlang/tutorials/proxy.html
+http://www.erlang.org/doc
+http://www.infoq.com/articles/vinoski-erlang-rest
+http://www.kazmier.com/computer/port-howto
+http://www.lshift.net/blog/2006/11/06/an-ajax-erlang-jukebox
+http://www.mcsweeneys.net/2008/11/20tucker.html
+http://www.nabble.com/does-yaws_vdir-work--td15032143.html
+http://www.rsaccon.com/2007/09/mochiweb-erlang-based-webserver-toolkit.html
+http://www.trapexit.org
+http://yarivsblog.com/articles/2006/08/14/smerl-simple-metaprogramming-for-erlang
+http://yaws.hyber.org
+http://yaws.hyber.org/index.yaws

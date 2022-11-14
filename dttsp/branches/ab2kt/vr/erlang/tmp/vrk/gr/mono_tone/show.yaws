@@ -1,0 +1,42 @@
+<html>
+<erl>
+
+out(Arg) ->
+    case vrk:http_meth(Arg) of
+ 	'POST' ->
+	    case postvar(Arg,"action") of
+
+		{ok,"init"} ->
+		    {html,f("POST ~p",["init"])};
+
+		{ok,"start"} ->
+		    {html,f("POST ~p",["start"])};
+
+		{ok,"stop"} ->
+		    {html,f("POST ~p",["stop"])};
+
+		{ok,"kill"} ->
+		    {html,f("POST ~p",["kill"])};
+		
+		{ok,"vary"} ->
+		    {ok,Param} = postvar(Arg,"param"),
+		    {ok,Value} = postvar(Arg,"value"),
+		    {html,f("POST ~p ~p ~p",["vary",Param,Value])};
+		
+		_ ->
+		    {html,f("POST ?",[])}
+		    
+	    end;
+
+ 	'GET' ->
+	    case queryvar(Arg,"param") of
+		{ok,Param} ->
+		    {html,f("GET ~p",[Param])};
+		_ ->
+		    {html,f("GET ?",[])}
+	    end
+    
+    end.
+
+</erl>
+</html>

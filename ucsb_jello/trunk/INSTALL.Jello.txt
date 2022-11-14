@@ -1,0 +1,35 @@
+This file is free documentation; the Free Software Foundation gives
+unlimited permission to copy, distribute and modify it.
+
+System Requirement
+==================
+This version should work with the current stable version of gnuradio-3.2.2. 
+
+See how to get gnuradio-3.2.2, and the operating system specific instructions 
+
+  http://gnuradio.org/redmine/wiki/gnuradio/BuildGuide
+
+
+Installation Instructions
+=========================
+
+1. Download gnuradio-3.2.2 tarball
+
+	http://gnuradio.org/redmine/wiki/gnuradio/Release32Branch
+
+2. Patch Jello files to gnuradio
+	
+	cp -r jello/ gnuradio-3.2.2/
+	
+3. Build gnuradio
+	
+	cd gnuradio-3.2.2
+    ./bootstrap
+	./configure
+	make
+	make check
+	sudo make install
+
+
+KNOWN ISSUES
+============

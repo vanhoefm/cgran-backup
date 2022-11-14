@@ -1,0 +1,18 @@
+Requirements
+------------
+
+The CS Toolbox itself works with any recent version of GNU Radio.
+Only the example application src/python/compressed_specest_from_file.py
+requires the gr-specest module.
+
+
+Building and installing:
+-----------------------
+
+The usual GNU build process applies:
+
+./bootstrap
+./configure
+make
+make check
+sudo make install

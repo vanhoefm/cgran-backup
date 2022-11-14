@@ -1,0 +1,75 @@
+GnuRadio Installation on Ubuntu 8.04 (Hardy Heron)
+
+* Install Needed binary packages:
+sudo apt-get -y install swig g++ automake1.10 libtool python-dev fftw3-dev \
+libcppunit-dev sdcc libusb-dev libasound2-dev libsdl1.2-dev \
+python-wxgtk2.8 subversion guile-1.8-dev libqt4-dev python-numpy-ext \
+ccache python-opengl libgsl0-dev python-cheetah python-lxml doxygen \
+libqwt5-qt4-dev libqwtplot3d-qt4-dev qt4-dev-tools python-qwt5-qt4
+
+* Download boost 1.37 source from:
+  http://downloads.sourceforge.net/boost/boost_1_37_0.tar.gz?modtime=1225667581&big_mirror=0
+
+* Install Boost from source:
+  unpack it somewhere
+  cd into the resulting directory (boost_1_37_0)
+  Pick a prefix to install it into.  I used /opt/boost_1_37_0:
+  $ BOOST_PREFIX=/opt/boost_1_37_0
+  $ ./configure --prefix=$BOOST_PREFIX --with-libraries=thread,date_time
+  $ make
+  $ sudo make install
+
+* Download QWT 5.1.1 from:
+  http://downloads.sourceforge.net/qwt/qwt-5.1.1.tar.bz2?modtime=1211655852&big_mirror=0
+
+* Patch and Install QWT:
+  Edit file qwtconfig.pri - 
+  Change the unix version of "INSTALLBASE" to "/usr/local" (was "/usr/local/qwt-5.1.1"); 
+  Save and exit
+  $ qmake
+  $ make
+  $ sudo make install
+
+* Download GnuRadio release 3.1.3 tarball from
+  ftp://ftp.gnu.org/gnu/gnuradio/gnuradio-3.1.3.tar.gz
+
+* Install Gnu Radio:
+  Unpack it.
+  Tell it where to find boost:
+  $ BOOST_PREFIX=/opt/boost_1_37_0
+  $ export LD_LIBRARY_PATH=$BOOST_PREFIX/lib
+
+  cd to the top level directory (gnuradio-3.1.3):
+  $ cd <path-to-top-of-gnuradio-tree>
+  $ ./configure --with-boost=$BOOST_PREFIX \
+                --with-boost-include-dir=$BOOST_PREFIX/include/boost-1_37
+  $ make && make check
+  $ sudo make install
+  $ sudo ldconfig
+
+* Setup access permissions to USRP
+  $ sudo addgroup usrp
+  $ sudo addgroup <YOUR_USERNAME> usrp
+  $ echo 'ACTION=="add", BUS=="usb", SYSFS{idVendor}=="fffe", SYSFS{idProduct}=="0002", GROUP:="usrp", MODE:="0660"' > tmpfile
+  $ sudo chown root.root tmpfile
+  $ sudo mv tmpfile /etc/udev/rules.d/10-usrp.rules
+  $ sudo /etc/init.d/udev stop
+  $ sudo /etc/init.d/udev start
+
+* Download pyxml 0.8.4 source from:
+  http://sourceforge.net/project/showfiles.php?group_id=6473&package_id=6541&release_id=286213
+
+* Compile and install
+  Unpack it.
+  $ cd  PyXML-0.8.4
+  $ sudo python setup.py install
+
+* Download GRC 0.70 from:
+  http://www.joshknows.com/download/grc/releases/stable/grc_0.70.tar.gz
+  Unpack it.
+  cd to the src directory
+  invoke ./Editor.py
+
+
+
+

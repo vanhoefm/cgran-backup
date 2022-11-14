@@ -1,0 +1,8 @@
+Makefile
+Makefile.in
+bbn_80211b_pkt.pyc
+bbn_80211b_rx.pyc
+bbn_80211b_tx.pyc
+bbn_80211b_tap.pyc
+bbn_80211b.pyc
+bbn_80211b_transmit_path.pyc

@@ -1,0 +1,6 @@
+This package is based on code from GNU Radio, and thus many files bear
+an FSF copyright.  BBN has modified some files, and thus there is also
+a copyright statement for the resulting derivative work, generally
+appearing after the FSF copyright and the grant of permission to copy
+under the GPL.  By this marking placement, BBN grants permission to
+copy our code under the GPL (see COPYING).

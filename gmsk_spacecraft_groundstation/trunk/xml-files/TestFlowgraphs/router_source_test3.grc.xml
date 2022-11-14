@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1226806530.19</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>samp_rate</key>
+      <value>256e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>input</key>
+      <value>0</value>
+      <min>0</min>
+      <max>1</max>
+      <step>1</step>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>20</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Default Flow Graph</param>
+        <param>Your Name</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>100</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Test graph to check out idle FLAG insertion</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Source</tag>
+      <id>HDLC Router Source0</id>
+      <x_coordinate>17</x_coordinate>
+      <y_coordinate>166</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>17</param>
+        <param>10.0.0.1</param>
+        <param>10.0.0.3</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Throttle</tag>
+      <id>Throttle0</id>
+      <x_coordinate>291</x_coordinate>
+      <y_coordinate>171</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>4</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>UChar to Float</tag>
+      <id>UChar to Float0</id>
+      <x_coordinate>553</x_coordinate>
+      <y_coordinate>188</y_coordinate>
+      <rotation>0</rotation>
+      <params/>
+    </signal_block>
+    <signal_block>
+      <tag>Scope Sink</tag>
+      <id>Scope Sink0</id>
+      <x_coordinate>779</x_coordinate>
+      <y_coordinate>136</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>1</param>
+        <param>Scope</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+        <param>0</param>
+        <param>0.00001</param>
+        <param>2</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>UChar to Float0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Throttle0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Scope Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>UChar to Float0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Throttle0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>HDLC Router Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

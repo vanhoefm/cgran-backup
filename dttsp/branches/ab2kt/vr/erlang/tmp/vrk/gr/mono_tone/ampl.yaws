@@ -1,0 +1,15 @@
+<html>
+<erl>
+out(Arg) ->
+    case vrk:http_meth(Arg) of
+	'GET' ->
+	    [{_,Value}] = vrmeme:lookup({mono_tone,"ampl"}),
+	    {html,Value};
+	'POST' ->
+	    {ok,Value} = postvar(Arg,"value"),
+	    vrk:execute(Arg,"mtb.set_ampl("++Value++")"),
+	    vrmeme:update({mono_tone,"ampl"},Value),
+	    {html,"ok"}
+    end.
+</erl>
+</html>

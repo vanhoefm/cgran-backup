@@ -1,0 +1,78 @@
+0-9 Tune to corresponding Dect channel for Europe and enable visualization
+0-3 Tune to corresponding Dect channel for US and enable visualization
+
+NB: while in listen mode the program will not accept user input, hit CTRL-C for entering command mode
+
+CTRL-C kill flowgraph, enter command mode and wait for user input
+
+10 will disable visualization of all packets
+
+11 turn ON visualization of Q type signalling packets
+12 turn OFF visualization of Q type signalling packets
+13 turn ON visualization of N type identity packets
+14 turn OFF visualization of N type identity packets
+15 turn ON visualization of M MAC control message
+16 turn OFF visualization of M MAC control message
+17 turn ON visualization of C type traffic channel
+18 turn OFF visualization of C type traffic channel
+19 turn ON visualization of P type base station paging message
+20 turn OFF visualization of P type base station paging message
+
+
+21 and above, exit command mode and terminate program
+
+
+
+Home directory:
+	benchmark_rx_dect.py
+	receive_path_dect.py
+	dect_mac_parser.py
+ 	fusb_options.py
+	pkt_dect.py
+	packet_utils_dect.py
+Gnuradio-core:
+Remember to update the following:
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/
+		general.i
+		Makefile.am
+change dir to:
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/
+make
+sudo make install
+
+
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_framer_sink_dect.cc
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_framer_sink_dect.h
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_framer_sink_dect.i
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_correlate_access_code_dect.cc
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_correlate_access_code_dect.h
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_correlate_access_code_dect.i
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_crc_r.cc
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_crc_r.h
+/usr/local/share/gnuradio-3.1.1/gnuradio-core/src/lib/general/gr_crc_r.i
+
+
+
+CRC:
+
+model for pycrc is: r-crc-16
+command line for pycrc for N identity of our dect basestation
+
+ ./pycrc.py --model r-crc-16 --check-string "6e00be4b3aa0"
+
+(hex) RESULT1= 0x209e
+(string) RESULT2= 0xa63
+
+
+in file pycrc.py .decode("hex") to accept hex input
+
+        this_crc = alg.bit_by_bit(opt.CheckString.decode("hex"))
+
+C code generator:
+
+pycrc.py --model r-crc-16 --algorithm table-driven --table-idx-width 4 --generate h -o gr_crc_r.h
+
+pycrc.py --model r-crc-16 --algorithm table-driven --table-idx-width 4 --generate c -o gr_crc_r.cc 
+
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<block>
+  <name>CUDA FIR</name>
+  <key>grgpu_fir_filter_fff_cuda</key>
+  <category>GRGPU</category>
+  <import>import grgpu</import>
+  <make>grgpu.fir_filter_fff_cuda()</make>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>

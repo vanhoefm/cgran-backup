@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# This script compiles a cuda code and generates an shared object. 
+# The shared object is then copied to the directory where it can be 
+# linked from the python library.
+
+# First compile the cuda code:
+
+for KERNEL in \
+    grgpu_fir_fff_cuda_kernel \
+    grgpu_utils \
+    grgpu_add_const_ff_cuda_kernel \
+    grgpu_test_remove_kernel \
+    grgpu_resampler_ccf_cuda_kernel \
+    grgpu_resampler_ccc_cuda_kernel \
+    grgpu_test_remov_kernel \
+    grgpu_resampler_fff_cuda_kernel \
+    grgpu_fft_vfc_cuda_kernel \
+    grgpu_h2d_cuda_kernel \
+    grgpu_h2d_c_cuda_kernel \
+    grgpu_d2h_cuda_kernel \
+    grgpu_d2h_c_cuda_kernel \
+    grgpu_fir_filter_fff_cuda_kernel
+do
+    if [ $KERNEL.cu -nt $KERNEL.cu.cc ]
+    then
+	nvcc --cuda $KERNEL.cu -o $KERNEL.cu.cc -I$HOME/NVIDIA_GPU_Computing_SDK/C/common/inc/ -I.
+    fi
+done
+

@@ -1,0 +1,8 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"mtb.start()"),
+    vrmeme:update({mono_tone,"last"},"start"),
+    {html,"ok"}.
+</erl>
+</html>

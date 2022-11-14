@@ -1,0 +1,78 @@
+$Id: ubiquiti_txpower.txt,v 1.1 2006/10/06 20:29:31 gdt Exp $
+
+Test of Ubiquiti "300 mW" atheros-based card
+20061006
+Greg Troxel
+Bob Vincent
+
+adroit8 (T42p)
+ADROIT netbsd build
+ubiquiti card as ath1
+all settings default unless otherwise noted.
+bootup state:
+
+  hw.ath1.smoothing_rate = 95
+  hw.ath1.sample_rate = 10
+  hw.ath1.countrycode = 0
+  hw.ath1.debug = 0
+  hw.ath1.slottime = 20
+  hw.ath1.acktimeout = 48
+  hw.ath1.ctstimeout = 48
+  hw.ath1.softled = 0
+  hw.ath1.ledpin = 0
+  hw.ath1.ledon = 0
+  hw.ath1.ledidle = 270
+  hw.ath1.txantenna = 0
+  hw.ath1.rxantenna = 2
+  hw.ath1.diversity = 1
+  hw.ath1.txintrperiod = 5
+  hw.ath1.diag = 0
+  hw.ath1.tpscale = 0
+  hw.ath1.txpowlimit = 63
+  hw.ath1.maxtxpower = 40
+  hw.ath1.tpc = 0
+  hw.ath1.tpack = 63
+  hw.ath1.tpcts = 63
+  hw.ath1.regdomain = 16
+
+~6" MMCX-N jumper to Anritsu spectrum analyzer, set for 22 MHz channel,
+peak hold with multiple minute integration time.
+
+maxtxpower	dBm
+tpc=0		26.5
+38		26.5
+0		15.1
+10		14.8
+20		18.0
+25		19.8
+30		21.7
+34		23.7
+38		27.0
+15		16.1
+20		18.2
+21		18.7
+22		19.3
+23		19.6
+24		20.1
+25		20.5
+
+Other experiments:
+
+* Setting tpack, tpcts to 0 did not affect results.
+* Setting maxtxpower to -1 was like max, read back as 63.
+* Setting tpscale to 1 or 4 did not appear to affect results.
+* Setting txantenna to 1 did not affect results
+* Setting txantenna to 2 moved most tx power to 2nd connector
+* Setting diversity to 0 made antenna not selected by txantenna
+  essentially 0
+
+
+Other observations:
+
+Transmitted noise floor on adjacent channels was about -35 dBm/100 kHz
+(if we are reading the scale of power per bin and resolution bandwidth
+correctly).   This corresponds to -12 dBm total noise in the band,
+which comprares reasonably with +25 dBm total power.
+
+The transmitted signal quality degrades a lot at txpower 34 and up,
+with out of band noise.

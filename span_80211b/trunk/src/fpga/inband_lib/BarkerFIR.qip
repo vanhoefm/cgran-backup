@@ -1,0 +1,9 @@
+set_global_assignment -name VHDL_FILE [file join C:/altera/72/ip/fir_compiler/lib "auk_dspip_lib_pkg_fir_72.vhd"]
+set_global_assignment -name VHDL_FILE [file join C:/altera/72/ip/fir_compiler/lib "auk_dspip_math_pkg_fir_72.vhd"]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "barkerfir_st.v"]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) "barkerfir_ast.vhd"]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "barkerfir.v"]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) "BarkerFIR_ast.vhd"]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "BarkerFIR_st.v"]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "BarkerFIR.v"]
+set_global_assignment -name SEARCH_PATH  C:/altera/72/ip/fir_compiler/lib

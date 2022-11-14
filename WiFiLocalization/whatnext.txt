@@ -1,0 +1,34 @@
+What's next?
+
+Simulator:
+* Recreate simulator's "Connect to solver" client code and socket management
+* Provide simulator GUI feature for creating a new Intruder
+-> Menu command creates a pop-up window with:
+  -> a place to enter the Intruder's location
+  -> a dropdown to select which Pattern you want
+  -> a place to enter other Pattern parameters (the number of steps to take, the velocity, etc for SquarePattern1)
+* Make sure everything is connected (right now it is not)
+* Make sure everything works 
+
+Solver:
+* Move Triplet related functions into a new Triplet class, they are currently in Measurement and Packetlist
+* Make aggregator output Triplets (and finish it)
+* Build localization algorithm to turn a Triplet into a Measurement
+* Check buffer structure that is used to pass Packets to the aggregator and Measurements to the GUI
+* Make sure everything is connected
+* Make sure everything works 
+
+Sensor:
+* Grab "pktdump" code from the lab 
+* Rebuild/uncomment TCP related functions
+
+Later:
+* Dynamic parameter setting
+* Multiple path loss models
+* Better documentation
+* Better pop up boxes
+* Faster button picture updates (don't delete/make new bitmap class)
+* TEST IT MORE
+* See if Ryan/Saul can understand documentation
+* Clean up code comments and remove junk
+

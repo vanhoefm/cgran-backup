@@ -1,0 +1,26 @@
+#!/bin/bash
+
+lib=pr
+
+echo -n "Class: "
+read class
+
+echo -n "Args: "
+read args
+
+LIBCLASS=`echo ${lib}_${class} | tr [:lower:] [:upper:]`
+
+fnh=${lib}_${class}.h
+fncc=${lib}_${class}.cc
+fni=${lib}_${class}.i
+
+test -f $fnh && exit 1
+test -f $fncc && exit 1
+test -f $fni && exit 1
+
+argb=`echo $args | sed "h;s/[[:space:]]*,.*//;s/.*[[:space:]]//;p;s/.*//;x;s/,[[:space:]]*/\\n/;D" | sed '$!s/$/, /' | xargs echo`
+
+sed "s/%lib/$lib/g;s/%class/$class/g;s/%args/$args/g;s/%argb/$argb/g;s/%LIBCLASS/$LIBCLASS/g" < block.h > $fnh
+sed "s/%lib/$lib/g;s/%class/$class/g;s/%args/$args/g;s/%argb/$argb/g;s/%LIBCLASS/$LIBCLASS/g" < block.cc > $fncc
+sed "s/%lib/$lib/g;s/%class/$class/g;s/%args/$args/g;s/%argb/$argb/g;s/%LIBCLASS/$LIBCLASS/g" < block.i > $fni
+

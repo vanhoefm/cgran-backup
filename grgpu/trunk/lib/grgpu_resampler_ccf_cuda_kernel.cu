@@ -1,0 +1,148 @@
+/* -*- cuda -*- */
+/*
+ * Copyright 2011 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ *
+ * This file was modified by William Plishker in 2011 for the GNU Radio 
+ * support package GRGPU.  See www.cgran.org/wiki/GRGPU for more details.
+ */ 
+
+#include <stdio.h>
+#include <assert.h>
+#include <time.h>
+#include <cutil_inline.h>
+#include <grgpu_utils.h>
+
+	// Copy to Device Memory
+typedef struct{
+  float *d_taps;
+  float2 *d_first_time_buff;
+  grgpu_fifo *fifo;
+  int upsample_rate;
+  int downsample_rate;
+  int num_of_taps;
+  int start_point;
+} grgpu_resampler_fff_context;
+
+	
+
+
+void grgpu_resampler_ccf_cuda_init_device(void**context, float *h_taps) 
+{
+  if(*context==0x0){  // TODO Make this programmatic
+    (*context) = malloc(sizeof(grgpu_resampler_fff_context));
+    grgpu_resampler_fff_context * rc = (grgpu_resampler_fff_context*)(*context);
+    rc->num_of_taps = 201;
+    cutilSafeCall(cudaMalloc( (void**) &rc->d_taps, rc->num_of_taps*sizeof(float)));
+    rc->upsample_rate = 10;
+    rc->downsample_rate = 7;
+    rc->start_point = 0;
+
+    rc->fifo  = (grgpu_fifo *) malloc(sizeof(grgpu_fifo));
+    grgpu_fifo *fifo = rc->fifo;
+    fifo->length = 512*1024;//*rc->upsample_rate;
+    fifo->history = 0;
+    fifo->token_size = sizeof(float2);
+    cudaMalloc(((void**)&(fifo->buffer)), fifo->token_size*(fifo->length));
+    fifo->head = fifo->buffer;
+    checkCUDAError("Malloc");
+
+    cutilSafeCall(cudaMemcpy( rc->d_taps, h_taps, rc->num_of_taps*sizeof(float), cudaMemcpyHostToDevice));
+
+    cutilSafeCall(cudaMalloc( (void**) &(rc->d_first_time_buff), (rc->num_of_taps+1024*rc->upsample_rate)*sizeof(float2)));
+  }
+}
+	
+
+__global__ void grgpu_resampler_ccf_cuda_kernel( float2* d_idata, float2* d_odata, float* d_taps, int UPSAMPLE_RATE, int DOWNSAMPLE_RATE, int NUM_OF_TAPS, int DATA_OUT_LENGTH, int start_point)
+{
+	
+	int i = blockIdx.x * blockDim.x + threadIdx.x;
+	
+	int x = i * DOWNSAMPLE_RATE + start_point+(NUM_OF_TAPS-1)*UPSAMPLE_RATE;
+	
+	float2 sum = make_float2(0.0,0.0);
+	
+	if (i < DATA_OUT_LENGTH)
+	{
+		for(int j = x - x % UPSAMPLE_RATE; j > x-NUM_OF_TAPS ; j = j-UPSAMPLE_RATE)
+		{
+			sum.x = sum.x + d_idata[j/UPSAMPLE_RATE].x * d_taps[x-j];
+			sum.y = sum.y + d_idata[j/UPSAMPLE_RATE].y * d_taps[x-j];
+		}
+		
+		d_odata[i] = sum;
+	}
+	
+}
+
+
+void grgpu_resampler_ccf_cuda_work_device(int noutput_items, const unsigned long* input_items,unsigned long* output_items, void**context, float* h_taps, int ninput_items) 
+{
+  // pointer for device memory
+  float2 *d_idata = (float2 *) grgpu_fifo_pop_device((unsigned long*)&(input_items[0]), ninput_items, sizeof(float2));
+  float2 *d_odata;
+  grgpu_resampler_fff_context * rc;
+  //  unsigned int o_size = (noutput_items) * sizeof (float);
+  if(*context==0x0){
+    printf("init\n");
+    grgpu_resampler_ccf_cuda_init_device(context, h_taps);
+    rc = (grgpu_resampler_fff_context*)(*context);
+    float2 *zeros;
+    zeros = (float2 *) malloc((rc->num_of_taps-1)*sizeof(float2));
+    for(int i=0; i<rc->num_of_taps-1; i++)
+      zeros[i]= make_float2(0.0,0.0);
+    cutilSafeCall(cudaMemcpy( rc->d_first_time_buff, zeros, (rc->num_of_taps-1)*sizeof(float2), cudaMemcpyHostToDevice));
+    cutilSafeCall(cudaMemcpy( (void*)&(rc->d_first_time_buff[rc->num_of_taps-1]), (void*)d_idata, (ninput_items)*sizeof(float2), cudaMemcpyDeviceToDevice));
+    d_idata = rc->d_first_time_buff;
+  } else {
+    rc = (grgpu_resampler_fff_context *) *context;
+    d_idata = (float2*)(((unsigned long)d_idata) - (rc->num_of_taps-1)*rc->fifo->token_size);
+  }
+
+  // Use in-place buffer for performance
+  //d_odata = (float*)input_items[0];
+  d_odata = (float2*)rc->fifo->head;
+  unsigned long orig_head = rc->fifo->head;
+  //  cudaMalloc( (void **) &d_odata, o_size);
+  //  checkCUDAError("Malloc");
+		
+#define tpb 128
+  int grid = noutput_items/tpb;
+  if(noutput_items % tpb)
+    grid++;
+  dim3 dimGrid(grid);
+  dim3 dimBlock(tpb);
+  
+  printf("kernel call %d, %d, %d, %d, %d\n", rc->upsample_rate, rc->downsample_rate, rc->num_of_taps, noutput_items, rc->start_point);
+  grgpu_resampler_ccf_cuda_kernel<<<noutput_items / 256 + 1, 256>>>( d_idata, d_odata, rc->d_taps, rc->upsample_rate, rc->downsample_rate, rc->num_of_taps, noutput_items, rc->start_point);
+  checkCUDAError("kernel execution 1");
+
+  rc->start_point = (noutput_items-rc->start_point)%rc->downsample_rate;
+  rc->fifo->head = rc->fifo->head + noutput_items*rc->fifo->token_size;
+
+  printf("d_odata: %p\n", d_odata);
+
+  //  cudaFree(d_idata);
+
+  //now fill out the output output items array with the corresponding device pointers
+  for(int i=0; i<noutput_items; i++){
+    output_items[i]=orig_head+i*rc->fifo->token_size;
+  }
+}

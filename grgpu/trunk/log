@@ -1,0 +1,155 @@
+Making check in config
+make[1]: Entering directory `/home/plishker/svn/grgpu/config'
+make[1]: Nothing to be done for `check'.
+make[1]: Leaving directory `/home/plishker/svn/grgpu/config'
+Making check in lib
+make[1]: Entering directory `/home/plishker/svn/grgpu/lib'
+make  check-TESTS
+make[2]: Entering directory `/home/plishker/svn/grgpu/lib'
+..
+
+
+OK (2 tests)
+
+
+PASS: test_all
+=============
+1 test passed
+=============
+make[2]: Leaving directory `/home/plishker/svn/grgpu/lib'
+make[1]: Leaving directory `/home/plishker/svn/grgpu/lib'
+Making check in swig
+make[1]: Entering directory `/home/plishker/svn/grgpu/swig'
+make  check-am
+make[2]: Entering directory `/home/plishker/svn/grgpu/swig'
+make[2]: Nothing to be done for `check-am'.
+make[2]: Leaving directory `/home/plishker/svn/grgpu/swig'
+make[1]: Leaving directory `/home/plishker/svn/grgpu/swig'
+Making check in python
+make[1]: Entering directory `/home/plishker/svn/grgpu/python'
+make  check-TESTS
+make[2]: Entering directory `/home/plishker/svn/grgpu/python'
+/home/plishker/svn/grgpu/lib:/home/plishker/svn/grgpu/lib/.libs:/home/plishker/svn/grgpu/swig:/home/plishker/svn/grgpu/swig/.libs:/home/plishker/svn/grgpu/python:/usr/local/lib/python2.6/dist-packages:/usr/local/lib/python2.6/dist-packages:/home/plishker/src/vtk-sandbox/vtk-build2/Wrapping/Python:/usr/local/cuda/lib:/home/plishker/src/vtk-sandbox/vtk-build2/bin:/home/plishker/src/itk-sandbox/itk-build-3.20/bin
+Executing Work function for fir.
+From general Work function, I/O: 0.000000, 0.000000 , noutput:8191.
+Elements per block:103, Running blocks:80
+Executing Work function for fir.
+From general Work function, I/O: -0.763007, 0.000000 , noutput:1023.
+Elements per block:13, Running blocks:79
+Executing Work function for fir.
+From general Work function, I/O: 0.287153, 0.000000 , noutput:511.
+Elements per block:7, Running blocks:73
+Executing Work function for fir.
+From general Work function, I/O: -0.980078, 0.000000 , noutput:255.
+Elements per block:4, Running blocks:64
+Executing Work function for fir.
+From general Work function, I/O: 0.744550, 0.000000 , noutput:15.
+Elements per block:1, Running blocks:15
+Executing Work function for fir.
+From general Work function, I/O: -0.999736, 0.000000 , noutput:3.
+Elements per block:1, Running blocks:3
+Executing Work function for fir.
+From general Work function, I/O: 0.992973, 0.000000 , noutput:1.
+Elements per block:1, Running blocks:1
+Executing Work function for fir.
+From general Work function, I/O: 0.636087, 0.000000 , noutput:1.
+Elements per block:1, Running blocks:1
+Now running reference
+running test2
+Executing Work function for H2D.
+H2D: head 0x200320, end 0x300000, new end 0x208320
+H2D: writing to 0x200320, for 32768 (8192)
+H2D, I/O: 0.000000, 0x200320 , noutput:8192.
+D2H input device pointer: 0x200320
+i=8192 
+quick check: -0.916485
+Executing Work function for H2D.
+H2D: head 0x208320, end 0x300000, new end 0x209320
+H2D: writing to 0x208320, for 4096 (1024)
+H2D, I/O: -0.956173, 0x208320 , noutput:1024.
+D2H input device pointer: 0x208320
+i=1024 
+quick check: -0.650883
+in: [0.0, 0.8414709848078965, 0.90929742682568171, 0.14112000805986721, -0.7568024953079282]
+out: [0.0, 0.84147095680236816, 0.9092974066734314, 0.14112000167369843, -0.75680249929428101]
+running test3
+Executing Work function for H2D.
+H2D: head 0x200320, end 0x300000, new end 0x208320
+H2D: writing to 0x200320, for 32768 (8192)
+H2D, I/O: 0.000000, 0x200320 , noutput:8192.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2097952, 0 , noutput:8191.
+Executing Work function for D2H. 4096
+D2H input device pointer: 0x200320
+i=4096 
+quick check: -0.716485
+D2H, I/O: 2097952, 0.200000 , noutput:4096.
+Executing Work function for H2D.
+H2D: head 0x208320, end 0x300000, new end 0x209320
+H2D: writing to 0x208320, for 4096 (1024)
+H2D, I/O: -0.956173, 0x208320 , noutput:1024.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2130716, 0 , noutput:768.
+Executing Work function for D2H. 4096
+D2H input device pointer: 0x204320
+i=4096 
+quick check: -0.774743
+D2H, I/O: 2114336, -0.394642 , noutput:4096.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2133788, 0 , noutput:244.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134764, 0 , noutput:7.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134792, 0 , noutput:3.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134804, 0 , noutput:3.
+Executing Work function for D2H. 1024
+D2H input device pointer: 0x208320
+i=1024 
+quick check: -0.450883
+D2H, I/O: 2130720, -0.756173 , noutput:1024.
+in003: [0.0, 0.8414709848078965, 0.90929742682568171, 0.14112000805986721, -0.7568024953079282]
+ref003: [0.20000000298023224, 1.041471004486084, 1.1092973947525024, 0.34112000465393066, -0.55680251121520996]
+out003: [0.20000000298023224, 1.041471004486084, 1.1092973947525024, 0.34112000465393066, -0.55680251121520996]
+H2D: head 0x200320, end 0x300000, new end 0x208320
+H2D: writing to 0x200320, for 32768 (8192)
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2097952, 0 , noutput:8191.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2097952, 0 , noutput:8191.
+D2H input device pointer: 0x200320
+i=4096 
+quick check: -0.516485
+H2D: head 0x208320, end 0x300000, new end 0x209320
+H2D: writing to 0x208320, for 4096 (1024)
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2130716, 0 , noutput:1023.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2130716, 0 , noutput:768.
+D2H input device pointer: 0x204320
+i=4096 
+quick check: -0.574743
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134808, 0 , noutput:1.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2133788, 0 , noutput:244.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134812, 0 , noutput:1.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134764, 0 , noutput:7.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134792, 0 , noutput:3.
+Executing Work function for add_const_ff_cuda.
+From general Work function, I/O: 2134804, 0 , noutput:3.
+D2H input device pointer: 0x208320
+i=1024 
+quick check: -0.250883
+in004: [0.0, 0.8414709848078965, 0.90929742682568171, 0.14112000805986721, -0.7568024953079282]
+ref004: [0.40000000596046448, 1.2414710521697998, 1.3092974424362183, 0.54111999273300171, -0.35680252313613892]
+out004: [0.40000000596046448, 1.2414710521697998, 1.3092974424362183, 0.54111999273300171, -0.35680252313613892]
+FAIL: run_tests
+==================
+1 of 1 test failed
+==================
+make[2]: Leaving directory `/home/plishker/svn/grgpu/python'
+make[1]: Leaving directory `/home/plishker/svn/grgpu/python'

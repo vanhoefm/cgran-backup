@@ -1,0 +1,8 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"dtb.start()"),
+    vrmeme:update({dial_tone,"last"},"start"),
+    {html,"ok"}.
+</erl>
+</html>

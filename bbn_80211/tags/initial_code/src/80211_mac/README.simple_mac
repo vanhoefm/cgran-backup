@@ -1,0 +1,144 @@
+simple_mac.py
+
+This program builds on the tunnel.py example by adding a simple MAC.
+As with the null MAC, it creates a "TAP" interface in the kernel and
+sends and receives ethernet packets through it.  This MAC adds an 802.11
+frame to each packet before it is sent to provide addressing
+information and fragmentation support.  Other 802.11 features are not
+currently supported.
+
+You have the option to use the "TUN" interface and send IP packets
+without ethernet if you need to.  The instructions for this are
+described below.
+
+To run this program you'll need to be root or otherwise be able to
+open the tap interface.  See the instructions for tunnel.py for
+additional information about the tap interface. You'll need to run a
+copy of the program on at least two different machines and will need
+to configure the program and routes on each machine.
+
+The remainder of this README describes how to configure and run
+the simple mac program.
+
+Running
+
+The simple_mac program must be run on each machine that will be
+communicating.  The program must be run as root so that it can access
+the 'tap' device.
+
+So for example, you can start the program as follows:
+
+  # simple_mac.py 
+
+A full list of command line options are included below.
+
+Once you start the program, you then need to set up the networking
+on each machine so that packets sent to the other hosts are sent
+through the 'tap' interface. 
+
+First you need to get the name of the 'tap' device that was created by
+starting the program.  The interface name should be printed on
+startup.
+
+With this information, you need to configure the IP address of the 
+interface and set the route to the other machines to use that
+interface.  For example on Linux:
+
+On machine A:
+
+  # ifconfig gr0 10.10.10.1
+
+On machine B:
+
+  # ifconfig gr0 10.10.10.2
+
+Now, on machine A you shold be able to ping machine B:
+
+  $ ping 10.10.10.2
+
+
+Running using IP packets
+
+When ethernet packets are used, the souce and destination MAC
+addresses are taken from the ethernet header.  Those addresses are not
+available from the IP packet, so the mappings from IP addresses to MAC
+addresses.  To use IP packets, specify "--tun" on the command line and
+it will take packets from the "TUN" device instead of the "TAP"
+device.  The command line requires that the MAC address that is to be
+assigned to this host is listed on the command line.  The MACs
+assigned to each host must be different.  Additionally, the IP to MAC
+mappings for each of the other hosts that will be involved in
+communications must be specified either on the command line or in the
+configuration file as is described below.
+
+So for example, you can start the program as follows:
+
+  # simple_mac.py --tun --macfile=ipmac.config --my-mac=12:23:34:45:56:67
+
+The remainder of the instructions to run the program are the same as
+above.
+
+
+Configuration File
+
+There is an optional configuration file that allows the IP address to
+MAC address mappings to be configured instead of placed on the command
+line.  A sample configuration file is included as simple-config.sample.
+The default name for the configuration file is simple-config, but the
+configuraiton filename may be set with the --macfile option.
+
+The file contains a list of mappings of the form:
+<IP address>=<MAC address>
+
+listed one per line.  Lines that start with '#' are considered comments.
+For example:
+# addr 1
+10.10.10.10=ab:ab:ab:ab:ab:ab
+# addr 2
+10.10.10.11=ab:ab:ab:ab:ab:ac
+
+The addresses must correspond to the addresses used when starting the 
+program on each host.  As described above, when starting the program,
+you assign the radio a MAC address, then use ifconfig to assign it an
+IP address.  The mappings in the configuration file must match these 
+assigned pairings.
+
+
+Options
+
+The full usage and options for running the mac program are:
+
+
+usage: simple_mac.py [options] [ipaddr=macaddr] ...
+
+options:
+  -h, --help            show this help message and exit
+  -f FREQ, --freq=FREQ  set Tx and Rx frequency to FREQ [default=423100000.0]
+  -r BITRATE, --bitrate=BITRATE
+                        specify bitrate.  spb and interp will be derived.
+  -g RX_GAIN, --rx-gain=RX_GAIN
+                        set rx gain
+  -T TX_SUBDEV_SPEC, --tx-subdev-spec=TX_SUBDEV_SPEC
+                        select USRP Tx side A or B
+  -R RX_SUBDEV_SPEC, --rx-subdev-spec=RX_SUBDEV_SPEC
+                        select USRP Rx side A or B
+  -S SPB, --spb=SPB     set samples/baud [default=none]
+  -d DECIM, --decim=DECIM
+                        set fpga decim rate to DECIM [default=none]
+  -i INTERP, --interp=INTERP
+                        set fpga interpolation rate to INTERP [default=none]
+  -c CARRIER_THRESHOLD, --carrier-threshold=CARRIER_THRESHOLD
+                        set carrier detect threshold (dB) [default=30]
+  --bt=BT               set bandwidth-time product [default=0.3]
+  --tun-device-filename=TUN_DEVICE_FILENAME
+                        path to tun device file [default=/dev/tap]
+  -b BSSID, --bssid=BSSID
+                        set bssid for network in the form xx:xx:xx:xx:xx:xx
+  --tun                 use tun device instead of tap to pass packets.
+  --macfile=MACFILE     filename containing a set of ipaddr=macaddr mappings,
+                        only needed with --tun.
+  -v, --verbose         
+  -B FUSB_BLOCK_SIZE, --fusb-block-size=FUSB_BLOCK_SIZE
+                        specify fast usb block size [default=0]
+  -N FUSB_NBLOCKS, --fusb-nblocks=FUSB_NBLOCKS
+                        specify number of fast usb blocks [default=0]

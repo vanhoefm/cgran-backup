@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<programlisting>
+  1  /* -*- c++ -*- */
+  2  /*
+  3   * Copyright 2004,2007 Free Software Foundation, Inc.
+  4   * 
+  5   * This file is part of GNU Radio
+  6   * 
+  7   * GNU Radio is free software; you can redistribute it and/or modify
+  8   * it under the terms of the GNU General Public License as published by
+  9   * the Free Software Foundation; either version 3, or (at your option)
+ 10   * any later version.
+ 11   * 
+ 12   * GNU Radio is distributed in the hope that it will be useful,
+ 13   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ 14   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ 15   * GNU General Public License for more details.
+ 16   * 
+ 17   * You should have received a copy of the GNU General Public License
+ 18   * along with GNU Radio; see the file COPYING.  If not, write to
+ 19   * the Free Software Foundation, Inc., 51 Franklin Street,
+ 20   * Boston, MA 02110-1301, USA.
+ 21   */
+ 22  
+ 23  #ifndef INCLUDED_GR_BLOCK_H
+ 24  #define INCLUDED_GR_BLOCK_H
+ 25  
+ 26  #include &lt;gr_basic_block.h&gt;
+ 27  
+ 28  /*!
+ 29   * \brief The abstract base class for all &apos;terminal&apos; processing blocks.
+ 30   * \ingroup base
+ 31   *
+ 32   * A signal processing flow is constructed by creating a tree of 
+ 33   * hierarchical blocks, which at any level may also contain terminal nodes
+ 34   * that actually implement signal processing functions. This is the base
+ 35   * class for all such leaf nodes.
+ 36   
+ 37   * Blocks have a set of input streams and output streams.  The
+ 38   * input_signature and output_signature define the number of input
+ 39   * streams and output streams respectively, and the type of the data
+ 40   * items in each stream.
+ 41   *
+ 42   * Although blocks may consume data on each input stream at a
+ 43   * different rate, all outputs streams must produce data at the same
+ 44   * rate.  That rate may be different from any of the input rates.
+ 45   *
+ 46   * User derived blocks override two methods, forecast and general_work,
+ 47   * to implement their signal processing behavior. forecast is called
+ 48   * by the system scheduler to determine how many items are required on
+ 49   * each input stream in order to produce a given number of output
+ 50   * items.
+ 51   *
+ 52   * general_work is called to perform the signal processing in the block.
+ 53   * It reads the input items and writes the output items.
+ 54   */
+ 55  
+ 56  class gr_block : public gr_basic_block {
+ 57  
+ 58   public:
+ 59    
+ 60    virtual ~gr_block ();
+ 61  
+ 62    /*!
+ 63     * Assume block computes y_i = f(x_i, x_i-1, x_i-2, x_i-3...)
+ 64     * History is the number of x_i&apos;s that are examined to produce one y_i.
+ 65     * This comes in handy for FIR filters, where we use history to
+ 66     * ensure that our input contains the appropriate &quot;history&quot; for the
+ 67     * filter.   History should be equal to the number of filter taps.
+ 68     */
+ 69    unsigned history () const { return d_history; }
+ 70    void  set_history (unsigned history) { d_history = history; }
+ 71    
+ 72    /*!
+ 73     * \brief return true if this block has a fixed input to output rate
+ 74     *
+ 75     * If true, then fixed_rate_in_to_out and fixed_rate_out_to_in may be called.
+ 76     */
+ 77    bool fixed_rate() const { return d_fixed_rate; }
+ 78  
+ 79    // ----------------------------------------------------------------
+ 80    //            override these to define your behavior
+ 81    // ----------------------------------------------------------------
+ 82  
+ 83    /*!
+ 84     * \brief  Estimate input requirements given output request
+ 85     *
+ 86     * \param noutput_items           number of output items to produce
+ 87     * \param ninput_items_required   number of input items required on each input stream
+ 88     *
+ 89     * Given a request to product \p noutput_items, estimate the number of
+ 90     * data items required on each input stream.  The estimate doesn&apos;t have
+ 91     * to be exact, but should be close.
+ 92     */
+ 93    virtual void forecast (int noutput_items,
+ 94                           gr_vector_int &amp;ninput_items_required);
+ 95  
+ 96    /*!
+ 97     * \brief compute output items from input items
+ 98     *
+ 99     * \param noutput_items       number of output items to write on each output stream
+100     * \param ninput_items        number of input items available on each input stream
+101     * \param input_items         vector of pointers to the input items, one entry per input stream
+102     * \param output_items        vector of pointers to the output items, one entry per output stream
+103     *
+104     * \returns number of items actually written to each output stream, or -1 on EOF.
+105     * It is OK to return a value less than noutput_items.  -1 &lt;= return value &lt;= noutput_items
+106     *
+107     * general_work must call consume or consume_each to indicate how many items
+108     * were consumed on each input stream.
+109     */
+110    virtual int general_work (int noutput_items,
+111                              gr_vector_int &amp;ninput_items,
+112                              gr_vector_const_void_star &amp;input_items,
+113                              gr_vector_void_star &amp;output_items) = 0;
+114  
+115    /*!
+116     * \brief Called to enable drivers, etc for i/o devices.
+117     *
+118     * This allows a block to enable an associated driver to begin
+119     * transfering data just before we start to execute the scheduler.
+120     * The end result is that this reduces latency in the pipeline when
+121     * dealing with audio devices, usrps, etc.
+122     */
+123    virtual bool start();
+124  
+125    /*!
+126     * \brief Called to disable drivers, etc for i/o devices.
+127     */
+128    virtual bool stop();
+129  
+130    // ----------------------------------------------------------------
+131  
+132    /*!
+133     * \brief Constrain the noutput_items argument passed to forecast and general_work
+134     *
+135     * set_output_multiple causes the scheduler to ensure that the noutput_items
+136     * argument passed to forecast and general_work will be an integer multiple
+137     * of \param multiple  The default value of output multiple is 1.
+138     */
+139    void set_output_multiple (int multiple);
+140    int  output_multiple () const { return d_output_multiple; }
+141  
+142    /*!
+143     * \brief Tell the scheduler \p how_many_items of input stream \p which_input were consumed.
+144     */
+145    void consume (int which_input, int how_many_items);
+146  
+147    /*!
+148     * \brief Tell the scheduler \p how_many_items were consumed on each input stream.
+149     */
+150    void consume_each (int how_many_items);
+151  
+152    /*!
+153     * \brief Set the approximate output rate / input rate
+154     *
+155     * Provide a hint to the buffer allocator and scheduler.
+156     * The default relative_rate is 1.0
+157     *
+158     * decimators have relative_rates &lt; 1.0
+159     * interpolators have relative_rates &gt; 1.0
+160     */
+161    void  set_relative_rate (double relative_rate);
+162  
+163    /*!
+164     * \brief return the approximate output rate / input rate
+165     */
+166    double relative_rate () const { return d_relative_rate; }
+167  
+168    /*
+169     * The following two methods provide special case info to the
+170     * scheduler in the event that a block has a fixed input to output
+171     * ratio.  gr_sync_block, gr_sync_decimator and gr_sync_interpolator
+172     * override these.  If you&apos;re fixed rate, subclass one of those.
+173     */
+174    /*!
+175     * \brief Given ninput samples, return number of output samples that will be produced.
+176     * N.B. this is only defined if fixed_rate returns true.
+177     * Generally speaking, you don&apos;t need to override this.
+178     */
+179    virtual int fixed_rate_ninput_to_noutput(int ninput);
+180  
+181    /*!
+182     * \brief Given noutput samples, return number of input samples required to produce noutput.
+183     * N.B. this is only defined if fixed_rate returns true.
+184     * Generally speaking, you don&apos;t need to override this.
+185     */
+186    virtual int fixed_rate_noutput_to_ninput(int noutput);
+187  
+188    // ----------------------------------------------------------------------------
+189  
+190   private:
+191  
+192    int                   d_output_multiple;
+193    double                d_relative_rate;        // approx output_rate / input_rate
+194    gr_block_detail_sptr  d_detail;                   // implementation details
+195    unsigned              d_history;
+196    bool                  d_fixed_rate;
+197      
+198   protected:
+199  
+200    gr_block (const std::string &amp;name,
+201              gr_io_signature_sptr input_signature,
+202              gr_io_signature_sptr output_signature);
+203  
+204    void set_fixed_rate(bool fixed_rate){ d_fixed_rate = fixed_rate; }
+205  
+206    // These are really only for internal use, but leaving them public avoids
+207    // having to work up an ever-varying list of friends
+208  
+209   public:
+210    gr_block_detail_sptr detail () const { return d_detail; }
+211    void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
+212  };
+213  
+214  typedef std::vector&lt;gr_block_sptr&gt; gr_block_vector_t;
+215  typedef std::vector&lt;gr_block_sptr&gt;::iterator gr_block_viter_t;
+216  
+217  inline gr_block_sptr make_gr_block_sptr(gr_basic_block_sptr p)
+218  {
+219    return boost::dynamic_pointer_cast&lt;gr_block, gr_basic_block&gt;(p);
+220  }
+221  
+222  #endif /* INCLUDED_GR_BLOCK_H */
+</programlisting>

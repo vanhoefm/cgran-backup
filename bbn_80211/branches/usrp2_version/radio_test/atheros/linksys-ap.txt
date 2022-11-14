@@ -1,0 +1,12 @@
+$Id: linksys-ap.txt,v 1.1 2006/10/06 20:31:59 gdt Exp $
+
+Bob Vincent measured a Linksys AP during the first week of October, 2006.
+
+Linksys claims +18 dBm output.  At the end of a 100foot spool of what
+I believe is LMR 400 cable, which should have an IL around 6dB, I
+measured +11.7 dBm on the right antenna (farther from the power
+connector) and +11.4 on the left antenna (nearer the power
+connector.
+
+The attenuator setup that we plan to use for receive characterization
+appears to have approximately a 2 dB IL.

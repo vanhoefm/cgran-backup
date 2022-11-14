@@ -1,0 +1,16 @@
+Mediatools is a collection of audio and video processing blocks for use in GNU Radio.
+
+Dependencies include:
+
+    libavcodec-dev
+    libavformat-dev
+    libavutil-dev
+
+    on ubuntu:
+        sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev
+
+    these are all part of the ffmpeg project
+
+Any audio input codec supported by ffmpeg should work, so this source should be cabable of playing mixed playlists of mp3, ogg, flac, wav, wmv, or any other input audio codecs you can build support for in ffmpeg
+
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<programlisting>
+  1  /* -*- c++ -*- */
+  2  
+  3  %include &quot;exception.i&quot;
+  4  %import &quot;gnuradio.i&quot;                            // the common stuff
+  5  
+  6  %{
+  7  #include &quot;gnuradio_swig_bug_workaround.h&quot;       // mandatory bug fix
+  8  #include &quot;howto_square_ff.h&quot;
+  9  #include &lt;stdexcept&gt;
+ 10  %}
+ 11  
+ 12  // ----------------------------------------------------------------
+ 13  
+ 14  /*
+ 15   * First arg is the package prefix.
+ 16   * Second arg is the name of the class minus the prefix.
+ 17   *
+ 18   * This does some behind-the-scenes magic so we can
+ 19   * access howto_square_ff from python as howto.square_ff
+ 20   */
+ 21  GR_SWIG_BLOCK_MAGIC(howto,square_ff);
+ 22  
+ 23  howto_square_ff_sptr howto_make_square_ff ();
+ 24  
+ 25  class howto_square_ff : public gr_block
+ 26  {
+ 27  private:
+ 28    howto_square_ff ();
+ 29  };
+</programlisting>

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+konsole --workdir `pwd` -e ./start_unit -wait ./srcnode.py&
+konsole --workdir `pwd` -e ./start_unit -wait ./relaynode.py&
+konsole --workdir `pwd` -e ./start_unit -wait ./destnode.py&
+konsole --workdir `pwd` -e ./start_unit -wait ./channels.py&
+

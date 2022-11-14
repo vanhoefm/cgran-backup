@@ -1,0 +1,37 @@
+#
+# Copyright 2010 Karlsruhe Institute of Technology, Communications Engineering Lab
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
+
+Please note this is still work in progress, 
+that's why it's still in the testing branch.
+In order to build this you'll need lapack and blas installed.
+Currently you need to make sure they're installed yourself, until I figure out
+how to do this with autotools. 
+If you have any suggestions feel free to contact
+me. 
+Up to now this is just planned as convenient C++ wrappers without python
+wrappers, since NumPy and SciPy already exist for this.
+
+If you're building from svn, you'll need to use this sequence, since
+svn doesn't contain configure or the generated Makefiles.
+
+  $ ./bootstrap
+  $ ./configure
+  $ make
+  $ make check

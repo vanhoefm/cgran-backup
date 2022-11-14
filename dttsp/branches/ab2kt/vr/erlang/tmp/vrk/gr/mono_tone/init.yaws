@@ -1,0 +1,11 @@
+<html>
+<erl>
+out(Arg) ->
+    vrk:execute(Arg,"import mono_tone"),
+    vrk:execute(Arg,"mtb = mono_tone.my_top_block()"),
+    vrmeme:insert({mono_tone,"ampl"},"0.1"),
+    vrmeme:insert({mono_tone,"freq"},"1000.0"),
+    vrmeme:insert({mono_tone,"last"},"init"),
+    {html,"ok"}.
+</erl>
+</html>

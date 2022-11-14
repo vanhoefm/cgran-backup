@@ -1,0 +1,144 @@
+#!/bin/bash
+LOGFILE=/dev/null
+PYTHONPATH=$PYTHONPATH:$HOME/bin:.
+export PYTHONPATH
+DEVID="rtl=0"
+DMFILT=Normal
+FREQ=101.1e6
+SUBDEV=A:RX1
+ANT=J1
+AHW=Default
+XMLPORT=13777
+GAIN=15.0
+RDS=False
+ARATE=48000
+FTUNE=0
+MUTE=-15.0
+DEEMPH=75.0e-6
+VOL=3.5
+LCL_PREFREQS="[91.5e6,92.3e6,101.1e6,103.3e6,106.1e6,106.9e6]"
+LCL_PRENAMES="['CBC-1','JACK','Y101','CBC-2','CHEZ','BEAR']"
+if [ @$FM_PREFREQS@ = @@ ]
+then
+	FM_PREFREQS="$LCL_PREFREQS"
+fi
+if [ @$FM_PRENAMES@ = @@ ]
+then
+	FM_PRENAMES="$LCL_PRENAMES"
+fi
+
+while [ $# -ge 1 ]
+do
+	case $1 in
+	--devid|--devinfo)
+		DEVID=$2
+		shift 2
+		;;
+	--freq)
+		FREQ=$2
+		shift 2
+		;;
+	--subdev)
+		SUBDEV=$2
+		shift 2
+		;;
+	--ant)
+		ANT=$2
+		shift 2
+		;;
+	--ahw)
+		AHW=$2
+		shift 2
+		;;
+	--xmlport)
+		XMLPORT=$2
+		shift 2
+		;;
+	--gain)
+		GAIN=$2
+		shift 2
+		;;
+	--prefreqs)
+		FM_PREFREQS="$2"
+		shift 2
+		;;
+	--prenames)
+		FM_PRENAMES="$2"
+		shift 2
+		;;
+		
+	--logfile)
+		LOGFILE=$2
+		shift 2
+		;;
+
+	--arate)
+		ARATE=$2
+		shift 2
+		;;
+		
+	--deemph)
+		DEEMPH=$2
+		shift 2
+		;;
+		
+	--dmfilt)
+		DMFILT=$2
+		shift 2
+		;;
+
+	--vol)
+		VOL=$2
+		shift 2
+		;;
+		
+	--help)
+		shift
+		cat <<!EOF!
+Usage: simple_fm_rcv [options]
+ --devid    <device_id>     	Default: $DEVID
+ --freq     <frequency>      	Default: $FREQ
+ --ahw      <audio hw>       	Default: $AHW
+ --xmlport  <xmlrpc port>    	Default: $XMLPORT
+ --prefreqs <preset-freqs>   	Default: $FM_PREFREQS
+ --prenames <preset-names>   	Default: $FM_PRENAMES
+ --arate    <audio-srate>    	Default: $ARATE
+ --mute     <mute-level(dB)> 	Default: $MUTE
+ --deemph   <deemph tconst>  	Default: $DEEMPH
+ --logfile  <logfile>        	Default: $LOGFILE
+ --dmfilt   normal/narrow/wide  Default: $DMFILT
+	
+Environment variables:
+
+FM_PREFREQS   Example:  $LCL_PREFREQS
+FM_PRENAMES   Example:  $LCL_PRENAMES
+!EOF!
+		exit
+		;;
+	*)
+		Unrecognized parameter: $1
+		exit
+	esac
+done
+
+case $DMFILT in
+	normal|Normal|Norm|NORMAL)
+		DMFILT=Normal
+		;;
+	narrow|Narrow|NARROW)
+		DMFILT=Narrow
+		;;
+	wide|Wide|WIDE)
+		DMFILT=Wide
+		;;
+	*)
+		echo "Unknown value for --dmfilt: $DMFILT"
+		exit
+		;;
+esac
+
+simple_fm_rcv.py --devid $DEVID --freq $FREQ \
+    --ahw $AHW \
+	--volume $VOL --xmlport $XMLPORT \
+	--prefreqs "$FM_PREFREQS" --prenames "$FM_PRENAMES" --arate $ARATE --mute $MUTE \
+	--dmfilt $DMFILT --deemph $DEEMPH >$LOGFILE 2>&1

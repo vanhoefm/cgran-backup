@@ -1,0 +1,23 @@
+double double
+title
+ubiquiti tx power in dBm vs control value
+invisible -2	10
+invisible 40	30
+box 0		15.1
+box 10		14.8
+box 15		16.1
+box 20		18.0
+box 20		18.2
+box 21		18.7
+box 22		19.3
+box 23		19.6
+box 24		20.1
+box 25		19.8
+box 25		20.5
+box 30		21.7
+box 34		23.7
+box 38		26.5
+box 38		27.0
+; hand fit (26 steps, 10 dB)
+line 12 15 38 25 1
+

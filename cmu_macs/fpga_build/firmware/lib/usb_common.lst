@@ -1,0 +1,1950 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Nov 10 2006)
+                              4 ; This file generated Wed Jan 23 16:41:19 2008
+                              5 ;--------------------------------------------------------
+                              6 	.module usb_common
+                              7 	.optsdcc -mmcs51 --model-small
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _epcs
+                             13 	.globl _plausible_endpoint
+                             14 	.globl _EIPX6
+                             15 	.globl _EIPX5
+                             16 	.globl _EIPX4
+                             17 	.globl _PI2C
+                             18 	.globl _PUSB
+                             19 	.globl _EIEX6
+                             20 	.globl _EIEX5
+                             21 	.globl _EIEX4
+                             22 	.globl _EI2C
+                             23 	.globl _EIUSB
+                             24 	.globl _SMOD1
+                             25 	.globl _ERESI
+                             26 	.globl _RESI
+                             27 	.globl _INT6
+                             28 	.globl _CY
+                             29 	.globl _AC
+                             30 	.globl _F0
+                             31 	.globl _RS1
+                             32 	.globl _RS0
+                             33 	.globl _OV
+                             34 	.globl _FL
+                             35 	.globl _P
+                             36 	.globl _TF2
+                             37 	.globl _EXF2
+                             38 	.globl _RCLK
+                             39 	.globl _TCLK
+                             40 	.globl _EXEN2
+                             41 	.globl _TR2
+                             42 	.globl _C_T2
+                             43 	.globl _CP_RL2
+                             44 	.globl _SM01
+                             45 	.globl _SM11
+                             46 	.globl _SM21
+                             47 	.globl _REN1
+                             48 	.globl _TB81
+                             49 	.globl _RB81
+                             50 	.globl _TI1
+                             51 	.globl _RI1
+                             52 	.globl _PS1
+                             53 	.globl _PT2
+                             54 	.globl _PS0
+                             55 	.globl _PT1
+                             56 	.globl _PX1
+                             57 	.globl _PT0
+                             58 	.globl _PX0
+                             59 	.globl _EA
+                             60 	.globl _ES1
+                             61 	.globl _ET2
+                             62 	.globl _ES0
+                             63 	.globl _ET1
+                             64 	.globl _EX1
+                             65 	.globl _ET0
+                             66 	.globl _EX0
+                             67 	.globl _SM0
+                             68 	.globl _SM1
+                             69 	.globl _SM2
+                             70 	.globl _REN
+                             71 	.globl _TB8
+                             72 	.globl _RB8
+                             73 	.globl _TI
+                             74 	.globl _RI
+                             75 	.globl _TF1
+                             76 	.globl _TR1
+                             77 	.globl _TF0
+                             78 	.globl _TR0
+                             79 	.globl _IE1
+                             80 	.globl _IT1
+                             81 	.globl _IE0
+                             82 	.globl _IT0
+                             83 	.globl _SEL
+                             84 	.globl _EIP
+                             85 	.globl _B
+                             86 	.globl _EIE
+                             87 	.globl _ACC
+                             88 	.globl _EICON
+                             89 	.globl _PSW
+                             90 	.globl _TH2
+                             91 	.globl _TL2
+                             92 	.globl _RCAP2H
+                             93 	.globl _RCAP2L
+                             94 	.globl _T2CON
+                             95 	.globl _SBUF1
+                             96 	.globl _SCON1
+                             97 	.globl _GPIFSGLDATLNOX
+                             98 	.globl _GPIFSGLDATLX
+                             99 	.globl _GPIFSGLDATH
+                            100 	.globl _GPIFTRIG
+                            101 	.globl _EP01STAT
+                            102 	.globl _IP
+                            103 	.globl _OEE
+                            104 	.globl _OED
+                            105 	.globl _OEC
+                            106 	.globl _OEB
+                            107 	.globl _OEA
+                            108 	.globl _IOE
+                            109 	.globl _IOD
+                            110 	.globl _AUTOPTRSETUP
+                            111 	.globl _EP68FIFOFLGS
+                            112 	.globl _EP24FIFOFLGS
+                            113 	.globl _EP2468STAT
+                            114 	.globl _IE
+                            115 	.globl _INT4CLR
+                            116 	.globl _INT2CLR
+                            117 	.globl _IOC
+                            118 	.globl _AUTODAT2
+                            119 	.globl _AUTOPTRL2
+                            120 	.globl _AUTOPTRH2
+                            121 	.globl _AUTODAT1
+                            122 	.globl _APTR1L
+                            123 	.globl _APTR1H
+                            124 	.globl _SBUF0
+                            125 	.globl _SCON0
+                            126 	.globl _MPAGE
+                            127 	.globl _EXIF
+                            128 	.globl _IOB
+                            129 	.globl _CKCON
+                            130 	.globl _TH1
+                            131 	.globl _TH0
+                            132 	.globl _TL1
+                            133 	.globl _TL0
+                            134 	.globl _TMOD
+                            135 	.globl _TCON
+                            136 	.globl _PCON
+                            137 	.globl _DPS
+                            138 	.globl _DPH1
+                            139 	.globl _DPL1
+                            140 	.globl _DPH
+                            141 	.globl _DPL
+                            142 	.globl _SP
+                            143 	.globl _IOA
+                            144 	.globl _EP8FIFOBUF
+                            145 	.globl _EP6FIFOBUF
+                            146 	.globl _EP4FIFOBUF
+                            147 	.globl _EP2FIFOBUF
+                            148 	.globl _EP1INBUF
+                            149 	.globl _EP1OUTBUF
+                            150 	.globl _EP0BUF
+                            151 	.globl _CT4
+                            152 	.globl _CT3
+                            153 	.globl _CT2
+                            154 	.globl _CT1
+                            155 	.globl _USBTEST
+                            156 	.globl _TESTCFG
+                            157 	.globl _DBUG
+                            158 	.globl _UDMACRCQUAL
+                            159 	.globl _UDMACRCL
+                            160 	.globl _UDMACRCH
+                            161 	.globl _GPIFHOLDAMOUNT
+                            162 	.globl _FLOWSTBHPERIOD
+                            163 	.globl _FLOWSTBEDGE
+                            164 	.globl _FLOWSTB
+                            165 	.globl _FLOWHOLDOFF
+                            166 	.globl _FLOWEQ1CTL
+                            167 	.globl _FLOWEQ0CTL
+                            168 	.globl _FLOWLOGIC
+                            169 	.globl _FLOWSTATE
+                            170 	.globl _GPIFABORT
+                            171 	.globl _GPIFREADYSTAT
+                            172 	.globl _GPIFREADYCFG
+                            173 	.globl _XGPIFSGLDATLNOX
+                            174 	.globl _XGPIFSGLDATLX
+                            175 	.globl _XGPIFSGLDATH
+                            176 	.globl _EP8GPIFTRIG
+                            177 	.globl _EP8GPIFPFSTOP
+                            178 	.globl _EP8GPIFFLGSEL
+                            179 	.globl _EP6GPIFTRIG
+                            180 	.globl _EP6GPIFPFSTOP
+                            181 	.globl _EP6GPIFFLGSEL
+                            182 	.globl _EP4GPIFTRIG
+                            183 	.globl _EP4GPIFPFSTOP
+                            184 	.globl _EP4GPIFFLGSEL
+                            185 	.globl _EP2GPIFTRIG
+                            186 	.globl _EP2GPIFPFSTOP
+                            187 	.globl _EP2GPIFFLGSEL
+                            188 	.globl _GPIFTCB0
+                            189 	.globl _GPIFTCB1
+                            190 	.globl _GPIFTCB2
+                            191 	.globl _GPIFTCB3
+                            192 	.globl _GPIFADRL
+                            193 	.globl _GPIFADRH
+                            194 	.globl _GPIFCTLCFG
+                            195 	.globl _GPIFIDLECTL
+                            196 	.globl _GPIFIDLECS
+                            197 	.globl _GPIFWFSELECT
+                            198 	.globl _SETUPDAT
+                            199 	.globl _SUDPTRCTL
+                            200 	.globl _SUDPTRL
+                            201 	.globl _SUDPTRH
+                            202 	.globl _EP8FIFOBCL
+                            203 	.globl _EP8FIFOBCH
+                            204 	.globl _EP6FIFOBCL
+                            205 	.globl _EP6FIFOBCH
+                            206 	.globl _EP4FIFOBCL
+                            207 	.globl _EP4FIFOBCH
+                            208 	.globl _EP2FIFOBCL
+                            209 	.globl _EP2FIFOBCH
+                            210 	.globl _EP8FIFOFLGS
+                            211 	.globl _EP6FIFOFLGS
+                            212 	.globl _EP4FIFOFLGS
+                            213 	.globl _EP2FIFOFLGS
+                            214 	.globl _EP8CS
+                            215 	.globl _EP6CS
+                            216 	.globl _EP4CS
+                            217 	.globl _EP2CS
+                            218 	.globl _EP1INCS
+                            219 	.globl _EP1OUTCS
+                            220 	.globl _EP0CS
+                            221 	.globl _EP8BCL
+                            222 	.globl _EP8BCH
+                            223 	.globl _EP6BCL
+                            224 	.globl _EP6BCH
+                            225 	.globl _EP4BCL
+                            226 	.globl _EP4BCH
+                            227 	.globl _EP2BCL
+                            228 	.globl _EP2BCH
+                            229 	.globl _EP1INBC
+                            230 	.globl _EP1OUTBC
+                            231 	.globl _EP0BCL
+                            232 	.globl _EP0BCH
+                            233 	.globl _FNADDR
+                            234 	.globl _MICROFRAME
+                            235 	.globl _USBFRAMEL
+                            236 	.globl _USBFRAMEH
+                            237 	.globl _TOGCTL
+                            238 	.globl _WAKEUPCS
+                            239 	.globl _SUSPEND
+                            240 	.globl _USBCS
+                            241 	.globl _XAUTODAT2
+                            242 	.globl _XAUTODAT1
+                            243 	.globl _I2CTL
+                            244 	.globl _I2DAT
+                            245 	.globl _I2CS
+                            246 	.globl _PORTECFG
+                            247 	.globl _PORTCCFG
+                            248 	.globl _PORTACFG
+                            249 	.globl _INTSETUP
+                            250 	.globl _INT4IVEC
+                            251 	.globl _INT2IVEC
+                            252 	.globl _CLRERRCNT
+                            253 	.globl _ERRCNTLIM
+                            254 	.globl _USBERRIRQ
+                            255 	.globl _USBERRIE
+                            256 	.globl _GPIFIRQ
+                            257 	.globl _GPIFIE
+                            258 	.globl _EPIRQ
+                            259 	.globl _EPIE
+                            260 	.globl _USBIRQ
+                            261 	.globl _USBIE
+                            262 	.globl _NAKIRQ
+                            263 	.globl _NAKIE
+                            264 	.globl _IBNIRQ
+                            265 	.globl _IBNIE
+                            266 	.globl _EP8FIFOIRQ
+                            267 	.globl _EP8FIFOIE
+                            268 	.globl _EP6FIFOIRQ
+                            269 	.globl _EP6FIFOIE
+                            270 	.globl _EP4FIFOIRQ
+                            271 	.globl _EP4FIFOIE
+                            272 	.globl _EP2FIFOIRQ
+                            273 	.globl _EP2FIFOIE
+                            274 	.globl _OUTPKTEND
+                            275 	.globl _INPKTEND
+                            276 	.globl _EP8ISOINPKTS
+                            277 	.globl _EP6ISOINPKTS
+                            278 	.globl _EP4ISOINPKTS
+                            279 	.globl _EP2ISOINPKTS
+                            280 	.globl _EP8FIFOPFL
+                            281 	.globl _EP8FIFOPFH
+                            282 	.globl _EP6FIFOPFL
+                            283 	.globl _EP6FIFOPFH
+                            284 	.globl _EP4FIFOPFL
+                            285 	.globl _EP4FIFOPFH
+                            286 	.globl _EP2FIFOPFL
+                            287 	.globl _EP2FIFOPFH
+                            288 	.globl _EP8AUTOINLENL
+                            289 	.globl _EP8AUTOINLENH
+                            290 	.globl _EP6AUTOINLENL
+                            291 	.globl _EP6AUTOINLENH
+                            292 	.globl _EP4AUTOINLENL
+                            293 	.globl _EP4AUTOINLENH
+                            294 	.globl _EP2AUTOINLENL
+                            295 	.globl _EP2AUTOINLENH
+                            296 	.globl _EP8FIFOCFG
+                            297 	.globl _EP6FIFOCFG
+                            298 	.globl _EP4FIFOCFG
+                            299 	.globl _EP2FIFOCFG
+                            300 	.globl _EP8CFG
+                            301 	.globl _EP6CFG
+                            302 	.globl _EP4CFG
+                            303 	.globl _EP2CFG
+                            304 	.globl _EP1INCFG
+                            305 	.globl _EP1OUTCFG
+                            306 	.globl _REVCTL
+                            307 	.globl _REVID
+                            308 	.globl _FIFOPINPOLAR
+                            309 	.globl _UART230
+                            310 	.globl _BPADDRL
+                            311 	.globl _BPADDRH
+                            312 	.globl _BREAKPT
+                            313 	.globl _FIFORESET
+                            314 	.globl _PINFLAGSCD
+                            315 	.globl _PINFLAGSAB
+                            316 	.globl _IFCONFIG
+                            317 	.globl _CPUCS
+                            318 	.globl _RES_WAVEDATA_END
+                            319 	.globl _GPIF_WAVE_DATA
+                            320 	.globl __usb_got_SUDAV
+                            321 	.globl _other_config_descr
+                            322 	.globl _current_config_descr
+                            323 	.globl _current_devqual_descr
+                            324 	.globl _current_device_descr
+                            325 	.globl __usb_alt_setting
+                            326 	.globl __usb_config
+                            327 	.globl _usb_install_handlers
+                            328 	.globl _usb_handle_setup_packet
+                            329 ;--------------------------------------------------------
+                            330 ; special function registers
+                            331 ;--------------------------------------------------------
+                            332 	.area RSEG    (DATA)
+                    0080    333 _IOA	=	0x0080
+                    0081    334 _SP	=	0x0081
+                    0082    335 _DPL	=	0x0082
+                    0083    336 _DPH	=	0x0083
+                    0084    337 _DPL1	=	0x0084
+                    0085    338 _DPH1	=	0x0085
+                    0086    339 _DPS	=	0x0086
+                    0087    340 _PCON	=	0x0087
+                    0088    341 _TCON	=	0x0088
+                    0089    342 _TMOD	=	0x0089
+                    008A    343 _TL0	=	0x008a
+                    008B    344 _TL1	=	0x008b
+                    008C    345 _TH0	=	0x008c
+                    008D    346 _TH1	=	0x008d
+                    008E    347 _CKCON	=	0x008e
+                    0090    348 _IOB	=	0x0090
+                    0091    349 _EXIF	=	0x0091
+                    0092    350 _MPAGE	=	0x0092
+                    0098    351 _SCON0	=	0x0098
+                    0099    352 _SBUF0	=	0x0099
+                    009A    353 _APTR1H	=	0x009a
+                    009B    354 _APTR1L	=	0x009b
+                    009C    355 _AUTODAT1	=	0x009c
+                    009D    356 _AUTOPTRH2	=	0x009d
+                    009E    357 _AUTOPTRL2	=	0x009e
+                    009F    358 _AUTODAT2	=	0x009f
+                    00A0    359 _IOC	=	0x00a0
+                    00A1    360 _INT2CLR	=	0x00a1
+                    00A2    361 _INT4CLR	=	0x00a2
+                    00A8    362 _IE	=	0x00a8
+                    00AA    363 _EP2468STAT	=	0x00aa
+                    00AB    364 _EP24FIFOFLGS	=	0x00ab
+                    00AC    365 _EP68FIFOFLGS	=	0x00ac
+                    00AF    366 _AUTOPTRSETUP	=	0x00af
+                    00B0    367 _IOD	=	0x00b0
+                    00B1    368 _IOE	=	0x00b1
+                    00B2    369 _OEA	=	0x00b2
+                    00B3    370 _OEB	=	0x00b3
+                    00B4    371 _OEC	=	0x00b4
+                    00B5    372 _OED	=	0x00b5
+                    00B6    373 _OEE	=	0x00b6
+                    00B8    374 _IP	=	0x00b8
+                    00BA    375 _EP01STAT	=	0x00ba
+                    00BB    376 _GPIFTRIG	=	0x00bb
+                    00BD    377 _GPIFSGLDATH	=	0x00bd
+                    00BE    378 _GPIFSGLDATLX	=	0x00be
+                    00BF    379 _GPIFSGLDATLNOX	=	0x00bf
+                    00C0    380 _SCON1	=	0x00c0
+                    00C1    381 _SBUF1	=	0x00c1
+                    00C8    382 _T2CON	=	0x00c8
+                    00CA    383 _RCAP2L	=	0x00ca
+                    00CB    384 _RCAP2H	=	0x00cb
+                    00CC    385 _TL2	=	0x00cc
+                    00CD    386 _TH2	=	0x00cd
+                    00D0    387 _PSW	=	0x00d0
+                    00D8    388 _EICON	=	0x00d8
+                    00E0    389 _ACC	=	0x00e0
+                    00E8    390 _EIE	=	0x00e8
+                    00F0    391 _B	=	0x00f0
+                    00F8    392 _EIP	=	0x00f8
+                            393 ;--------------------------------------------------------
+                            394 ; special function bits
+                            395 ;--------------------------------------------------------
+                            396 	.area RSEG    (DATA)
+                    0086    397 _SEL	=	0x0086
+                    0088    398 _IT0	=	0x0088
+                    0089    399 _IE0	=	0x0089
+                    008A    400 _IT1	=	0x008a
+                    008B    401 _IE1	=	0x008b
+                    008C    402 _TR0	=	0x008c
+                    008D    403 _TF0	=	0x008d
+                    008E    404 _TR1	=	0x008e
+                    008F    405 _TF1	=	0x008f
+                    0098    406 _RI	=	0x0098
+                    0099    407 _TI	=	0x0099
+                    009A    408 _RB8	=	0x009a
+                    009B    409 _TB8	=	0x009b
+                    009C    410 _REN	=	0x009c
+                    009D    411 _SM2	=	0x009d
+                    009E    412 _SM1	=	0x009e
+                    009F    413 _SM0	=	0x009f
+                    00A8    414 _EX0	=	0x00a8
+                    00A9    415 _ET0	=	0x00a9
+                    00AA    416 _EX1	=	0x00aa
+                    00AB    417 _ET1	=	0x00ab
+                    00AC    418 _ES0	=	0x00ac
+                    00AD    419 _ET2	=	0x00ad
+                    00AE    420 _ES1	=	0x00ae
+                    00AF    421 _EA	=	0x00af
+                    00B8    422 _PX0	=	0x00b8
+                    00B9    423 _PT0	=	0x00b9
+                    00BA    424 _PX1	=	0x00ba
+                    00BB    425 _PT1	=	0x00bb
+                    00BC    426 _PS0	=	0x00bc
+                    00BD    427 _PT2	=	0x00bd
+                    00BE    428 _PS1	=	0x00be
+                    00C0    429 _RI1	=	0x00c0
+                    00C1    430 _TI1	=	0x00c1
+                    00C2    431 _RB81	=	0x00c2
+                    00C3    432 _TB81	=	0x00c3
+                    00C4    433 _REN1	=	0x00c4
+                    00C5    434 _SM21	=	0x00c5
+                    00C6    435 _SM11	=	0x00c6
+                    00C7    436 _SM01	=	0x00c7
+                    00C8    437 _CP_RL2	=	0x00c8
+                    00C9    438 _C_T2	=	0x00c9
+                    00CA    439 _TR2	=	0x00ca
+                    00CB    440 _EXEN2	=	0x00cb
+                    00CC    441 _TCLK	=	0x00cc
+                    00CD    442 _RCLK	=	0x00cd
+                    00CE    443 _EXF2	=	0x00ce
+                    00CF    444 _TF2	=	0x00cf
+                    00D0    445 _P	=	0x00d0
+                    00D1    446 _FL	=	0x00d1
+                    00D2    447 _OV	=	0x00d2
+                    00D3    448 _RS0	=	0x00d3
+                    00D4    449 _RS1	=	0x00d4
+                    00D5    450 _F0	=	0x00d5
+                    00D6    451 _AC	=	0x00d6
+                    00D7    452 _CY	=	0x00d7
+                    00DB    453 _INT6	=	0x00db
+                    00DC    454 _RESI	=	0x00dc
+                    00DD    455 _ERESI	=	0x00dd
+                    00DF    456 _SMOD1	=	0x00df
+                    00E8    457 _EIUSB	=	0x00e8
+                    00E9    458 _EI2C	=	0x00e9
+                    00EA    459 _EIEX4	=	0x00ea
+                    00EB    460 _EIEX5	=	0x00eb
+                    00EC    461 _EIEX6	=	0x00ec
+                    00F8    462 _PUSB	=	0x00f8
+                    00F9    463 _PI2C	=	0x00f9
+                    00FA    464 _EIPX4	=	0x00fa
+                    00FB    465 _EIPX5	=	0x00fb
+                    00FC    466 _EIPX6	=	0x00fc
+                            467 ;--------------------------------------------------------
+                            468 ; overlayable register banks
+                            469 ;--------------------------------------------------------
+                            470 	.area REG_BANK_0	(REL,OVR,DATA)
+   0000                     471 	.ds 8
+                            472 ;--------------------------------------------------------
+                            473 ; internal ram data
+                            474 ;--------------------------------------------------------
+                            475 	.area DSEG    (DATA)
+   0000                     476 __usb_config::
+   0000                     477 	.ds 1
+   0001                     478 __usb_alt_setting::
+   0001                     479 	.ds 1
+   0002                     480 _current_device_descr::
+   0002                     481 	.ds 2
+   0004                     482 _current_devqual_descr::
+   0004                     483 	.ds 2
+   0006                     484 _current_config_descr::
+   0006                     485 	.ds 2
+   0008                     486 _other_config_descr::
+   0008                     487 	.ds 2
+                            488 ;--------------------------------------------------------
+                            489 ; overlayable items in internal ram 
+                            490 ;--------------------------------------------------------
+                            491 	.area	OSEG    (OVR,DATA)
+                            492 	.area	OSEG    (OVR,DATA)
+                            493 ;--------------------------------------------------------
+                            494 ; indirectly addressable internal ram data
+                            495 ;--------------------------------------------------------
+                            496 	.area ISEG    (DATA)
+                            497 ;--------------------------------------------------------
+                            498 ; bit data
+                            499 ;--------------------------------------------------------
+                            500 	.area BSEG    (BIT)
+   0000                     501 __usb_got_SUDAV::
+   0000                     502 	.ds 1
+                            503 ;--------------------------------------------------------
+                            504 ; paged external ram data
+                            505 ;--------------------------------------------------------
+                            506 	.area PSEG    (PAG,XDATA)
+                            507 ;--------------------------------------------------------
+                            508 ; external ram data
+                            509 ;--------------------------------------------------------
+                            510 	.area XSEG    (XDATA)
+                    E400    511 _GPIF_WAVE_DATA	=	0xe400
+                    E480    512 _RES_WAVEDATA_END	=	0xe480
+                    E600    513 _CPUCS	=	0xe600
+                    E601    514 _IFCONFIG	=	0xe601
+                    E602    515 _PINFLAGSAB	=	0xe602
+                    E603    516 _PINFLAGSCD	=	0xe603
+                    E604    517 _FIFORESET	=	0xe604
+                    E605    518 _BREAKPT	=	0xe605
+                    E606    519 _BPADDRH	=	0xe606
+                    E607    520 _BPADDRL	=	0xe607
+                    E608    521 _UART230	=	0xe608
+                    E609    522 _FIFOPINPOLAR	=	0xe609
+                    E60A    523 _REVID	=	0xe60a
+                    E60B    524 _REVCTL	=	0xe60b
+                    E610    525 _EP1OUTCFG	=	0xe610
+                    E611    526 _EP1INCFG	=	0xe611
+                    E612    527 _EP2CFG	=	0xe612
+                    E613    528 _EP4CFG	=	0xe613
+                    E614    529 _EP6CFG	=	0xe614
+                    E615    530 _EP8CFG	=	0xe615
+                    E618    531 _EP2FIFOCFG	=	0xe618
+                    E619    532 _EP4FIFOCFG	=	0xe619
+                    E61A    533 _EP6FIFOCFG	=	0xe61a
+                    E61B    534 _EP8FIFOCFG	=	0xe61b
+                    E620    535 _EP2AUTOINLENH	=	0xe620
+                    E621    536 _EP2AUTOINLENL	=	0xe621
+                    E622    537 _EP4AUTOINLENH	=	0xe622
+                    E623    538 _EP4AUTOINLENL	=	0xe623
+                    E624    539 _EP6AUTOINLENH	=	0xe624
+                    E625    540 _EP6AUTOINLENL	=	0xe625
+                    E626    541 _EP8AUTOINLENH	=	0xe626
+                    E627    542 _EP8AUTOINLENL	=	0xe627
+                    E630    543 _EP2FIFOPFH	=	0xe630
+                    E631    544 _EP2FIFOPFL	=	0xe631
+                    E632    545 _EP4FIFOPFH	=	0xe632
+                    E633    546 _EP4FIFOPFL	=	0xe633
+                    E634    547 _EP6FIFOPFH	=	0xe634
+                    E635    548 _EP6FIFOPFL	=	0xe635
+                    E636    549 _EP8FIFOPFH	=	0xe636
+                    E637    550 _EP8FIFOPFL	=	0xe637
+                    E640    551 _EP2ISOINPKTS	=	0xe640
+                    E641    552 _EP4ISOINPKTS	=	0xe641
+                    E642    553 _EP6ISOINPKTS	=	0xe642
+                    E643    554 _EP8ISOINPKTS	=	0xe643
+                    E648    555 _INPKTEND	=	0xe648
+                    E649    556 _OUTPKTEND	=	0xe649
+                    E650    557 _EP2FIFOIE	=	0xe650
+                    E651    558 _EP2FIFOIRQ	=	0xe651
+                    E652    559 _EP4FIFOIE	=	0xe652
+                    E653    560 _EP4FIFOIRQ	=	0xe653
+                    E654    561 _EP6FIFOIE	=	0xe654
+                    E655    562 _EP6FIFOIRQ	=	0xe655
+                    E656    563 _EP8FIFOIE	=	0xe656
+                    E657    564 _EP8FIFOIRQ	=	0xe657
+                    E658    565 _IBNIE	=	0xe658
+                    E659    566 _IBNIRQ	=	0xe659
+                    E65A    567 _NAKIE	=	0xe65a
+                    E65B    568 _NAKIRQ	=	0xe65b
+                    E65C    569 _USBIE	=	0xe65c
+                    E65D    570 _USBIRQ	=	0xe65d
+                    E65E    571 _EPIE	=	0xe65e
+                    E65F    572 _EPIRQ	=	0xe65f
+                    E660    573 _GPIFIE	=	0xe660
+                    E661    574 _GPIFIRQ	=	0xe661
+                    E662    575 _USBERRIE	=	0xe662
+                    E663    576 _USBERRIRQ	=	0xe663
+                    E664    577 _ERRCNTLIM	=	0xe664
+                    E665    578 _CLRERRCNT	=	0xe665
+                    E666    579 _INT2IVEC	=	0xe666
+                    E667    580 _INT4IVEC	=	0xe667
+                    E668    581 _INTSETUP	=	0xe668
+                    E670    582 _PORTACFG	=	0xe670
+                    E671    583 _PORTCCFG	=	0xe671
+                    E672    584 _PORTECFG	=	0xe672
+                    E678    585 _I2CS	=	0xe678
+                    E679    586 _I2DAT	=	0xe679
+                    E67A    587 _I2CTL	=	0xe67a
+                    E67B    588 _XAUTODAT1	=	0xe67b
+                    E67C    589 _XAUTODAT2	=	0xe67c
+                    E680    590 _USBCS	=	0xe680
+                    E681    591 _SUSPEND	=	0xe681
+                    E682    592 _WAKEUPCS	=	0xe682
+                    E683    593 _TOGCTL	=	0xe683
+                    E684    594 _USBFRAMEH	=	0xe684
+                    E685    595 _USBFRAMEL	=	0xe685
+                    E686    596 _MICROFRAME	=	0xe686
+                    E687    597 _FNADDR	=	0xe687
+                    E68A    598 _EP0BCH	=	0xe68a
+                    E68B    599 _EP0BCL	=	0xe68b
+                    E68D    600 _EP1OUTBC	=	0xe68d
+                    E68F    601 _EP1INBC	=	0xe68f
+                    E690    602 _EP2BCH	=	0xe690
+                    E691    603 _EP2BCL	=	0xe691
+                    E694    604 _EP4BCH	=	0xe694
+                    E695    605 _EP4BCL	=	0xe695
+                    E698    606 _EP6BCH	=	0xe698
+                    E699    607 _EP6BCL	=	0xe699
+                    E69C    608 _EP8BCH	=	0xe69c
+                    E69D    609 _EP8BCL	=	0xe69d
+                    E6A0    610 _EP0CS	=	0xe6a0
+                    E6A1    611 _EP1OUTCS	=	0xe6a1
+                    E6A2    612 _EP1INCS	=	0xe6a2
+                    E6A3    613 _EP2CS	=	0xe6a3
+                    E6A4    614 _EP4CS	=	0xe6a4
+                    E6A5    615 _EP6CS	=	0xe6a5
+                    E6A6    616 _EP8CS	=	0xe6a6
+                    E6A7    617 _EP2FIFOFLGS	=	0xe6a7
+                    E6A8    618 _EP4FIFOFLGS	=	0xe6a8
+                    E6A9    619 _EP6FIFOFLGS	=	0xe6a9
+                    E6AA    620 _EP8FIFOFLGS	=	0xe6aa
+                    E6AB    621 _EP2FIFOBCH	=	0xe6ab
+                    E6AC    622 _EP2FIFOBCL	=	0xe6ac
+                    E6AD    623 _EP4FIFOBCH	=	0xe6ad
+                    E6AE    624 _EP4FIFOBCL	=	0xe6ae
+                    E6AF    625 _EP6FIFOBCH	=	0xe6af
+                    E6B0    626 _EP6FIFOBCL	=	0xe6b0
+                    E6B1    627 _EP8FIFOBCH	=	0xe6b1
+                    E6B2    628 _EP8FIFOBCL	=	0xe6b2
+                    E6B3    629 _SUDPTRH	=	0xe6b3
+                    E6B4    630 _SUDPTRL	=	0xe6b4
+                    E6B5    631 _SUDPTRCTL	=	0xe6b5
+                    E6B8    632 _SETUPDAT	=	0xe6b8
+                    E6C0    633 _GPIFWFSELECT	=	0xe6c0
+                    E6C1    634 _GPIFIDLECS	=	0xe6c1
+                    E6C2    635 _GPIFIDLECTL	=	0xe6c2
+                    E6C3    636 _GPIFCTLCFG	=	0xe6c3
+                    E6C4    637 _GPIFADRH	=	0xe6c4
+                    E6C5    638 _GPIFADRL	=	0xe6c5
+                    E6CE    639 _GPIFTCB3	=	0xe6ce
+                    E6CF    640 _GPIFTCB2	=	0xe6cf
+                    E6D0    641 _GPIFTCB1	=	0xe6d0
+                    E6D1    642 _GPIFTCB0	=	0xe6d1
+                    E6D2    643 _EP2GPIFFLGSEL	=	0xe6d2
+                    E6D3    644 _EP2GPIFPFSTOP	=	0xe6d3
+                    E6D4    645 _EP2GPIFTRIG	=	0xe6d4
+                    E6DA    646 _EP4GPIFFLGSEL	=	0xe6da
+                    E6DB    647 _EP4GPIFPFSTOP	=	0xe6db
+                    E6DC    648 _EP4GPIFTRIG	=	0xe6dc
+                    E6E2    649 _EP6GPIFFLGSEL	=	0xe6e2
+                    E6E3    650 _EP6GPIFPFSTOP	=	0xe6e3
+                    E6E4    651 _EP6GPIFTRIG	=	0xe6e4
+                    E6EA    652 _EP8GPIFFLGSEL	=	0xe6ea
+                    E6EB    653 _EP8GPIFPFSTOP	=	0xe6eb
+                    E6EC    654 _EP8GPIFTRIG	=	0xe6ec
+                    E6F0    655 _XGPIFSGLDATH	=	0xe6f0
+                    E6F1    656 _XGPIFSGLDATLX	=	0xe6f1
+                    E6F2    657 _XGPIFSGLDATLNOX	=	0xe6f2
+                    E6F3    658 _GPIFREADYCFG	=	0xe6f3
+                    E6F4    659 _GPIFREADYSTAT	=	0xe6f4
+                    E6F5    660 _GPIFABORT	=	0xe6f5
+                    E6C6    661 _FLOWSTATE	=	0xe6c6
+                    E6C7    662 _FLOWLOGIC	=	0xe6c7
+                    E6C8    663 _FLOWEQ0CTL	=	0xe6c8
+                    E6C9    664 _FLOWEQ1CTL	=	0xe6c9
+                    E6CA    665 _FLOWHOLDOFF	=	0xe6ca
+                    E6CB    666 _FLOWSTB	=	0xe6cb
+                    E6CC    667 _FLOWSTBEDGE	=	0xe6cc
+                    E6CD    668 _FLOWSTBHPERIOD	=	0xe6cd
+                    E60C    669 _GPIFHOLDAMOUNT	=	0xe60c
+                    E67D    670 _UDMACRCH	=	0xe67d
+                    E67E    671 _UDMACRCL	=	0xe67e
+                    E67F    672 _UDMACRCQUAL	=	0xe67f
+                    E6F8    673 _DBUG	=	0xe6f8
+                    E6F9    674 _TESTCFG	=	0xe6f9
+                    E6FA    675 _USBTEST	=	0xe6fa
+                    E6FB    676 _CT1	=	0xe6fb
+                    E6FC    677 _CT2	=	0xe6fc
+                    E6FD    678 _CT3	=	0xe6fd
+                    E6FE    679 _CT4	=	0xe6fe
+                    E740    680 _EP0BUF	=	0xe740
+                    E780    681 _EP1OUTBUF	=	0xe780
+                    E7C0    682 _EP1INBUF	=	0xe7c0
+                    F000    683 _EP2FIFOBUF	=	0xf000
+                    F400    684 _EP4FIFOBUF	=	0xf400
+                    F800    685 _EP6FIFOBUF	=	0xf800
+                    FC00    686 _EP8FIFOBUF	=	0xfc00
+                            687 ;--------------------------------------------------------
+                            688 ; external initialized ram data
+                            689 ;--------------------------------------------------------
+                            690 	.area HOME    (CODE)
+                            691 	.area GSINIT0 (CODE)
+                            692 	.area GSINIT1 (CODE)
+                            693 	.area GSINIT2 (CODE)
+                            694 	.area GSINIT3 (CODE)
+                            695 	.area GSINIT4 (CODE)
+                            696 	.area GSINIT5 (CODE)
+                            697 	.area GSINIT  (CODE)
+                            698 	.area GSFINAL (CODE)
+                            699 	.area CSEG    (CODE)
+                            700 ;--------------------------------------------------------
+                            701 ; global & static initialisations
+                            702 ;--------------------------------------------------------
+                            703 	.area HOME    (CODE)
+                            704 	.area GSINIT  (CODE)
+                            705 	.area GSFINAL (CODE)
+                            706 	.area GSINIT  (CODE)
+                            707 ;	usb_common.c:53: unsigned char	_usb_config = 0;
+                            708 ;	genAssign
+   0000 75*00 00            709 	mov	__usb_config,#0x00
+                            710 ;	usb_common.c:54: unsigned char	_usb_alt_setting = 0;	// FIXME really 1/interface
+                            711 ;	genAssign
+   0003 75*01 00            712 	mov	__usb_alt_setting,#0x00
+                            713 ;--------------------------------------------------------
+                            714 ; Home
+                            715 ;--------------------------------------------------------
+                            716 	.area HOME    (CODE)
+                            717 	.area CSEG    (CODE)
+                            718 ;--------------------------------------------------------
+                            719 ; code
+                            720 ;--------------------------------------------------------
+                            721 	.area CSEG    (CODE)
+                            722 ;------------------------------------------------------------
+                            723 ;Allocation info for local variables in function 'setup_descriptors'
+                            724 ;------------------------------------------------------------
+                            725 ;------------------------------------------------------------
+                            726 ;	usb_common.c:62: setup_descriptors (void)
+                            727 ;	-----------------------------------------
+                            728 ;	 function setup_descriptors
+                            729 ;	-----------------------------------------
+   0000                     730 _setup_descriptors:
+                    0002    731 	ar2 = 0x02
+                    0003    732 	ar3 = 0x03
+                    0004    733 	ar4 = 0x04
+                    0005    734 	ar5 = 0x05
+                    0006    735 	ar6 = 0x06
+                    0007    736 	ar7 = 0x07
+                    0000    737 	ar0 = 0x00
+                    0001    738 	ar1 = 0x01
+                            739 ;	usb_common.c:64: if (USBCS & bmHSM){		// high speed mode
+                            740 ;	genAssign
+   0000 90 E6 80            741 	mov	dptr,#_USBCS
+   0003 E0                  742 	movx	a,@dptr
+                            743 ;	genAnd
+   0004 FA                  744 	mov	r2,a
+                            745 ;	Peephole 105	removed redundant mov
+                            746 ;	genIfxJump
+                            747 ;	Peephole 108.d	removed ljmp by inverse jump logic
+   0005 30 E7 19            748 	jnb	acc.7,00102$
+                            749 ;	Peephole 300	removed redundant label 00107$
+                            750 ;	usb_common.c:65: current_device_descr  = high_speed_device_descr;
+                            751 ;	genAddrOf
+   0008 75*02r00            752 	mov	_current_device_descr,#_high_speed_device_descr
+   000B 75*03s00            753 	mov	(_current_device_descr + 1),#(_high_speed_device_descr >> 8)
+                            754 ;	usb_common.c:66: current_devqual_descr = high_speed_devqual_descr;
+                            755 ;	genAddrOf
+   000E 75*04r00            756 	mov	_current_devqual_descr,#_high_speed_devqual_descr
+   0011 75*05s00            757 	mov	(_current_devqual_descr + 1),#(_high_speed_devqual_descr >> 8)
+                            758 ;	usb_common.c:67: current_config_descr  = high_speed_config_descr;
+                            759 ;	genAddrOf
+   0014 75*06r00            760 	mov	_current_config_descr,#_high_speed_config_descr
+   0017 75*07s00            761 	mov	(_current_config_descr + 1),#(_high_speed_config_descr >> 8)
+                            762 ;	usb_common.c:68: other_config_descr    = full_speed_config_descr;
+                            763 ;	genAddrOf
+   001A 75*08r00            764 	mov	_other_config_descr,#_full_speed_config_descr
+   001D 75*09s00            765 	mov	(_other_config_descr + 1),#(_full_speed_config_descr >> 8)
+                            766 ;	Peephole 112.b	changed ljmp to sjmp
+                            767 ;	Peephole 251.b	replaced sjmp to ret with ret
+   0020 22                  768 	ret
+   0021                     769 00102$:
+                            770 ;	usb_common.c:71: current_device_descr  = full_speed_device_descr;
+                            771 ;	genAddrOf
+   0021 75*02r00            772 	mov	_current_device_descr,#_full_speed_device_descr
+   0024 75*03s00            773 	mov	(_current_device_descr + 1),#(_full_speed_device_descr >> 8)
+                            774 ;	usb_common.c:72: current_devqual_descr = full_speed_devqual_descr;
+                            775 ;	genAddrOf
+   0027 75*04r00            776 	mov	_current_devqual_descr,#_full_speed_devqual_descr
+   002A 75*05s00            777 	mov	(_current_devqual_descr + 1),#(_full_speed_devqual_descr >> 8)
+                            778 ;	usb_common.c:73: current_config_descr  = full_speed_config_descr;
+                            779 ;	genAddrOf
+   002D 75*06r00            780 	mov	_current_config_descr,#_full_speed_config_descr
+   0030 75*07s00            781 	mov	(_current_config_descr + 1),#(_full_speed_config_descr >> 8)
+                            782 ;	usb_common.c:74: other_config_descr    = high_speed_config_descr;
+                            783 ;	genAddrOf
+   0033 75*08r00            784 	mov	_other_config_descr,#_high_speed_config_descr
+   0036 75*09s00            785 	mov	(_other_config_descr + 1),#(_high_speed_config_descr >> 8)
+                            786 ;	Peephole 300	removed redundant label 00104$
+   0039 22                  787 	ret
+                            788 ;------------------------------------------------------------
+                            789 ;Allocation info for local variables in function 'isr_SUDAV'
+                            790 ;------------------------------------------------------------
+                            791 ;------------------------------------------------------------
+                            792 ;	usb_common.c:84: isr_SUDAV (void) interrupt
+                            793 ;	-----------------------------------------
+                            794 ;	 function isr_SUDAV
+                            795 ;	-----------------------------------------
+   003A                     796 _isr_SUDAV:
+                            797 ;	usb_common.c:86: clear_usb_irq ();
+                            798 ;	genAnd
+   003A 53 91 EF            799 	anl	_EXIF,#0xEF
+                            800 ;	genAssign
+   003D 75 A1 00            801 	mov	_INT2CLR,#0x00
+                            802 ;	usb_common.c:87: _usb_got_SUDAV = 1;
+                            803 ;	genAssign
+   0040 D2*00               804 	setb	__usb_got_SUDAV
+                            805 ;	Peephole 300	removed redundant label 00101$
+   0042 32                  806 	reti
+                            807 ;	eliminated unneeded push/pop psw
+                            808 ;	eliminated unneeded push/pop dpl
+                            809 ;	eliminated unneeded push/pop dph
+                            810 ;	eliminated unneeded push/pop b
+                            811 ;	eliminated unneeded push/pop acc
+                            812 ;------------------------------------------------------------
+                            813 ;Allocation info for local variables in function 'isr_USBRESET'
+                            814 ;------------------------------------------------------------
+                            815 ;------------------------------------------------------------
+                            816 ;	usb_common.c:91: isr_USBRESET (void) interrupt
+                            817 ;	-----------------------------------------
+                            818 ;	 function isr_USBRESET
+                            819 ;	-----------------------------------------
+   0043                     820 _isr_USBRESET:
+   0043 C0 E0               821 	push	acc
+   0045 C0 F0               822 	push	b
+   0047 C0 82               823 	push	dpl
+   0049 C0 83               824 	push	dph
+   004B C0 02               825 	push	(0+2)
+   004D C0 03               826 	push	(0+3)
+   004F C0 04               827 	push	(0+4)
+   0051 C0 05               828 	push	(0+5)
+   0053 C0 06               829 	push	(0+6)
+   0055 C0 07               830 	push	(0+7)
+   0057 C0 00               831 	push	(0+0)
+   0059 C0 01               832 	push	(0+1)
+   005B C0 D0               833 	push	psw
+   005D 75 D0 00            834 	mov	psw,#0x00
+                            835 ;	usb_common.c:93: clear_usb_irq ();
+                            836 ;	genAnd
+   0060 53 91 EF            837 	anl	_EXIF,#0xEF
+                            838 ;	genAssign
+   0063 75 A1 00            839 	mov	_INT2CLR,#0x00
+                            840 ;	usb_common.c:94: setup_descriptors ();
+                            841 ;	genCall
+   0066 12s00r00            842 	lcall	_setup_descriptors
+                            843 ;	Peephole 300	removed redundant label 00101$
+   0069 D0 D0               844 	pop	psw
+   006B D0 01               845 	pop	(0+1)
+   006D D0 00               846 	pop	(0+0)
+   006F D0 07               847 	pop	(0+7)
+   0071 D0 06               848 	pop	(0+6)
+   0073 D0 05               849 	pop	(0+5)
+   0075 D0 04               850 	pop	(0+4)
+   0077 D0 03               851 	pop	(0+3)
+   0079 D0 02               852 	pop	(0+2)
+   007B D0 83               853 	pop	dph
+   007D D0 82               854 	pop	dpl
+   007F D0 F0               855 	pop	b
+   0081 D0 E0               856 	pop	acc
+   0083 32                  857 	reti
+                            858 ;------------------------------------------------------------
+                            859 ;Allocation info for local variables in function 'isr_HIGHSPEED'
+                            860 ;------------------------------------------------------------
+                            861 ;------------------------------------------------------------
+                            862 ;	usb_common.c:98: isr_HIGHSPEED (void) interrupt
+                            863 ;	-----------------------------------------
+                            864 ;	 function isr_HIGHSPEED
+                            865 ;	-----------------------------------------
+   0084                     866 _isr_HIGHSPEED:
+   0084 C0 E0               867 	push	acc
+   0086 C0 F0               868 	push	b
+   0088 C0 82               869 	push	dpl
+   008A C0 83               870 	push	dph
+   008C C0 02               871 	push	(0+2)
+   008E C0 03               872 	push	(0+3)
+   0090 C0 04               873 	push	(0+4)
+   0092 C0 05               874 	push	(0+5)
+   0094 C0 06               875 	push	(0+6)
+   0096 C0 07               876 	push	(0+7)
+   0098 C0 00               877 	push	(0+0)
+   009A C0 01               878 	push	(0+1)
+   009C C0 D0               879 	push	psw
+   009E 75 D0 00            880 	mov	psw,#0x00
+                            881 ;	usb_common.c:100: clear_usb_irq ();
+                            882 ;	genAnd
+   00A1 53 91 EF            883 	anl	_EXIF,#0xEF
+                            884 ;	genAssign
+   00A4 75 A1 00            885 	mov	_INT2CLR,#0x00
+                            886 ;	usb_common.c:101: setup_descriptors ();
+                            887 ;	genCall
+   00A7 12s00r00            888 	lcall	_setup_descriptors
+                            889 ;	Peephole 300	removed redundant label 00101$
+   00AA D0 D0               890 	pop	psw
+   00AC D0 01               891 	pop	(0+1)
+   00AE D0 00               892 	pop	(0+0)
+   00B0 D0 07               893 	pop	(0+7)
+   00B2 D0 06               894 	pop	(0+6)
+   00B4 D0 05               895 	pop	(0+5)
+   00B6 D0 04               896 	pop	(0+4)
+   00B8 D0 03               897 	pop	(0+3)
+   00BA D0 02               898 	pop	(0+2)
+   00BC D0 83               899 	pop	dph
+   00BE D0 82               900 	pop	dpl
+   00C0 D0 F0               901 	pop	b
+   00C2 D0 E0               902 	pop	acc
+   00C4 32                  903 	reti
+                            904 ;------------------------------------------------------------
+                            905 ;Allocation info for local variables in function 'usb_install_handlers'
+                            906 ;------------------------------------------------------------
+                            907 ;------------------------------------------------------------
+                            908 ;	usb_common.c:105: usb_install_handlers (void)
+                            909 ;	-----------------------------------------
+                            910 ;	 function usb_install_handlers
+                            911 ;	-----------------------------------------
+   00C5                     912 _usb_install_handlers:
+                            913 ;	usb_common.c:107: setup_descriptors ();	    // ensure that they're set before use
+                            914 ;	genCall
+   00C5 12s00r00            915 	lcall	_setup_descriptors
+                            916 ;	usb_common.c:109: hook_uv (UV_SUDAV,     (unsigned short) isr_SUDAV);
+                            917 ;	genCast
+   00C8 75*00r3A            918 	mov	_hook_uv_PARM_2,#_isr_SUDAV
+   00CB 75*01s00            919 	mov	(_hook_uv_PARM_2 + 1),#(_isr_SUDAV >> 8)
+                            920 ;	genCall
+   00CE 75 82 00            921 	mov	dpl,#0x00
+   00D1 12s00r00            922 	lcall	_hook_uv
+                            923 ;	usb_common.c:110: hook_uv (UV_USBRESET,  (unsigned short) isr_USBRESET);
+                            924 ;	genCast
+   00D4 75*00r43            925 	mov	_hook_uv_PARM_2,#_isr_USBRESET
+   00D7 75*01s00            926 	mov	(_hook_uv_PARM_2 + 1),#(_isr_USBRESET >> 8)
+                            927 ;	genCall
+   00DA 75 82 10            928 	mov	dpl,#0x10
+   00DD 12s00r00            929 	lcall	_hook_uv
+                            930 ;	usb_common.c:111: hook_uv (UV_HIGHSPEED, (unsigned short) isr_HIGHSPEED);
+                            931 ;	genCast
+   00E0 75*00r84            932 	mov	_hook_uv_PARM_2,#_isr_HIGHSPEED
+   00E3 75*01s00            933 	mov	(_hook_uv_PARM_2 + 1),#(_isr_HIGHSPEED >> 8)
+                            934 ;	genCall
+   00E6 75 82 14            935 	mov	dpl,#0x14
+   00E9 12s00r00            936 	lcall	_hook_uv
+                            937 ;	usb_common.c:113: USBIE = bmSUDAV | bmURES | bmHSGRANT;
+                            938 ;	genAssign
+   00EC 90 E6 5C            939 	mov	dptr,#_USBIE
+   00EF 74 31               940 	mov	a,#0x31
+   00F1 F0                  941 	movx	@dptr,a
+                            942 ;	Peephole 300	removed redundant label 00101$
+   00F2 22                  943 	ret
+                            944 ;------------------------------------------------------------
+                            945 ;Allocation info for local variables in function 'plausible_endpoint'
+                            946 ;------------------------------------------------------------
+                            947 ;ep                        Allocated to registers r2 
+                            948 ;------------------------------------------------------------
+                            949 ;	usb_common.c:120: plausible_endpoint (unsigned char ep)
+                            950 ;	-----------------------------------------
+                            951 ;	 function plausible_endpoint
+                            952 ;	-----------------------------------------
+   00F3                     953 _plausible_endpoint:
+                            954 ;	genReceive
+                            955 ;	usb_common.c:122: ep &= ~0x80;	// ignore direction bit
+                            956 ;	genAnd
+                            957 ;	usb_common.c:124: if (ep > 8)
+                            958 ;	genCmpGt
+                            959 ;	genCmp
+                            960 ;	genIfxJump
+                            961 ;	Peephole 108.a	removed ljmp by inverse jump logic
+                            962 ;	Peephole 132.b	optimized genCmpGt by inverse logic (acc differs)
+                            963 ;	Peephole 187	used a instead of ar2 for anl
+   00F3 E5 82               964 	mov	a,dpl
+   00F5 54 7F               965 	anl	a,#0x7F
+   00F7 FA                  966 	mov	r2,a
+   00F8 24 F7               967 	add	a,#0xff - 0x08
+   00FA 50 04               968 	jnc	00102$
+                            969 ;	Peephole 300	removed redundant label 00109$
+                            970 ;	usb_common.c:125: return 0;
+                            971 ;	genRet
+   00FC 75 82 00            972 	mov	dpl,#0x00
+                            973 ;	Peephole 112.b	changed ljmp to sjmp
+                            974 ;	Peephole 251.b	replaced sjmp to ret with ret
+   00FF 22                  975 	ret
+   0100                     976 00102$:
+                            977 ;	usb_common.c:127: if (ep == 1)
+                            978 ;	genCmpEq
+                            979 ;	gencjneshort
+                            980 ;	Peephole 112.b	changed ljmp to sjmp
+                            981 ;	Peephole 198.b	optimized misc jump sequence
+   0100 BA 01 04            982 	cjne	r2,#0x01,00104$
+                            983 ;	Peephole 200.b	removed redundant sjmp
+                            984 ;	Peephole 300	removed redundant label 00110$
+                            985 ;	Peephole 300	removed redundant label 00111$
+                            986 ;	usb_common.c:128: return 1;
+                            987 ;	genRet
+   0103 75 82 01            988 	mov	dpl,#0x01
+                            989 ;	Peephole 112.b	changed ljmp to sjmp
+                            990 ;	Peephole 251.b	replaced sjmp to ret with ret
+   0106 22                  991 	ret
+   0107                     992 00104$:
+                            993 ;	usb_common.c:130: return (ep & 0x1) == 0;	// must be even
+                            994 ;	genAnd
+   0107 53 02 01            995 	anl	ar2,#0x01
+                            996 ;	genCmpEq
+                            997 ;	gencjne
+                            998 ;	gencjneshort
+                            999 ;	Peephole 241.d	optimized compare
+   010A E4                 1000 	clr	a
+   010B BA 00 01           1001 	cjne	r2,#0x00,00112$
+   010E 04                 1002 	inc	a
+   010F                    1003 00112$:
+                           1004 ;	Peephole 300	removed redundant label 00113$
+   010F F5 82              1005 	mov	dpl,a
+                           1006 ;	genRet
+                           1007 ;	Peephole 300	removed redundant label 00105$
+   0111 22                 1008 	ret
+                           1009 ;------------------------------------------------------------
+                           1010 ;Allocation info for local variables in function 'epcs'
+                           1011 ;------------------------------------------------------------
+                           1012 ;ep                        Allocated to registers r2 
+                           1013 ;------------------------------------------------------------
+                           1014 ;	usb_common.c:137: epcs (unsigned char ep)
+                           1015 ;	-----------------------------------------
+                           1016 ;	 function epcs
+                           1017 ;	-----------------------------------------
+   0112                    1018 _epcs:
+                           1019 ;	genReceive
+   0112 AA 82              1020 	mov	r2,dpl
+                           1021 ;	usb_common.c:139: if (ep == 0x01)		// ep1 has different in and out CS regs
+                           1022 ;	genCmpEq
+                           1023 ;	gencjneshort
+                           1024 ;	Peephole 112.b	changed ljmp to sjmp
+                           1025 ;	Peephole 198.b	optimized misc jump sequence
+   0114 BA 01 0C           1026 	cjne	r2,#0x01,00102$
+                           1027 ;	Peephole 200.b	removed redundant sjmp
+                           1028 ;	Peephole 300	removed redundant label 00112$
+                           1029 ;	Peephole 300	removed redundant label 00113$
+                           1030 ;	usb_common.c:140: return EP1OUTCS;
+                           1031 ;	genAssign
+   0117 90 E6 A1           1032 	mov	dptr,#_EP1OUTCS
+   011A E0                 1033 	movx	a,@dptr
+   011B FB                 1034 	mov	r3,a
+                           1035 ;	genCast
+   011C 7C 00              1036 	mov	r4,#0x00
+                           1037 ;	genRet
+   011E 8B 82              1038 	mov	dpl,r3
+   0120 8C 83              1039 	mov	dph,r4
+                           1040 ;	Peephole 112.b	changed ljmp to sjmp
+                           1041 ;	Peephole 251.b	replaced sjmp to ret with ret
+   0122 22                 1042 	ret
+   0123                    1043 00102$:
+                           1044 ;	usb_common.c:142: if (ep == 0x81)
+                           1045 ;	genCmpEq
+                           1046 ;	gencjneshort
+                           1047 ;	Peephole 112.b	changed ljmp to sjmp
+                           1048 ;	Peephole 198.b	optimized misc jump sequence
+   0123 BA 81 0C           1049 	cjne	r2,#0x81,00104$
+                           1050 ;	Peephole 200.b	removed redundant sjmp
+                           1051 ;	Peephole 300	removed redundant label 00114$
+                           1052 ;	Peephole 300	removed redundant label 00115$
+                           1053 ;	usb_common.c:143: return EP1INCS;
+                           1054 ;	genAssign
+   0126 90 E6 A2           1055 	mov	dptr,#_EP1INCS
+   0129 E0                 1056 	movx	a,@dptr
+   012A FB                 1057 	mov	r3,a
+                           1058 ;	genCast
+   012B 7C 00              1059 	mov	r4,#0x00
+                           1060 ;	genRet
+   012D 8B 82              1061 	mov	dpl,r3
+   012F 8C 83              1062 	mov	dph,r4
+                           1063 ;	Peephole 112.b	changed ljmp to sjmp
+                           1064 ;	Peephole 251.b	replaced sjmp to ret with ret
+   0131 22                 1065 	ret
+   0132                    1066 00104$:
+                           1067 ;	usb_common.c:145: ep &= ~0x80;			// ignore direction bit
+                           1068 ;	genAnd
+   0132 53 02 7F           1069 	anl	ar2,#0x7F
+                           1070 ;	usb_common.c:147: if (ep == 0x00)		// ep0
+                           1071 ;	genIfx
+   0135 EA                 1072 	mov	a,r2
+                           1073 ;	genIfxJump
+                           1074 ;	Peephole 108.b	removed ljmp by inverse jump logic
+   0136 70 0C              1075 	jnz	00106$
+                           1076 ;	Peephole 300	removed redundant label 00116$
+                           1077 ;	usb_common.c:148: return EP0CS;
+                           1078 ;	genAssign
+   0138 90 E6 A0           1079 	mov	dptr,#_EP0CS
+   013B E0                 1080 	movx	a,@dptr
+   013C FB                 1081 	mov	r3,a
+                           1082 ;	genCast
+   013D 7C 00              1083 	mov	r4,#0x00
+                           1084 ;	genRet
+   013F 8B 82              1085 	mov	dpl,r3
+   0141 8C 83              1086 	mov	dph,r4
+                           1087 ;	Peephole 112.b	changed ljmp to sjmp
+                           1088 ;	Peephole 251.b	replaced sjmp to ret with ret
+   0143 22                 1089 	ret
+   0144                    1090 00106$:
+                           1091 ;	usb_common.c:150: return EP2CS + (ep >> 1);	// 2, 4, 6, 8 are consecutive
+                           1092 ;	genAssign
+   0144 90 E6 A3           1093 	mov	dptr,#_EP2CS
+   0147 E0                 1094 	movx	a,@dptr
+   0148 FB                 1095 	mov	r3,a
+                           1096 ;	genCast
+   0149 7C 00              1097 	mov	r4,#0x00
+                           1098 ;	genRightShift
+                           1099 ;	genRightShiftLiteral
+                           1100 ;	genrshOne
+   014B EA                 1101 	mov	a,r2
+   014C C3                 1102 	clr	c
+   014D 13                 1103 	rrc	a
+   014E FA                 1104 	mov	r2,a
+                           1105 ;	genCast
+   014F 7D 00              1106 	mov	r5,#0x00
+                           1107 ;	genPlus
+                           1108 ;	Peephole 236.g	used r2 instead of ar2
+   0151 EA                 1109 	mov	a,r2
+                           1110 ;	Peephole 236.a	used r3 instead of ar3
+   0152 2B                 1111 	add	a,r3
+   0153 FB                 1112 	mov	r3,a
+                           1113 ;	Peephole 236.g	used r5 instead of ar5
+   0154 ED                 1114 	mov	a,r5
+                           1115 ;	Peephole 236.b	used r4 instead of ar4
+   0155 3C                 1116 	addc	a,r4
+                           1117 ;	genCast
+                           1118 ;	genRet
+                           1119 ;	Peephole 234.b	loading dph directly from a(ccumulator), r4 not set
+   0156 8B 82              1120 	mov	dpl,r3
+   0158 F5 83              1121 	mov	dph,a
+                           1122 ;	Peephole 300	removed redundant label 00107$
+   015A 22                 1123 	ret
+                           1124 ;------------------------------------------------------------
+                           1125 ;Allocation info for local variables in function 'usb_handle_setup_packet'
+                           1126 ;------------------------------------------------------------
+                           1127 ;p                         Allocated to registers r2 r3 
+                           1128 ;__00060000                Allocated to registers r2 r3 
+                           1129 ;__00050001                Allocated to registers r2 r3 
+                           1130 ;------------------------------------------------------------
+                           1131 ;	usb_common.c:154: usb_handle_setup_packet (void)
+                           1132 ;	-----------------------------------------
+                           1133 ;	 function usb_handle_setup_packet
+                           1134 ;	-----------------------------------------
+   015B                    1135 _usb_handle_setup_packet:
+                           1136 ;	usb_common.c:156: _usb_got_SUDAV = 0;
+                           1137 ;	genAssign
+   015B C2*00              1138 	clr	__usb_got_SUDAV
+                           1139 ;	usb_common.c:160: switch (bRequestType & bmRT_TYPE_MASK){
+                           1140 ;	genPointerGet
+                           1141 ;	genFarPointerGet
+   015D 90 E6 B8           1142 	mov	dptr,#_SETUPDAT
+   0160 E0                 1143 	movx	a,@dptr
+   0161 FA                 1144 	mov	r2,a
+                           1145 ;	genAnd
+   0162 53 02 60           1146 	anl	ar2,#0x60
+                           1147 ;	genCmpEq
+                           1148 ;	gencjneshort
+   0165 BA 00 02           1149 	cjne	r2,#0x00,00206$
+                           1150 ;	Peephole 112.b	changed ljmp to sjmp
+   0168 80 28              1151 	sjmp	00106$
+   016A                    1152 00206$:
+                           1153 ;	genCmpEq
+                           1154 ;	gencjneshort
+   016A BA 20 02           1155 	cjne	r2,#0x20,00207$
+                           1156 ;	Peephole 112.b	changed ljmp to sjmp
+   016D 80 0D              1157 	sjmp	00102$
+   016F                    1158 00207$:
+                           1159 ;	genCmpEq
+                           1160 ;	gencjneshort
+   016F BA 40 02           1161 	cjne	r2,#0x40,00208$
+                           1162 ;	Peephole 112.b	changed ljmp to sjmp
+   0172 80 0E              1163 	sjmp	00103$
+   0174                    1164 00208$:
+                           1165 ;	genCmpEq
+                           1166 ;	gencjneshort
+   0174 BA 60 02           1167 	cjne	r2,#0x60,00209$
+   0177 80 03              1168 	sjmp	00210$
+   0179                    1169 00209$:
+   0179 02s04r24           1170 	ljmp	00175$
+   017C                    1171 00210$:
+                           1172 ;	usb_common.c:163: case bmRT_TYPE_RESERVED:
+   017C                    1173 00102$:
+                           1174 ;	usb_common.c:164: fx2_stall_ep0 ();		// we don't handle these.  indicate error
+                           1175 ;	genCall
+   017C 12s00r00           1176 	lcall	_fx2_stall_ep0
+                           1177 ;	usb_common.c:165: break;
+   017F 02s04r24           1178 	ljmp	00175$
+                           1179 ;	usb_common.c:167: case bmRT_TYPE_VENDOR:
+   0182                    1180 00103$:
+                           1181 ;	usb_common.c:171: if (!app_vendor_cmd ())	
+                           1182 ;	genCall
+   0182 12s00r00           1183 	lcall	_app_vendor_cmd
+   0185 E5 82              1184 	mov	a,dpl
+                           1185 ;	genIfx
+                           1186 ;	genIfxJump
+   0187 60 03              1187 	jz	00211$
+   0189 02s04r24           1188 	ljmp	00175$
+   018C                    1189 00211$:
+                           1190 ;	usb_common.c:172: fx2_stall_ep0 ();
+                           1191 ;	genCall
+   018C 12s00r00           1192 	lcall	_fx2_stall_ep0
+                           1193 ;	usb_common.c:173: break;
+   018F 02s04r24           1194 	ljmp	00175$
+                           1195 ;	usb_common.c:175: case bmRT_TYPE_STD:
+   0192                    1196 00106$:
+                           1197 ;	usb_common.c:178: if ((bRequestType & bmRT_DIR_MASK) == bmRT_DIR_IN){
+                           1198 ;	genPointerGet
+                           1199 ;	genFarPointerGet
+   0192 90 E6 B8           1200 	mov	dptr,#_SETUPDAT
+   0195 E0                 1201 	movx	a,@dptr
+   0196 FA                 1202 	mov	r2,a
+                           1203 ;	genAnd
+   0197 53 02 80           1204 	anl	ar2,#0x80
+                           1205 ;	genCmpEq
+                           1206 ;	gencjneshort
+   019A BA 80 02           1207 	cjne	r2,#0x80,00212$
+   019D 80 03              1208 	sjmp	00213$
+   019F                    1209 00212$:
+   019F 02s03r20           1210 	ljmp	00173$
+   01A2                    1211 00213$:
+                           1212 ;	usb_common.c:184: switch (bRequest){
+                           1213 ;	genPointerGet
+                           1214 ;	genFarPointerGet
+   01A2 90 E6 B9           1215 	mov	dptr,#(_SETUPDAT + 0x0001)
+   01A5 E0                 1216 	movx	a,@dptr
+   01A6 FA                 1217 	mov	r2,a
+                           1218 ;	genCmpEq
+                           1219 ;	gencjneshort
+   01A7 BA 00 03           1220 	cjne	r2,#0x00,00214$
+   01AA 02s02r95           1221 	ljmp	00128$
+   01AD                    1222 00214$:
+                           1223 ;	genCmpEq
+                           1224 ;	gencjneshort
+   01AD BA 06 02           1225 	cjne	r2,#0x06,00215$
+                           1226 ;	Peephole 112.b	changed ljmp to sjmp
+   01B0 80 35              1227 	sjmp	00109$
+   01B2                    1228 00215$:
+                           1229 ;	genCmpEq
+                           1230 ;	gencjneshort
+   01B2 BA 08 02           1231 	cjne	r2,#0x08,00216$
+                           1232 ;	Peephole 112.b	changed ljmp to sjmp
+   01B5 80 08              1233 	sjmp	00107$
+   01B7                    1234 00216$:
+                           1235 ;	genCmpEq
+                           1236 ;	gencjneshort
+   01B7 BA 0A 02           1237 	cjne	r2,#0x0A,00217$
+                           1238 ;	Peephole 112.b	changed ljmp to sjmp
+   01BA 80 17              1239 	sjmp	00108$
+   01BC                    1240 00217$:
+   01BC 02s03r1A           1241 	ljmp	00138$
+                           1242 ;	usb_common.c:186: case RQ_GET_CONFIG:
+   01BF                    1243 00107$:
+                           1244 ;	usb_common.c:187: EP0BUF[0] = _usb_config;	// FIXME app should handle
+                           1245 ;	genPointerSet
+                           1246 ;     genFarPointerSet
+   01BF 90 E7 40           1247 	mov	dptr,#_EP0BUF
+   01C2 E5*00              1248 	mov	a,__usb_config
+   01C4 F0                 1249 	movx	@dptr,a
+                           1250 ;	usb_common.c:188: EP0BCH = 0;
+                           1251 ;	genAssign
+   01C5 90 E6 8A           1252 	mov	dptr,#_EP0BCH
+                           1253 ;	Peephole 181	changed mov to clr
+   01C8 E4                 1254 	clr	a
+   01C9 F0                 1255 	movx	@dptr,a
+                           1256 ;	usb_common.c:189: EP0BCL = 1;
+                           1257 ;	genAssign
+   01CA 90 E6 8B           1258 	mov	dptr,#_EP0BCL
+   01CD 74 01              1259 	mov	a,#0x01
+   01CF F0                 1260 	movx	@dptr,a
+                           1261 ;	usb_common.c:190: break;
+   01D0 02s04r24           1262 	ljmp	00175$
+                           1263 ;	usb_common.c:194: case RQ_GET_INTERFACE:
+   01D3                    1264 00108$:
+                           1265 ;	usb_common.c:195: EP0BUF[0] = _usb_alt_setting;	// FIXME app should handle
+                           1266 ;	genPointerSet
+                           1267 ;     genFarPointerSet
+   01D3 90 E7 40           1268 	mov	dptr,#_EP0BUF
+   01D6 E5*01              1269 	mov	a,__usb_alt_setting
+   01D8 F0                 1270 	movx	@dptr,a
+                           1271 ;	usb_common.c:196: EP0BCH = 0;
+                           1272 ;	genAssign
+   01D9 90 E6 8A           1273 	mov	dptr,#_EP0BCH
+                           1274 ;	Peephole 181	changed mov to clr
+   01DC E4                 1275 	clr	a
+   01DD F0                 1276 	movx	@dptr,a
+                           1277 ;	usb_common.c:197: EP0BCL = 1;
+                           1278 ;	genAssign
+   01DE 90 E6 8B           1279 	mov	dptr,#_EP0BCL
+   01E1 74 01              1280 	mov	a,#0x01
+   01E3 F0                 1281 	movx	@dptr,a
+                           1282 ;	usb_common.c:198: break;
+   01E4 02s04r24           1283 	ljmp	00175$
+                           1284 ;	usb_common.c:202: case RQ_GET_DESCR:
+   01E7                    1285 00109$:
+                           1286 ;	usb_common.c:203: switch (wValueH){
+                           1287 ;	genPointerGet
+                           1288 ;	genFarPointerGet
+   01E7 90 E6 BB           1289 	mov	dptr,#(_SETUPDAT + 0x0003)
+   01EA E0                 1290 	movx	a,@dptr
+   01EB FA                 1291 	mov	r2,a
+                           1292 ;	genCmpEq
+                           1293 ;	gencjneshort
+   01EC BA 01 02           1294 	cjne	r2,#0x01,00218$
+                           1295 ;	Peephole 112.b	changed ljmp to sjmp
+   01EF 80 17              1296 	sjmp	00110$
+   01F1                    1297 00218$:
+                           1298 ;	genCmpEq
+                           1299 ;	gencjneshort
+   01F1 BA 02 02           1300 	cjne	r2,#0x02,00219$
+                           1301 ;	Peephole 112.b	changed ljmp to sjmp
+   01F4 80 38              1302 	sjmp	00114$
+   01F6                    1303 00219$:
+                           1304 ;	genCmpEq
+                           1305 ;	gencjneshort
+   01F6 BA 03 02           1306 	cjne	r2,#0x03,00220$
+                           1307 ;	Peephole 112.b	changed ljmp to sjmp
+   01F9 80 59              1308 	sjmp	00122$
+   01FB                    1309 00220$:
+                           1310 ;	genCmpEq
+                           1311 ;	gencjneshort
+   01FB BA 06 02           1312 	cjne	r2,#0x06,00221$
+                           1313 ;	Peephole 112.b	changed ljmp to sjmp
+   01FE 80 1B              1314 	sjmp	00111$
+   0200                    1315 00221$:
+                           1316 ;	genCmpEq
+                           1317 ;	gencjneshort
+   0200 BA 07 02           1318 	cjne	r2,#0x07,00222$
+                           1319 ;	Peephole 112.b	changed ljmp to sjmp
+   0203 80 3C              1320 	sjmp	00119$
+   0205                    1321 00222$:
+   0205 02s02r8F           1322 	ljmp	00126$
+                           1323 ;	usb_common.c:205: case DT_DEVICE:
+   0208                    1324 00110$:
+                           1325 ;	usb_common.c:206: SUDPTRH = MSB (current_device_descr);
+                           1326 ;	genCast
+   0208 AA*02              1327 	mov	r2,_current_device_descr
+   020A AB*03              1328 	mov	r3,(_current_device_descr + 1)
+                           1329 ;	genGetByte
+   020C 90 E6 B3           1330 	mov	dptr,#_SUDPTRH
+   020F EB                 1331 	mov	a,r3
+   0210 F0                 1332 	movx	@dptr,a
+                           1333 ;	usb_common.c:207: SUDPTRL = LSB (current_device_descr);
+                           1334 ;	genAnd
+   0211 7B 00              1335 	mov	r3,#0x00
+                           1336 ;	genCast
+   0213 90 E6 B4           1337 	mov	dptr,#_SUDPTRL
+   0216 EA                 1338 	mov	a,r2
+   0217 F0                 1339 	movx	@dptr,a
+                           1340 ;	usb_common.c:208: break;
+   0218 02s04r24           1341 	ljmp	00175$
+                           1342 ;	usb_common.c:210: case DT_DEVQUAL:
+   021B                    1343 00111$:
+                           1344 ;	usb_common.c:211: SUDPTRH = MSB (current_devqual_descr);
+                           1345 ;	genCast
+   021B AA*04              1346 	mov	r2,_current_devqual_descr
+   021D AB*05              1347 	mov	r3,(_current_devqual_descr + 1)
+                           1348 ;	genGetByte
+   021F 90 E6 B3           1349 	mov	dptr,#_SUDPTRH
+   0222 EB                 1350 	mov	a,r3
+   0223 F0                 1351 	movx	@dptr,a
+                           1352 ;	usb_common.c:212: SUDPTRL = LSB (current_devqual_descr);
+                           1353 ;	genAnd
+   0224 7B 00              1354 	mov	r3,#0x00
+                           1355 ;	genCast
+   0226 90 E6 B4           1356 	mov	dptr,#_SUDPTRL
+   0229 EA                 1357 	mov	a,r2
+   022A F0                 1358 	movx	@dptr,a
+                           1359 ;	usb_common.c:213: break;
+   022B 02s04r24           1360 	ljmp	00175$
+                           1361 ;	usb_common.c:217: fx2_stall_ep0 ();
+   022E                    1362 00114$:
+                           1363 ;	usb_common.c:219: SUDPTRH = MSB (current_config_descr);
+                           1364 ;	genCast
+   022E AA*06              1365 	mov	r2,_current_config_descr
+   0230 AB*07              1366 	mov	r3,(_current_config_descr + 1)
+                           1367 ;	genGetByte
+   0232 90 E6 B3           1368 	mov	dptr,#_SUDPTRH
+   0235 EB                 1369 	mov	a,r3
+   0236 F0                 1370 	movx	@dptr,a
+                           1371 ;	usb_common.c:220: SUDPTRL = LSB (current_config_descr);
+                           1372 ;	genAnd
+   0237 7B 00              1373 	mov	r3,#0x00
+                           1374 ;	genCast
+   0239 90 E6 B4           1375 	mov	dptr,#_SUDPTRL
+   023C EA                 1376 	mov	a,r2
+   023D F0                 1377 	movx	@dptr,a
+                           1378 ;	usb_common.c:222: break;
+   023E 02s04r24           1379 	ljmp	00175$
+                           1380 ;	usb_common.c:226: fx2_stall_ep0 ();
+   0241                    1381 00119$:
+                           1382 ;	usb_common.c:228: SUDPTRH = MSB (other_config_descr);
+                           1383 ;	genCast
+   0241 AA*08              1384 	mov	r2,_other_config_descr
+   0243 AB*09              1385 	mov	r3,(_other_config_descr + 1)
+                           1386 ;	genGetByte
+   0245 90 E6 B3           1387 	mov	dptr,#_SUDPTRH
+   0248 EB                 1388 	mov	a,r3
+   0249 F0                 1389 	movx	@dptr,a
+                           1390 ;	usb_common.c:229: SUDPTRL = LSB (other_config_descr);
+                           1391 ;	genAnd
+   024A 7B 00              1392 	mov	r3,#0x00
+                           1393 ;	genCast
+   024C 90 E6 B4           1394 	mov	dptr,#_SUDPTRL
+   024F EA                 1395 	mov	a,r2
+   0250 F0                 1396 	movx	@dptr,a
+                           1397 ;	usb_common.c:231: break;
+   0251 02s04r24           1398 	ljmp	00175$
+                           1399 ;	usb_common.c:233: case DT_STRING:
+   0254                    1400 00122$:
+                           1401 ;	usb_common.c:234: if (wValueL >= nstring_descriptors)
+                           1402 ;	genPointerGet
+                           1403 ;	genFarPointerGet
+   0254 90 E6 BA           1404 	mov	dptr,#(_SETUPDAT + 0x0002)
+   0257 E0                 1405 	movx	a,@dptr
+   0258 FA                 1406 	mov	r2,a
+                           1407 ;	genAssign
+   0259 90s00r00           1408 	mov	dptr,#_nstring_descriptors
+   025C E0                 1409 	movx	a,@dptr
+   025D FB                 1410 	mov	r3,a
+                           1411 ;	genCmpLt
+                           1412 ;	genCmp
+   025E C3                 1413 	clr	c
+   025F EA                 1414 	mov	a,r2
+   0260 9B                 1415 	subb	a,r3
+                           1416 ;	genIfxJump
+                           1417 ;	Peephole 112.b	changed ljmp to sjmp
+                           1418 ;	Peephole 160.a	removed sjmp by inverse jump logic
+   0261 40 06              1419 	jc	00124$
+                           1420 ;	Peephole 300	removed redundant label 00223$
+                           1421 ;	usb_common.c:235: fx2_stall_ep0 ();
+                           1422 ;	genCall
+   0263 12s00r00           1423 	lcall	_fx2_stall_ep0
+   0266 02s04r24           1424 	ljmp	00175$
+   0269                    1425 00124$:
+                           1426 ;	usb_common.c:237: xdata char *p = string_descriptors[wValueL];
+                           1427 ;	genPointerGet
+                           1428 ;	genFarPointerGet
+   0269 90 E6 BA           1429 	mov	dptr,#(_SETUPDAT + 0x0002)
+   026C E0                 1430 	movx	a,@dptr
+                           1431 ;	genMult
+                           1432 ;	genMultOneByte
+   026D FA                 1433 	mov	r2,a
+                           1434 ;	Peephole 105	removed redundant mov
+   026E 75 F0 02           1435 	mov	b,#0x02
+   0271 A4                 1436 	mul	ab
+                           1437 ;	genPlus
+   0272 24r00              1438 	add	a,#_string_descriptors
+   0274 F5 82              1439 	mov	dpl,a
+   0276 74s00              1440 	mov	a,#(_string_descriptors >> 8)
+   0278 35 F0              1441 	addc	a,b
+   027A F5 83              1442 	mov	dph,a
+                           1443 ;	genPointerGet
+                           1444 ;	genFarPointerGet
+   027C E0                 1445 	movx	a,@dptr
+   027D FA                 1446 	mov	r2,a
+   027E A3                 1447 	inc	dptr
+   027F E0                 1448 	movx	a,@dptr
+                           1449 ;	usb_common.c:238: SUDPTRH = MSB (p);
+                           1450 ;	genCast
+                           1451 ;	genGetByte
+   0280 FB                 1452 	mov	r3,a
+   0281 90 E6 B3           1453 	mov	dptr,#_SUDPTRH
+                           1454 ;	Peephole 100	removed redundant mov
+   0284 F0                 1455 	movx	@dptr,a
+                           1456 ;	usb_common.c:239: SUDPTRL = LSB (p);
+                           1457 ;	genAnd
+   0285 7B 00              1458 	mov	r3,#0x00
+                           1459 ;	genCast
+   0287 90 E6 B4           1460 	mov	dptr,#_SUDPTRL
+   028A EA                 1461 	mov	a,r2
+   028B F0                 1462 	movx	@dptr,a
+                           1463 ;	usb_common.c:241: break;
+   028C 02s04r24           1464 	ljmp	00175$
+                           1465 ;	usb_common.c:243: default:
+   028F                    1466 00126$:
+                           1467 ;	usb_common.c:244: fx2_stall_ep0 ();	// invalid request
+                           1468 ;	genCall
+   028F 12s00r00           1469 	lcall	_fx2_stall_ep0
+                           1470 ;	usb_common.c:247: break;
+   0292 02s04r24           1471 	ljmp	00175$
+                           1472 ;	usb_common.c:251: case RQ_GET_STATUS:
+   0295                    1473 00128$:
+                           1474 ;	usb_common.c:252: switch (bRequestType & bmRT_RECIP_MASK){
+                           1475 ;	genPointerGet
+                           1476 ;	genFarPointerGet
+   0295 90 E6 B8           1477 	mov	dptr,#_SETUPDAT
+   0298 E0                 1478 	movx	a,@dptr
+   0299 FA                 1479 	mov	r2,a
+                           1480 ;	genAnd
+   029A 53 02 1F           1481 	anl	ar2,#0x1F
+                           1482 ;	genCmpEq
+                           1483 ;	gencjneshort
+   029D BA 00 02           1484 	cjne	r2,#0x00,00224$
+                           1485 ;	Peephole 112.b	changed ljmp to sjmp
+   02A0 80 0A              1486 	sjmp	00129$
+   02A2                    1487 00224$:
+                           1488 ;	genCmpEq
+                           1489 ;	gencjneshort
+   02A2 BA 01 02           1490 	cjne	r2,#0x01,00225$
+                           1491 ;	Peephole 112.b	changed ljmp to sjmp
+   02A5 80 1D              1492 	sjmp	00130$
+   02A7                    1493 00225$:
+                           1494 ;	genCmpEq
+                           1495 ;	gencjneshort
+                           1496 ;	Peephole 112.b	changed ljmp to sjmp
+                           1497 ;	usb_common.c:253: case bmRT_RECIP_DEVICE:
+                           1498 ;	Peephole 112.b	changed ljmp to sjmp
+                           1499 ;	Peephole 198.b	optimized misc jump sequence
+   02A7 BA 02 6A           1500 	cjne	r2,#0x02,00135$
+   02AA 80 2E              1501 	sjmp	00131$
+                           1502 ;	Peephole 300	removed redundant label 00226$
+   02AC                    1503 00129$:
+                           1504 ;	usb_common.c:254: EP0BUF[0] = bmGSDA_SELF_POWERED;	// FIXME app should handle
+                           1505 ;	genPointerSet
+                           1506 ;     genFarPointerSet
+   02AC 90 E7 40           1507 	mov	dptr,#_EP0BUF
+   02AF 74 01              1508 	mov	a,#0x01
+   02B1 F0                 1509 	movx	@dptr,a
+                           1510 ;	usb_common.c:255: EP0BUF[1] = 0;
+                           1511 ;	genPointerSet
+                           1512 ;     genFarPointerSet
+   02B2 90 E7 41           1513 	mov	dptr,#(_EP0BUF + 0x0001)
+                           1514 ;	Peephole 181	changed mov to clr
+                           1515 ;	usb_common.c:256: EP0BCH = 0;
+                           1516 ;	genAssign
+                           1517 ;	Peephole 181	changed mov to clr
+                           1518 ;	Peephole 219.a	removed redundant clear
+   02B5 E4                 1519 	clr	a
+   02B6 F0                 1520 	movx	@dptr,a
+   02B7 90 E6 8A           1521 	mov	dptr,#_EP0BCH
+   02BA F0                 1522 	movx	@dptr,a
+                           1523 ;	usb_common.c:257: EP0BCL = 2;
+                           1524 ;	genAssign
+   02BB 90 E6 8B           1525 	mov	dptr,#_EP0BCL
+   02BE 74 02              1526 	mov	a,#0x02
+   02C0 F0                 1527 	movx	@dptr,a
+                           1528 ;	usb_common.c:258: break;
+   02C1 02s04r24           1529 	ljmp	00175$
+                           1530 ;	usb_common.c:260: case bmRT_RECIP_INTERFACE:
+   02C4                    1531 00130$:
+                           1532 ;	usb_common.c:261: EP0BUF[0] = 0;
+                           1533 ;	genPointerSet
+                           1534 ;     genFarPointerSet
+   02C4 90 E7 40           1535 	mov	dptr,#_EP0BUF
+                           1536 ;	Peephole 181	changed mov to clr
+                           1537 ;	usb_common.c:262: EP0BUF[1] = 0;
+                           1538 ;	genPointerSet
+                           1539 ;     genFarPointerSet
+                           1540 ;	Peephole 181	changed mov to clr
+                           1541 ;	Peephole 219.a	removed redundant clear
+                           1542 ;	usb_common.c:263: EP0BCH = 0;
+                           1543 ;	genAssign
+                           1544 ;	Peephole 181	changed mov to clr
+   02C7 E4                 1545 	clr	a
+   02C8 F0                 1546 	movx	@dptr,a
+   02C9 90 E7 41           1547 	mov	dptr,#(_EP0BUF + 0x0001)
+   02CC F0                 1548 	movx	@dptr,a
+   02CD 90 E6 8A           1549 	mov	dptr,#_EP0BCH
+                           1550 ;	Peephole 219.b	removed redundant clear
+   02D0 F0                 1551 	movx	@dptr,a
+                           1552 ;	usb_common.c:264: EP0BCL = 2;
+                           1553 ;	genAssign
+   02D1 90 E6 8B           1554 	mov	dptr,#_EP0BCL
+   02D4 74 02              1555 	mov	a,#0x02
+   02D6 F0                 1556 	movx	@dptr,a
+                           1557 ;	usb_common.c:265: break;
+   02D7 02s04r24           1558 	ljmp	00175$
+                           1559 ;	usb_common.c:267: case bmRT_RECIP_ENDPOINT:
+   02DA                    1560 00131$:
+                           1561 ;	usb_common.c:268: if (plausible_endpoint (wIndexL)){
+                           1562 ;	genPointerGet
+                           1563 ;	genFarPointerGet
+   02DA 90 E6 BC           1564 	mov	dptr,#(_SETUPDAT + 0x0004)
+   02DD E0                 1565 	movx	a,@dptr
+                           1566 ;	genCall
+   02DE FA                 1567 	mov	r2,a
+                           1568 ;	Peephole 244.c	loading dpl from a instead of r2
+   02DF F5 82              1569 	mov	dpl,a
+   02E1 12s00rF3           1570 	lcall	_plausible_endpoint
+   02E4 E5 82              1571 	mov	a,dpl
+                           1572 ;	genIfx
+                           1573 ;	genIfxJump
+                           1574 ;	Peephole 108.c	removed ljmp by inverse jump logic
+   02E6 60 26              1575 	jz	00133$
+                           1576 ;	Peephole 300	removed redundant label 00227$
+                           1577 ;	usb_common.c:269: EP0BUF[0] = *epcs (wIndexL) & bmEPSTALL;
+                           1578 ;	genPointerGet
+                           1579 ;	genFarPointerGet
+   02E8 90 E6 BC           1580 	mov	dptr,#(_SETUPDAT + 0x0004)
+   02EB E0                 1581 	movx	a,@dptr
+                           1582 ;	genCall
+   02EC FA                 1583 	mov	r2,a
+                           1584 ;	Peephole 244.c	loading dpl from a instead of r2
+   02ED F5 82              1585 	mov	dpl,a
+   02EF 12s01r12           1586 	lcall	_epcs
+                           1587 ;	genPointerGet
+                           1588 ;	genFarPointerGet
+   02F2 E0                 1589 	movx	a,@dptr
+   02F3 FA                 1590 	mov	r2,a
+                           1591 ;	genAnd
+   02F4 53 02 01           1592 	anl	ar2,#0x01
+                           1593 ;	genPointerSet
+                           1594 ;     genFarPointerSet
+   02F7 90 E7 40           1595 	mov	dptr,#_EP0BUF
+   02FA EA                 1596 	mov	a,r2
+   02FB F0                 1597 	movx	@dptr,a
+                           1598 ;	usb_common.c:270: EP0BUF[1] = 0;
+                           1599 ;	genPointerSet
+                           1600 ;     genFarPointerSet
+   02FC 90 E7 41           1601 	mov	dptr,#(_EP0BUF + 0x0001)
+                           1602 ;	Peephole 181	changed mov to clr
+                           1603 ;	usb_common.c:271: EP0BCH = 0;
+                           1604 ;	genAssign
+                           1605 ;	Peephole 181	changed mov to clr
+                           1606 ;	Peephole 219.a	removed redundant clear
+   02FF E4                 1607 	clr	a
+   0300 F0                 1608 	movx	@dptr,a
+   0301 90 E6 8A           1609 	mov	dptr,#_EP0BCH
+   0304 F0                 1610 	movx	@dptr,a
+                           1611 ;	usb_common.c:272: EP0BCL = 2;
+                           1612 ;	genAssign
+   0305 90 E6 8B           1613 	mov	dptr,#_EP0BCL
+   0308 74 02              1614 	mov	a,#0x02
+   030A F0                 1615 	movx	@dptr,a
+   030B 02s04r24           1616 	ljmp	00175$
+   030E                    1617 00133$:
+                           1618 ;	usb_common.c:275: fx2_stall_ep0 ();
+                           1619 ;	genCall
+   030E 12s00r00           1620 	lcall	_fx2_stall_ep0
+                           1621 ;	usb_common.c:276: break;
+   0311 02s04r24           1622 	ljmp	00175$
+                           1623 ;	usb_common.c:278: default:
+   0314                    1624 00135$:
+                           1625 ;	usb_common.c:279: fx2_stall_ep0 ();
+                           1626 ;	genCall
+   0314 12s00r00           1627 	lcall	_fx2_stall_ep0
+                           1628 ;	usb_common.c:282: break;
+   0317 02s04r24           1629 	ljmp	00175$
+                           1630 ;	usb_common.c:287: default:
+   031A                    1631 00138$:
+                           1632 ;	usb_common.c:288: fx2_stall_ep0 ();
+                           1633 ;	genCall
+   031A 12s00r00           1634 	lcall	_fx2_stall_ep0
+                           1635 ;	usb_common.c:290: }
+   031D 02s04r24           1636 	ljmp	00175$
+   0320                    1637 00173$:
+                           1638 ;	usb_common.c:299: switch (bRequest){
+                           1639 ;	genPointerGet
+                           1640 ;	genFarPointerGet
+   0320 90 E6 B9           1641 	mov	dptr,#(_SETUPDAT + 0x0001)
+   0323 E0                 1642 	movx	a,@dptr
+                           1643 ;	genCmpGt
+                           1644 ;	genCmp
+                           1645 ;	genIfxJump
+                           1646 ;	Peephole 132.b	optimized genCmpGt by inverse logic (acc differs)
+   0324 FA                 1647 	mov  r2,a
+                           1648 ;	Peephole 177.a	removed redundant mov
+   0325 24 F4              1649 	add	a,#0xff - 0x0B
+   0327 50 03              1650 	jnc	00228$
+   0329 02s04r21           1651 	ljmp	00170$
+   032C                    1652 00228$:
+                           1653 ;	genJumpTab
+   032C EA                 1654 	mov	a,r2
+                           1655 ;	Peephole 254	optimized left shift
+   032D 2A                 1656 	add	a,r2
+   032E 2A                 1657 	add	a,r2
+   032F 90s03r33           1658 	mov	dptr,#00229$
+   0332 73                 1659 	jmp	@a+dptr
+   0333                    1660 00229$:
+   0333 02s04r21           1661 	ljmp	00170$
+   0336 02s03r69           1662 	ljmp	00142$
+   0339 02s03rE7           1663 	ljmp	00161$
+   033C 02s03rC8           1664 	ljmp	00154$
+   033F 02s04r21           1665 	ljmp	00170$
+   0342 02s04r21           1666 	ljmp	00168$
+   0345 02s04r21           1667 	ljmp	00170$
+   0348 02s04r21           1668 	ljmp	00169$
+   034B 02s04r21           1669 	ljmp	00170$
+   034E 02s03r57           1670 	ljmp	00140$
+   0351 02s04r21           1671 	ljmp	00170$
+   0354 02s03r60           1672 	ljmp	00141$
+                           1673 ;	usb_common.c:301: case RQ_SET_CONFIG:
+   0357                    1674 00140$:
+                           1675 ;	usb_common.c:302: _usb_config = wValueL;		// FIXME app should handle
+                           1676 ;	genPointerGet
+                           1677 ;	genFarPointerGet
+   0357 90 E6 BA           1678 	mov	dptr,#(_SETUPDAT + 0x0002)
+   035A E0                 1679 	movx	a,@dptr
+   035B F5*00              1680 	mov	__usb_config,a
+                           1681 ;	usb_common.c:303: break;
+   035D 02s04r24           1682 	ljmp	00175$
+                           1683 ;	usb_common.c:305: case RQ_SET_INTERFACE:
+   0360                    1684 00141$:
+                           1685 ;	usb_common.c:306: _usb_alt_setting = wValueL;	// FIXME app should handle
+                           1686 ;	genPointerGet
+                           1687 ;	genFarPointerGet
+   0360 90 E6 BA           1688 	mov	dptr,#(_SETUPDAT + 0x0002)
+   0363 E0                 1689 	movx	a,@dptr
+   0364 F5*01              1690 	mov	__usb_alt_setting,a
+                           1691 ;	usb_common.c:307: break;
+   0366 02s04r24           1692 	ljmp	00175$
+                           1693 ;	usb_common.c:311: case RQ_CLEAR_FEATURE:
+   0369                    1694 00142$:
+                           1695 ;	usb_common.c:312: switch (bRequestType & bmRT_RECIP_MASK){
+                           1696 ;	genPointerGet
+                           1697 ;	genFarPointerGet
+   0369 90 E6 B8           1698 	mov	dptr,#_SETUPDAT
+   036C E0                 1699 	movx	a,@dptr
+   036D FA                 1700 	mov	r2,a
+                           1701 ;	genAnd
+   036E 53 02 1F           1702 	anl	ar2,#0x1F
+                           1703 ;	genCmpEq
+                           1704 ;	gencjneshort
+   0371 BA 00 02           1705 	cjne	r2,#0x00,00230$
+                           1706 ;	Peephole 112.b	changed ljmp to sjmp
+   0374 80 05              1707 	sjmp	00143$
+   0376                    1708 00230$:
+                           1709 ;	genCmpEq
+                           1710 ;	gencjneshort
+                           1711 ;	Peephole 112.b	changed ljmp to sjmp
+                           1712 ;	usb_common.c:314: case bmRT_RECIP_DEVICE:
+                           1713 ;	Peephole 112.b	changed ljmp to sjmp
+                           1714 ;	Peephole 198.b	optimized misc jump sequence
+   0376 BA 02 4A           1715 	cjne	r2,#0x02,00152$
+   0379 80 0A              1716 	sjmp	00147$
+                           1717 ;	Peephole 300	removed redundant label 00231$
+   037B                    1718 00143$:
+                           1719 ;	usb_common.c:315: switch (wValueL){
+                           1720 ;	genPointerGet
+                           1721 ;	genFarPointerGet
+   037B 90 E6 BA           1722 	mov	dptr,#(_SETUPDAT + 0x0002)
+   037E E0                 1723 	movx	a,@dptr
+                           1724 ;	usb_common.c:318: fx2_stall_ep0 ();
+                           1725 ;	genCall
+   037F 12s00r00           1726 	lcall	_fx2_stall_ep0
+                           1727 ;	usb_common.c:320: break;
+   0382 02s04r24           1728 	ljmp	00175$
+                           1729 ;	usb_common.c:322: case bmRT_RECIP_ENDPOINT:
+   0385                    1730 00147$:
+                           1731 ;	usb_common.c:323: if (wValueL == FS_ENDPOINT_HALT && plausible_endpoint (wIndexL)){
+                           1732 ;	genPointerGet
+                           1733 ;	genFarPointerGet
+   0385 90 E6 BA           1734 	mov	dptr,#(_SETUPDAT + 0x0002)
+   0388 E0                 1735 	movx	a,@dptr
+                           1736 ;	genIfxJump
+                           1737 ;	Peephole 108.b	removed ljmp by inverse jump logic
+   0389 70 33              1738 	jnz	00149$
+                           1739 ;	Peephole 300	removed redundant label 00232$
+                           1740 ;	genPointerGet
+                           1741 ;	genFarPointerGet
+   038B 90 E6 BC           1742 	mov	dptr,#(_SETUPDAT + 0x0004)
+   038E E0                 1743 	movx	a,@dptr
+                           1744 ;	genCall
+   038F FA                 1745 	mov	r2,a
+                           1746 ;	Peephole 244.c	loading dpl from a instead of r2
+   0390 F5 82              1747 	mov	dpl,a
+   0392 12s00rF3           1748 	lcall	_plausible_endpoint
+   0395 E5 82              1749 	mov	a,dpl
+                           1750 ;	genIfx
+                           1751 ;	genIfxJump
+                           1752 ;	Peephole 108.c	removed ljmp by inverse jump logic
+   0397 60 25              1753 	jz	00149$
+                           1754 ;	Peephole 300	removed redundant label 00233$
+                           1755 ;	usb_common.c:324: *epcs (wIndexL) &= ~bmEPSTALL;
+                           1756 ;	genPointerGet
+                           1757 ;	genFarPointerGet
+   0399 90 E6 BC           1758 	mov	dptr,#(_SETUPDAT + 0x0004)
+   039C E0                 1759 	movx	a,@dptr
+                           1760 ;	genCall
+   039D FA                 1761 	mov	r2,a
+                           1762 ;	Peephole 244.c	loading dpl from a instead of r2
+   039E F5 82              1763 	mov	dpl,a
+   03A0 12s01r12           1764 	lcall	_epcs
+                           1765 ;	genPointerGet
+                           1766 ;	genFarPointerGet
+   03A3 AA 82              1767 	mov	r2,dpl
+                           1768 ;	Peephole 177.d	removed redundant move
+   03A5 AB 83              1769 	mov  r3,dph
+                           1770 ;	Peephole 177.a	removed redundant mov
+   03A7 E0                 1771 	movx	a,@dptr
+   03A8 FC                 1772 	mov	r4,a
+                           1773 ;	genAnd
+   03A9 53 04 FE           1774 	anl	ar4,#0xFE
+                           1775 ;	genPointerSet
+                           1776 ;     genFarPointerSet
+   03AC 8A 82              1777 	mov	dpl,r2
+   03AE 8B 83              1778 	mov	dph,r3
+   03B0 EC                 1779 	mov	a,r4
+   03B1 F0                 1780 	movx	@dptr,a
+                           1781 ;	usb_common.c:325: fx2_reset_data_toggle (wIndexL);
+                           1782 ;	genPointerGet
+                           1783 ;	genFarPointerGet
+   03B2 90 E6 BC           1784 	mov	dptr,#(_SETUPDAT + 0x0004)
+   03B5 E0                 1785 	movx	a,@dptr
+                           1786 ;	genCall
+   03B6 FA                 1787 	mov	r2,a
+                           1788 ;	Peephole 244.c	loading dpl from a instead of r2
+   03B7 F5 82              1789 	mov	dpl,a
+   03B9 12s00r00           1790 	lcall	_fx2_reset_data_toggle
+                           1791 ;	Peephole 112.b	changed ljmp to sjmp
+   03BC 80 66              1792 	sjmp	00175$
+   03BE                    1793 00149$:
+                           1794 ;	usb_common.c:328: fx2_stall_ep0 ();
+                           1795 ;	genCall
+   03BE 12s00r00           1796 	lcall	_fx2_stall_ep0
+                           1797 ;	usb_common.c:329: break;
+                           1798 ;	usb_common.c:331: default:
+                           1799 ;	Peephole 112.b	changed ljmp to sjmp
+   03C1 80 61              1800 	sjmp	00175$
+   03C3                    1801 00152$:
+                           1802 ;	usb_common.c:332: fx2_stall_ep0 ();
+                           1803 ;	genCall
+   03C3 12s00r00           1804 	lcall	_fx2_stall_ep0
+                           1805 ;	usb_common.c:335: break;
+                           1806 ;	usb_common.c:339: case RQ_SET_FEATURE:
+                           1807 ;	Peephole 112.b	changed ljmp to sjmp
+   03C6 80 5C              1808 	sjmp	00175$
+   03C8                    1809 00154$:
+                           1810 ;	usb_common.c:340: switch (bRequestType & bmRT_RECIP_MASK){
+                           1811 ;	genPointerGet
+                           1812 ;	genFarPointerGet
+   03C8 90 E6 B8           1813 	mov	dptr,#_SETUPDAT
+   03CB E0                 1814 	movx	a,@dptr
+   03CC FA                 1815 	mov	r2,a
+                           1816 ;	genAnd
+   03CD 53 02 1F           1817 	anl	ar2,#0x1F
+                           1818 ;	genCmpEq
+                           1819 ;	gencjneshort
+                           1820 ;	Peephole 112.b	changed ljmp to sjmp
+                           1821 ;	Peephole 198.b	optimized misc jump sequence
+   03D0 BA 00 51           1822 	cjne	r2,#0x00,00175$
+                           1823 ;	Peephole 200.b	removed redundant sjmp
+                           1824 ;	Peephole 300	removed redundant label 00234$
+                           1825 ;	Peephole 300	removed redundant label 00235$
+                           1826 ;	usb_common.c:343: switch (wValueL){
+                           1827 ;	genPointerGet
+                           1828 ;	genFarPointerGet
+   03D3 90 E6 BA           1829 	mov	dptr,#(_SETUPDAT + 0x0002)
+   03D6 E0                 1830 	movx	a,@dptr
+   03D7 FA                 1831 	mov	r2,a
+                           1832 ;	genCmpEq
+                           1833 ;	gencjneshort
+   03D8 BA 01 02           1834 	cjne	r2,#0x01,00236$
+                           1835 ;	Peephole 112.b	changed ljmp to sjmp
+   03DB 80 05              1836 	sjmp	00158$
+   03DD                    1837 00236$:
+                           1838 ;	genCmpEq
+                           1839 ;	gencjneshort
+   03DD BA 02 02           1840 	cjne	r2,#0x02,00237$
+                           1841 ;	Peephole 112.b	changed ljmp to sjmp
+   03E0 80 42              1842 	sjmp	00175$
+   03E2                    1843 00237$:
+                           1844 ;	usb_common.c:349: default:
+   03E2                    1845 00158$:
+                           1846 ;	usb_common.c:350: fx2_stall_ep0 ();
+                           1847 ;	genCall
+   03E2 12s00r00           1848 	lcall	_fx2_stall_ep0
+                           1849 ;	usb_common.c:354: break;
+                           1850 ;	usb_common.c:356: case bmRT_RECIP_ENDPOINT:
+                           1851 ;	Peephole 112.b	changed ljmp to sjmp
+   03E5 80 3D              1852 	sjmp	00175$
+   03E7                    1853 00161$:
+                           1854 ;	usb_common.c:357: switch (wValueL){
+                           1855 ;	genPointerGet
+                           1856 ;	genFarPointerGet
+   03E7 90 E6 BA           1857 	mov	dptr,#(_SETUPDAT + 0x0002)
+   03EA E0                 1858 	movx	a,@dptr
+                           1859 ;	genCmpEq
+                           1860 ;	gencjneshort
+   03EB FA                 1861 	mov	r2,a
+                           1862 ;	Peephole 115.b	jump optimization
+                           1863 ;	Peephole 300	removed redundant label 00238$
+                           1864 ;	Peephole 112.b	changed ljmp to sjmp
+                           1865 ;	Peephole 160.d	removed sjmp by inverse jump logic
+   03EC 70 2E              1866 	jnz	00166$
+                           1867 ;	Peephole 300	removed redundant label 00239$
+                           1868 ;	usb_common.c:359: if (plausible_endpoint (wIndexL))
+                           1869 ;	genPointerGet
+                           1870 ;	genFarPointerGet
+   03EE 90 E6 BC           1871 	mov	dptr,#(_SETUPDAT + 0x0004)
+   03F1 E0                 1872 	movx	a,@dptr
+                           1873 ;	genCall
+   03F2 FA                 1874 	mov	r2,a
+                           1875 ;	Peephole 244.c	loading dpl from a instead of r2
+   03F3 F5 82              1876 	mov	dpl,a
+   03F5 12s00rF3           1877 	lcall	_plausible_endpoint
+   03F8 E5 82              1878 	mov	a,dpl
+                           1879 ;	genIfx
+                           1880 ;	genIfxJump
+                           1881 ;	Peephole 108.c	removed ljmp by inverse jump logic
+   03FA 60 1B              1882 	jz	00164$
+                           1883 ;	Peephole 300	removed redundant label 00240$
+                           1884 ;	usb_common.c:360: *epcs (wIndexL) |= bmEPSTALL;
+                           1885 ;	genPointerGet
+                           1886 ;	genFarPointerGet
+   03FC 90 E6 BC           1887 	mov	dptr,#(_SETUPDAT + 0x0004)
+   03FF E0                 1888 	movx	a,@dptr
+                           1889 ;	genCall
+   0400 FA                 1890 	mov	r2,a
+                           1891 ;	Peephole 244.c	loading dpl from a instead of r2
+   0401 F5 82              1892 	mov	dpl,a
+   0403 12s01r12           1893 	lcall	_epcs
+                           1894 ;	genPointerGet
+                           1895 ;	genFarPointerGet
+   0406 AA 82              1896 	mov	r2,dpl
+                           1897 ;	Peephole 177.d	removed redundant move
+   0408 AB 83              1898 	mov  r3,dph
+                           1899 ;	Peephole 177.a	removed redundant mov
+   040A E0                 1900 	movx	a,@dptr
+   040B FC                 1901 	mov	r4,a
+                           1902 ;	genOr
+   040C 43 04 01           1903 	orl	ar4,#0x01
+                           1904 ;	genPointerSet
+                           1905 ;     genFarPointerSet
+   040F 8A 82              1906 	mov	dpl,r2
+   0411 8B 83              1907 	mov	dph,r3
+   0413 EC                 1908 	mov	a,r4
+   0414 F0                 1909 	movx	@dptr,a
+                           1910 ;	Peephole 112.b	changed ljmp to sjmp
+   0415 80 0D              1911 	sjmp	00175$
+   0417                    1912 00164$:
+                           1913 ;	usb_common.c:362: fx2_stall_ep0 ();
+                           1914 ;	genCall
+   0417 12s00r00           1915 	lcall	_fx2_stall_ep0
+                           1916 ;	usb_common.c:363: break;
+                           1917 ;	usb_common.c:365: default:
+                           1918 ;	Peephole 112.b	changed ljmp to sjmp
+   041A 80 08              1919 	sjmp	00175$
+   041C                    1920 00166$:
+                           1921 ;	usb_common.c:366: fx2_stall_ep0 ();
+                           1922 ;	genCall
+   041C 12s00r00           1923 	lcall	_fx2_stall_ep0
+                           1924 ;	usb_common.c:369: break;
+                           1925 ;	usb_common.c:373: case RQ_SET_ADDRESS:	// handled by fx2 hardware
+                           1926 ;	Peephole 112.b	changed ljmp to sjmp
+   041F 80 03              1927 	sjmp	00175$
+   0421                    1928 00168$:
+                           1929 ;	usb_common.c:374: case RQ_SET_DESCR:	// not implemented
+   0421                    1930 00169$:
+                           1931 ;	usb_common.c:375: default:
+   0421                    1932 00170$:
+                           1933 ;	usb_common.c:376: fx2_stall_ep0 ();
+                           1934 ;	genCall
+   0421 12s00r00           1935 	lcall	_fx2_stall_ep0
+                           1936 ;	usb_common.c:382: }	// bmRT_TYPE_MASK
+   0424                    1937 00175$:
+                           1938 ;	usb_common.c:385: EP0CS |= bmHSNAK;
+                           1939 ;	genAssign
+                           1940 ;	genOr
+   0424 90 E6 A0           1941 	mov	dptr,#_EP0CS
+   0427 E0                 1942 	movx	a,@dptr
+   0428 FA                 1943 	mov	r2,a
+                           1944 ;	Peephole 248.a	optimized or to xdata
+   0429 44 80              1945 	orl	a,#0x80
+   042B F0                 1946 	movx	@dptr,a
+                           1947 ;	Peephole 300	removed redundant label 00176$
+   042C 22                 1948 	ret
+                           1949 	.area CSEG    (CODE)
+                           1950 	.area CONST   (CODE)

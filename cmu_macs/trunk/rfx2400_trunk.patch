@@ -1,0 +1,654 @@
+Index: usrp/host/lib/inband/db_flexrf_mimo.cc
+===================================================================
+--- usrp/host/lib/inband/db_flexrf_mimo.cc	(revision 0)
++++ usrp/host/lib/inband/db_flexrf_mimo.cc	(revision 0)
+@@ -0,0 +1,384 @@
++
++
++#include "db_flexrf_mimo.h"
++#include <usrp_standard.h>
++#include <iostream>
++#include <assert.h>
++#include <fpga_regs_common.h>
++#include <math.h>
++
++using namespace std;
++
++db_flexrf_mimo::db_flexrf_mimo(usrp_standard_rx* rx,usrp_standard_tx* tx, unsigned int side) {
++
++  d_rx=rx;
++  d_tx=tx;
++  d_side=side;
++  dbid_rx=d_rx -> daughterboard_id(d_side);   
++  dbid_tx=d_tx -> daughterboard_id(d_side);   
++
++  rx_is_configured=false;
++  tx_is_configured=false;
++
++  switch (dbid_rx) {
++  
++     case 39:
++     case 52:
++         freq_mult=1;
++         phdet_freq=64e6/16;
++         R=3407936;
++         control=5228836;
++         prescaler=16;
++         Nconstant=0;
++      
++       break;
++     
++     default:
++       cout<<"Sorry, this daughterboard (" << dbid_rx << ") is not implemented yet! \n";
++       exit(1);
++       break;
++  };
++
++  switch (dbid_tx) {
++  
++     case 43:
++     case 53:
++     
++       break;
++
++     default:
++       cout<<"Sorry, this daughterboard (" << dbid_tx << ") is not implemented yet! \n";
++       exit(1);  
++       break;
++  };
++
++  if (side>1) {
++    cout << "Side must be 0 or 1";
++    exit(1);
++  };
++
++}
++
++void db_flexrf_mimo::select_rx2(void ) {
++  if (rx_is_configured) {
++             d_rx->write_io(d_side,RX2_RX1N,RX2_RX1N);
++  };
++
++}
++
++void db_flexrf_mimo::select_tx(void ) {
++  if (tx_is_configured) {
++    d_tx->write_io(d_side,~RX_TXN,RX_TXN);
++  };
++
++}
++
++float db_flexrf_mimo::configure_tx(int gain) 
++{
++  // Disable REF clock
++  d_tx->_write_oe(0,0,0xffff);
++  d_tx->_write_fpga_reg (FR_TX_A_REFCLK, 0);
++
++  // Set PGA to 0
++  d_tx->set_pga(d_side*2+0, 0);
++  d_tx->set_pga(d_side*2+1, 0);
++
++  // No auto TR
++  set_tx_auto_tr(false);
++
++  // Setup
++  d_tx->_write_oe(d_side, (POWER_UP|RX_TXN|ENABLE), 0xffff);
++  d_tx->write_io (d_side, ((~POWER_UP) |RX_TXN), (POWER_UP|RX_TXN|ENABLE));
++
++}
++
++float db_flexrf_mimo::configure_rx(int gain) 
++{
++  // Disable REF clock
++  d_rx->_write_oe(0,0,0xffff);
++  d_rx->_write_fpga_reg (FR_RX_A_REFCLK, 0);
++
++  // Set RX Gain
++  set_rx_gain(gain);
++
++  // Set RX auto TR to false
++  set_rx_auto_tr(false);
++  
++  // Setup
++  d_rx->_write_oe(d_side,POWER_UP|RX2_RX1N|ENABLE,0xffff); 
++  d_rx->write_io(d_side, (~POWER_UP) |RX2_RX1N|ENABLE,POWER_UP|RX2_RX1N|ENABLE);
++  d_rx->write_io(d_side,0,RX2_RX1N);
++        
++  // ADC Buffer Bypass
++  // I don't know why 2 3 and are set again, but thats what the python code does
++  d_rx->set_adc_buffer_bypass(0,1);
++  d_rx->set_adc_buffer_bypass(1,1);
++  d_rx->set_adc_buffer_bypass(2,1);
++  d_rx->set_adc_buffer_bypass(3,1);
++  d_rx->set_adc_buffer_bypass(2,1);
++  d_rx->set_adc_buffer_bypass(3,1);
++}
++
++float db_flexrf_mimo::tune_tx(float freq, int gain)
++{
++  unsigned int rxtx =1; // TX
++  float target_freq=freq;
++
++  freq+=tx_lo_offset;
++
++  // Set TX PGA to 0
++  d_tx->set_pga(d_side*2+0, 0); // FIXME: I think this is unneeded
++  d_tx->set_pga(d_side*2+1, 0); // FIXME: I think this is unneeded
++
++  // Compute frequency
++  desired_n=(int)(freq*freq_mult/phdet_freq);     
++  float actual_freq=desired_n * phdet_freq;
++  int B = (int) (desired_n/prescaler);
++  int B_DIV=B;
++  int A=(int) (desired_n - prescaler*B);
++  int A_DIV=A;
++
++  if (B_DIV<A_DIV) {
++    cout << "B_DIV<<A_DIV !\n";
++    exit(1);
++  };
++
++  unsigned int N = (B_DIV << 8) | (A_DIV<<2) | Nconstant;
++
++  write_it((R & ~0x3) | 1,d_side*2+rxtx);
++  write_it((control & ~0x3) | 0,d_side*2+rxtx);
++
++  // wait 10ms
++  usleep(10000);
++
++  write_it((N & ~0x3) | 2, d_side*2+rxtx);
++
++  int lock_detect;
++  d_tx->read_io (d_side, &lock_detect);
++  lock_detect=lock_detect & PLL_LOCK_DETECT;
++  if(lock_detect==0) {
++    d_tx->read_io (d_side, &lock_detect);
++    lock_detect=lock_detect & PLL_LOCK_DETECT;
++
++    if (lock_detect==0) {
++      cout << "tx lock_detect==0 !! \n";
++      exit(1);
++    }
++  }
++
++  float dxc_freq = calculate_dxc_frequency(target_freq, actual_freq, tx_converter);
++  dxc_freq=-dxc_freq;
++  d_tx->set_tx_freq(0,dxc_freq);
++  
++  tx_is_configured=true;
++}
++
++void db_flexrf_mimo::enable_tx()
++{
++  d_tx->write_io (d_side, ENABLE, (RX_TXN|ENABLE));
++}
++
++void db_flexrf_mimo::shutdown()
++{
++  d_tx->write_io (0, -129, 224);
++  d_tx->write_io (0, -129, 128);
++
++  d_rx->write_io (0, -129, 160);
++  d_rx->write_io (0, -129, 128);
++}
++
++float db_flexrf_mimo::tune_rx(float freq, int gain)
++{
++  unsigned int rxtx = 0; // RX
++  float target_freq = freq;
++
++  freq+=rx_lo_offset;
++
++  // Set RX PGA to 0
++  d_rx->set_pga(d_side*2+0, 0); // FIXME: I think this is unneeded
++  d_rx->set_pga(d_side*2+1, 0); // FIXME: I think this is unneeded
++
++  // Set RX gain
++  set_rx_gain(gain);  // FIXME: I think this is unneeded
++    
++  // Compute frequency
++  desired_n= (int)(freq*freq_mult/phdet_freq);     
++  float actual_freq=desired_n * phdet_freq;
++  int B = (int) (desired_n/prescaler);
++  int B_DIV=B;
++  int A=(int) (desired_n - prescaler*B);
++  int A_DIV=A;
++
++  if (B_DIV<A_DIV) {
++    cout << "B_DIV<<A_DIV !\n";
++    exit(1);
++  };
++
++  unsigned int N = (B_DIV << 8) | (A_DIV<<2) | Nconstant;
++
++  write_it((R & ~0x3) | 1,d_side*2+rxtx);
++  write_it((control & ~0x3) | 0,d_side*2+rxtx);
++
++  // wait 10ms
++  usleep(10000);
++
++  write_it((N & ~0x3) | 2, d_side*2+rxtx);
++  
++  int lock_detect;
++  d_rx->read_io (d_side, &lock_detect);
++  lock_detect=lock_detect & PLL_LOCK_DETECT;
++  if(lock_detect==0) {
++    d_rx->read_io (d_side, &lock_detect);
++    lock_detect=lock_detect & PLL_LOCK_DETECT;
++
++    if (lock_detect==0) {
++      cout << "tx lock_detect==0 !! \n";
++      exit(1);
++    }
++  }
++  
++  float dxc_freq = calculate_dxc_frequency(target_freq, actual_freq, rx_converter);
++  d_rx->set_rx_freq(0,dxc_freq);
++
++  rx_is_configured=true;
++}
++
++void db_flexrf_mimo::set_tx_auto_tr(bool on)
++{
++  if(on) {
++    set_tx_atr_mask (RX_TXN | ENABLE);
++    set_tx_atr_txval(0      | ENABLE);
++    set_tx_atr_rxval(RX_TXN | 0);
++  } else {
++    set_tx_atr_mask (0);
++    set_tx_atr_txval(0);
++    set_tx_atr_rxval(0);
++  }
++}
++
++void db_flexrf_mimo::set_rx_auto_tr(bool on)
++{
++  if(on) {
++    set_rx_atr_mask (RX_TXN | ENABLE);
++    set_rx_atr_txval(0      | ENABLE);
++    set_rx_atr_rxval(RX_TXN | 0);
++  } else {
++    set_rx_atr_mask (0);
++    set_rx_atr_txval(0);
++    set_rx_atr_rxval(0);
++  }
++}
++
++void db_flexrf_mimo::set_tx_atr_mask(long v)
++{
++  d_tx->_write_fpga_reg(FR_ATR_MASK_0 + 3 * 0, v);
++}
++
++void db_flexrf_mimo::set_tx_atr_txval(long v)
++{
++  d_tx->_write_fpga_reg(FR_ATR_TXVAL_0 + 3 * 0, v);
++}
++
++void db_flexrf_mimo::set_tx_atr_rxval(long v)
++{
++  d_tx->_write_fpga_reg(FR_ATR_RXVAL_0 + 3 * 0, v);
++}
++
++void db_flexrf_mimo::set_rx_atr_mask(long v)
++{
++  d_rx->_write_fpga_reg(FR_ATR_MASK_0 + 3 * 1, v);
++}
++
++void db_flexrf_mimo::set_rx_atr_txval(long v)
++{
++  d_rx->_write_fpga_reg(FR_ATR_TXVAL_0 + 3 * 1, v);
++}
++
++void db_flexrf_mimo::set_rx_atr_rxval(long v)
++{
++  d_rx->_write_fpga_reg(FR_ATR_RXVAL_0 + 3 * 1, v);
++}
++
++void db_flexrf_mimo::set_rx_gain(long gain)
++{
++  float pga_gain, agc_gain;
++  float V_maxgain, V_mingain, V_fullscale;
++  float dac_value;
++
++  float maxgain = d_rx->pga_max()+70 - d_rx->pga_max();
++  float mingain = d_rx->pga_min();
++
++  if(gain>maxgain) {
++    pga_gain = gain-maxgain;
++    assert(pga_gain <= d_rx->pga_max());
++    agc_gain = maxgain;
++  } else {
++    pga_gain = 0;
++    agc_gain = gain;
++  }
++  V_maxgain = 0.2;
++  V_mingain = 1.2;
++  V_fullscale = 3.3;
++  dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale;
++  assert(dac_value>=0);
++  assert(dac_value<4096);
++  d_rx->write_aux_dac(0, 0, (int)dac_value);
++  d_rx->set_pga(0, (int)pga_gain);
++  d_rx->set_pga(1, (int)pga_gain);
++}
++
++float db_flexrf_mimo::calculate_dxc_frequency(float target_freq, float baseband_freq, float fs)
++{
++  float delta = target_freq-baseband_freq;
++
++  if(delta > 0) {
++    while(delta>fs)
++      delta-=fs;
++    if(delta <= fs/2)
++      return -delta;
++    else
++      return delta-fs;
++  } else {
++    while(delta < -fs)
++      delta+=fs;
++    if(delta >= -fs/2)
++      return -delta;
++    else
++      return delta+fs;
++  }
++}
++
++
++void db_flexrf_mimo::write_it(unsigned int v,unsigned int slot) {
++  char *s1,*s2,*s3, s1c, s2c, s3c;
++  std::string str=std::string();
++
++  s1=&s1c;  s2=&s2c;  s3=&s3c; 
++
++
++  *s1=static_cast<char>(((v >> 16) & 0xff));
++  *s2=static_cast<char>(((v >> 8) & 0xff));
++  *s3=static_cast<char>(((v >> 0) & 0xff));
++
++  str.append(string(s1,1));
++  str.append(string(s2,1));
++  str.append(string(s3,1));
++
++  switch (slot) {
++  case 0:
++    d_rx->_write_spi (0,SPI_ENABLE_RX_A,0,str);
++    break;
++  case 1:
++    d_tx->_write_spi (0,SPI_ENABLE_TX_A,0,str);
++    break;
++  case 2:
++    d_rx->_write_spi (0,SPI_ENABLE_RX_B,0,str);
++    break;
++  case 3:
++    d_tx->_write_spi (0,SPI_ENABLE_TX_B,0,str);
++    break;
++  };  
++
++};
++
++
+Index: usrp/host/lib/inband/usrp_usb_interface.h
+===================================================================
+--- usrp/host/lib/inband/usrp_usb_interface.h	(revision 8303)
++++ usrp/host/lib/inband/usrp_usb_interface.h	(working copy)
+@@ -49,7 +49,7 @@
+   long d_interp_tx;
+   long d_decim_rx;
+ 
+-  long d_rf_freq;
++  unsigned long d_rf_freq;
+ 
+   std::string d_rbf;
+ 
+Index: usrp/host/lib/inband/db_flexrf_mimo.h
+===================================================================
+--- usrp/host/lib/inband/db_flexrf_mimo.h	(revision 0)
++++ usrp/host/lib/inband/db_flexrf_mimo.h	(revision 0)
+@@ -0,0 +1,143 @@
++/* -*- c++ -*- */
++/*
++ * Copyright 2003,2004 Free Software Foundation, Inc.
++ * 
++ * This file is part of GNU Radio
++ * 
++ * GNU Radio is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 3, or (at your option)
++ * any later version.
++ * 
++ * GNU Radio is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ * 
++ * You should have received a copy of the GNU General Public License
++ * along with GNU Radio; see the file COPYING.  If not, write to
++ * the Free Software Foundation, Inc., 51 Franklin Street,
++ * Boston, MA 02110-1301, USA.
++ */
++
++#ifndef INCLUDED_DB_FLEXRF_MIMO_H
++#define INCLUDED_DB_FLEXRF_MIMO_H
++
++#include <usrp_standard.h>
++
++
++
++
++// These defines are taken from db_flexrf.py
++
++#define FR_TX_A_REFCLK          40
++#define FR_RX_A_REFCLK          41
++#define FR_TX_B_REFCLK          42
++#define FR_RX_B_REFCLK          43
++
++#define MIN_GAIN 0.0
++#define MAX_GAIN 90.0
++#define GAIN_RES 0.05
++
++#define PLL_LOCK_DETECT  (1 << 2)
++
++
++#define POWER_UP (1 << 7)   // enables power supply
++#define RX2_RX1N (1 << 6)   // Rx only: antenna switch between RX2 and TX/RX port
++#define RX_TXN (1 << 6)  
++#define ENABLE  (1 << 5)    // enables mixer
++#define AUX_RXAGC (1 << 8)
++
++
++
++// These defines are taken from usrp_spi_defs.h 
++#define SPI_ENABLE_TX_A         0x10    // select d'board TX A
++#define SPI_ENABLE_RX_A         0x20    // select d'board RX A
++#define SPI_ENABLE_TX_B         0x40    // select d'board TX B
++#define SPI_ENABLE_RX_B         0x80    // select d'board RX B
++
++const static float rx_lo_offset = -4000000.0;
++const static float tx_lo_offset = 4000000.0;
++
++const static long tx_converter = 128000000;
++const static long rx_converter = 64000000;
++
++class db_flexrf_mimo {
++
++  public:
++ 
++  /*!
++   * \brief Instantiate a flexradio daughterboard.
++   * 
++   * \param rx          
++   * \param tx          
++   * \param side.       Which daughterboard =0 for A, =1 for B. 
++   */
++
++  db_flexrf_mimo(usrp_standard_rx *rx,usrp_standard_tx *tx, unsigned int side);
++
++  /*!
++   * \brief Configure flexradio daughterboard
++   * 
++   * 
++   * \param desired_freq.  The desired frequency of the LO.
++   * \param gain.          The gain in receiving mode [0,4095].
++   * \param rxtx           If rxtx=0 then the RX is configured, otherwise the tx.
++   * \returns the actual frequency of the LO 
++   */
++  float  configure(float desired_freq,unsigned int gain,unsigned int rxtx); 
++
++  /*!
++   * \brief Select the rx2 port as input for the rx.    
++   */
++  void select_rx2(void );
++
++  /*!
++   * \brief Connect the TX to the RX/TX port.    
++   */
++  void select_tx(void );
++
++   /*!
++    * \brief Connect the TX/RX antenna to the transmitter.
++    */
++   void set_tx(void);
++   /*!
++    * brief Connected the TX/RX antenna to the receiver.
++    */   
++   void set_rx(void);
++
++   float calculate_dxc_frequency(float target_freq, float baseband_freq, float fs);
++
++   void set_rx_gain(long);
++   void set_tx_atr_mask(long);
++   void set_tx_atr_txval(long);
++   void set_tx_atr_rxval(long);
++   void set_rx_atr_mask(long);
++   void set_rx_atr_txval(long);
++   void set_rx_atr_rxval(long);
++   void set_tx_auto_tr(bool);
++   void set_rx_auto_tr(bool);
++
++   float configure_rx(int);
++   float configure_tx(int);
++   float tune_tx(float,int);
++   float tune_rx(float,int);
++   void  enable_tx();
++   void  shutdown();
++  private: 
++
++  void write_it(unsigned int,unsigned int);
++
++    unsigned int dbid_rx, dbid_tx,d_side, R_DIV, desired_n, R, control;
++    unsigned int Nconstant;
++    float  refclk_divisor,refclk_freq,phdet_freq,prescaler,freq_mult;
++
++    usrp_standard_rx* d_rx;
++    usrp_standard_tx* d_tx;
++
++    bool rx_is_configured;
++    bool tx_is_configured;
++};
++
++
++#endif //INCLUDED_DB_FLEXRF_MIMO_H
+Index: usrp/host/lib/inband/usrp_usb_interface.cc
+===================================================================
+--- usrp/host/lib/inband/usrp_usb_interface.cc	(revision 8303)
++++ usrp/host/lib/inband/usrp_usb_interface.cc	(working copy)
+@@ -35,6 +35,7 @@
+ #include <usrp_rx_stub.h>
+ #include "usrp_tx.h"
+ #include "usrp_standard.h"
++#include "db_flexrf_mimo.h"
+ #include <stdio.h>
+ 
+ typedef usrp_inband_usb_packet transport_pkt;
+@@ -303,24 +304,15 @@
+     return;
+   }
+ 
+-  if(!d_utx->set_tx_freq (0,d_rf_freq) || !d_utx->set_tx_freq(1,d_rf_freq)) {  // try setting center freq to 0
++//  if(!d_utx->set_mux(0xBA98)) {
++  if(!d_utx->set_mux(152)) {
+     if (verbose)
+-      std::cout << "[USRP_USB_INTERFACE] Failed to set center frequency on TX\n";
+-    reply_data = pmt_list2(invocation_handle, PMT_F);
+-    d_cs->send(s_response_usrp_open, reply_data);
+-    return;
+-  }
+-
+-  if(!d_utx->set_mux(0xBA98)) {
+-    if (verbose)
+       std::cout << "[USRP_USB_INTERFACE] Failed to set TX mux\n";
+     reply_data = pmt_list2(invocation_handle, PMT_F);
+     d_cs->send(s_response_usrp_open, reply_data);
+     return;
+   }
+ 
+-  d_utx->start();
+-
+   if (verbose)
+     std::cout << "[USRP_USB_INTERFACE] Setup TX channel\n";
+ 
+@@ -342,17 +334,10 @@
+     return;
+   }
+ 
+-  if(!d_urx->set_rx_freq (0, -d_rf_freq) || !d_urx->set_rx_freq(1, -d_rf_freq)) {
+-    if (verbose)
+-      std::cout << "[usrp_server] Failed to set center frequency on RX\n";
+-    reply_data = pmt_list2(invocation_handle, PMT_F);
+-    d_cs->send(s_response_usrp_open, reply_data);
+-    return;
+-  }
+-  
+   // Two channels ... this really needs to end up being set correctly by
+   // querying for what dboards are connected
+-  if(!d_urx->set_mux(0x32103210)) {
++  if(!d_urx->set_mux(1)) {
++//  if(!d_urx->set_mux(0x32103210)) {
+     if (verbose)
+       std::cout << "[USRP_USB_INTERFACE] Failed to set RX mux\n";
+     reply_data = pmt_list2(invocation_handle, PMT_F);
+@@ -370,6 +355,24 @@
+ //  d_urx->_write_oe(1, 0xffff, 0xffff);
+ 
+   d_cs->send(s_response_usrp_open, pmt_list2(invocation_handle, PMT_T));
++
++  // Tune daughterboards
++  db_flexrf_mimo dboards(d_urx, d_utx, 0);
++  dboards.configure_tx(0);
++  dboards.configure_rx(45);
++  dboards.tune_tx(d_rf_freq, 0);
++  dboards.tune_rx(d_rf_freq, 45);
++  dboards.enable_tx();
++  dboards.select_tx();
++
++
++//  dboards.configure(d_rf_freq, 0, 1);
++//  dboards.configure(d_rf_freq, 45, 0);
++//  dboards.select_tx();
++//  dboards.select_rx2();
++  
++  d_utx->start();
++
+ }
+ 
+ /*!
+Index: usrp/host/lib/inband/Makefile.am
+===================================================================
+--- usrp/host/lib/inband/Makefile.am	(revision 8303)
++++ usrp/host/lib/inband/Makefile.am	(working copy)
+@@ -57,6 +57,7 @@
+ 	usrp_server.cc			\
+ 	usrp_tx.cc			\
+ 	usrp_tx_stub.cc			\
++	db_flexrf_mimo.cc \
+ 	usrp_usb_interface.cc		
+ 
+ libusrp_inband_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+@@ -73,6 +74,7 @@
+ 	usrp_server.h			\
+ 	usrp_tx.h			\
+ 	usrp_tx_stub.h			\
++	db_flexrf_mimo.h \
+ 	usrp_usb_interface.h
+ 
+ noinst_HEADERS =      			\

@@ -1,0 +1,122 @@
+Testing simple_mac.py
+----------------------
+
+This file documents the testing that I've done and needs to be done
+to get simple_mac.py tested and running.  simple_mac.py is based on
+gnuradio-examples/python/gmsk2/tunnel.py and requires other files in
+gnuradio-examples/python/gmsk2.
+
+Because it is heavily based on tunnel.py, getting tunnel.py up and
+running is the first step in getting simple_mac.py tested as it will
+separate getting the radio code running from testing the MAC code.
+tunnel.py as is distributed is Linux specific for setting up the tap
+device.  To set the device for NetBSD, either use the
+--tun-device-filename=/dev/tap command line option or apply the patch
+included at the end of this file that will automatically set the right
+tap device.  I've used both methods.
+
+I tested on adroit-1 and adroit-2.  On adroit-1 I would run:
+sudo ./tunnel.py -v -f 2400E6 --bitrate 50k -i 32 -d 16 
+sudo ifconfig tap0 10.10.10.1
+
+And on adroit-2:
+sudo ./tunnel.py -v -f 2400E6 --bitrate 50k -i 32 -d 16 
+sudo ifconfig tap0 10.10.10.2
+
+There are also arguments to set things like gain and spb.  See either
+README.simple_mac or tunnel.py -h for more options.  I've played with
+the options a bit but have not figured out the right incantation.
+simple_mac.py may be substituted for tunnel.py as they take the same
+arguments, though it is not tested and needs the tunnel.py code
+working before it can be fully tested.
+
+Once these are started, then on adroit-1 you should be able to:
+ping 10.10.10.2
+
+If all were working, the ping should work.
+
+What I have been seeing, however, is the tunnel/simple_mac code
+getting the arp request from tap and trying to transmit it.  As far as
+tunnel.py is concerned it gets transmitted, but the code is not
+instrumented deep enough to confirm it was transmitted and running the
+USRP fft and oscope applications doesn't suggest anything was actually
+transmitted.  I expect that the problem is not turning the correct
+knobs and dials on the command line.  I've tried most of them, but I'm
+mostly turning them blindly.
+
+
+
+---------------------------------------------------------------
+--- tunnel.py.orig	2006-09-21 15:24:39.000000000 -0400
++++ tunnel.py	2006-09-25 09:42:52.000000000 -0400
+@@ -44,6 +44,7 @@
+ import struct
+ import sys
+ import os
++import platform
+ 
+ # from current dir
+ from transmit_path import transmit_path
+@@ -70,17 +71,26 @@
+ IFF_NO_PI	= 0x1000   # don't pass extra packet info
+ IFF_ONE_QUEUE	= 0x2000   # beats me ;)
+ 
+-def open_tun_interface(tun_device_filename):
++def open_tun_interface(type, tun_device_filename):
+     from fcntl import ioctl
+-    
+-    mode = IFF_TAP | IFF_NO_PI
+-    TUNSETIFF = 0x400454ca
+ 
++    mode = IFF_TUN   
++    ifname = 'tun0'
++
++    if type == 'tap':
++       mode = IFF_TAP | IFF_NO_PI
++       ifname = 'tapxx'
++
++    TUNSETIFF = 0x400454ca
++    TAPGIFNAME = 0x40206500
+     tun = os.open(tun_device_filename, os.O_RDWR)
+-    ifs = ioctl(tun, TUNSETIFF, struct.pack("16sH", "gr%d", mode))
+-    ifname = ifs[:16].strip("\x00")
++    if platform.system() == 'Linux':
++	ifs = ioctl(tun, TUNSETIFF, struct.pack("16sH", "gr%d", mode))
++    	ifname = ifs[:16].strip("\x00")
++    if platform.system() == 'NetBSD':
++	ifs = ioctl(tun, TAPGIFNAME, struct.pack("16sH", "gr%d", mode))
++	ifname = ifs[:16].strip("\x00")
+     return (tun, ifname)
+-    
+ 
+ # /////////////////////////////////////////////////////////////////////////////
+ #                             the flow graph
+@@ -180,6 +190,10 @@
+ 
+ def main():
+ 
++    tun_device_default = "/dev/net/tun"
++    if (platform.system() == 'FreeBSD' or platform.system() == 'NetBSD'):
++       tun_device_default = "/dev/tap"
++
+     parser = OptionParser (option_class=eng_option)
+     parser.add_option("-f", "--freq", type="eng_float", default=423.1e6,
+                       help="set Tx and Rx frequency to FREQ [default=%default]",
+@@ -204,7 +218,7 @@
+                       help="set carrier detect threshold (dB) [default=%default]")
+     parser.add_option("", "--bt", type="float", default=0.3,
+                       help="set bandwidth-time product [default=%default]")
+-    parser.add_option("","--tun-device-filename", default="/dev/net/tun",
++    parser.add_option("","--tun-device-filename", default=tun_device_default,
+                       help="path to tun device file [default=%default]")
+     parser.add_option("-v","--verbose", action="store_true", default=False)
+     fusb_options.add_options(parser)
+@@ -222,7 +236,7 @@
+         }
+ 
+     # open the TUN/TAP interface
+-    (tun_fd, tun_ifname) = open_tun_interface(options.tun_device_filename)
++    (tun_fd, tun_ifname) = open_tun_interface('tap', options.tun_device_filename)
+ 
+     # Attempt to enable realtime scheduling
+     r = gr.enable_realtime_scheduling()

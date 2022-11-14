@@ -1,0 +1,353 @@
+Summary
+=======
+
+The following USB throughput results were collected on two systems
+with the same hardware, running NetBSD-current with our ugen changes
+and SuSE Linux.
+
+The ugen changes allow specifying the length of the transfer to
+request from the host controller, and here the fusb_netbsd testing
+code was recompiled with the different sizes.  The fusb_linux code
+uses 16k requests (and says that this is the largest request
+possible).  In both cases the USRP library's default buffer size of 2
+MB was used.  The ugen driver could also be changed to avoid a copy to
+the buffer in the driver, and these tests investigate how much
+performance is improved in that case.
+
+
+For reference, here is how interpolation/decimation relates to the
+intended data rate:
+
+data rate | decimation | interpolation
+--------------------------------------
+16 MB/s     16           32
+18.3 MB/s   14           28
+21.3 MB/s   12           24
+25.6 MB/s   10           20
+32 MB/s     8            16
+42.6 MB/s   6            12
+
+
+benchmark_usb.py (bidirectional test)
+
+driver       | xfer size | maximum (read+write)
+----------------------------------
+NetBSD         16k         32 MB/s
+Linux          16k         36.57 MB/s
+NetBSD         64k         32 MB/s (usually gets 36.57)
+NetBSD         128k        32 MB/s
+NetBSD -copy   16k         32 MB/s
+NetBSD -copy   64k         42.6 MB/s
+NetBSD -copy   128k        42.6 MB/s
+
+
+test_standard_usrp_rx
+
+driver       | xfer size | maximum
+----------------------------------
+NetBSD         16k         21.3
+Linux          16k         32
+NetBSD         64k         25.6
+NetBSD         128k        21.3
+NetBSD -copy   16k         25.6
+NetBSD -copy   64k         25.6
+NetBSD -copy   128k        25.6
+
+test_standard_usrp_tx
+
+driver       | xfer size | maximum
+----------------------------------
+NetBSD         16k         21.3
+Linux          16k         32
+NetBSD         64k         25.6
+NetBSD         128k        21.3
+NetBSD -copy   16k         21.3
+NetBSD -copy   64k         25.6
+NetBSD -copy   128k        25.6
+
+
+The Linux numbers suggest that there is about 36 MB/s bandwidth
+available total (maybe more but less than 42), and it must be divided
+between transmit and receive.  So 32 can be done one-way, but as soon
+as one needs bidirectional traffic, neither direction can do 32.
+Probably the USRP could be set up to use, say, 25.6 and 8 between read
+and write instead of 16 and 16, but not 25.6 and 16.
+
+This follows fairly well from the implementation.  On Linux, USRP
+reads and writes are all done via a generic request mechanism funneled
+through the control endpoint.  So the sum of reads and writes in
+aggregate seems to be constrained by how fast data can be pushed
+through this system.
+
+With our NetBSD implementation, unless the transactions go in
+lock-step and thus one of read and write has to wait while the other's
+completion interrupt is being handled, read and write are handled
+independently all the way down until you get to the host controller
+driver.  Therefore the bidirectional numbers are more related to the
+sum of the two unidirectional numbers, instead of bidirectional being
+essentially equal to unidirectional as we're seeing with Linux.
+
+The NetBSD numbers demonstrate that 128k transfers perform worse than
+64k.  As would be expected, 128k transfers aren't worse with the extra
+copy removed but they also aren't notably better.  So while there is
+clearly too much cost copying 128k at a time vs. copying 64k, there is
+still a lot of cost that's not in the copy at all, because the numbers
+don't get vastly better when the copy is removed.  The latter cost is
+what's preventing us from getting unidirectional rates comparable to
+Linux.
+
+Copying to/from user space is not showing to be the bottleneck; the
+kernel debug logs clearly show that user space consumes and writes
+faster than the bus in these tests.
+
+
+Choosing a Good Buffer Size
+===========================
+
+The previous results are all using a buffer size of 2 MB (which is 2
+MB for each of read and write with fusb_netbsd).  Also, all reads and
+writes from user space were 16k.  The following tests indicated the
+read and write length does not matter very much.  However, reducing
+the buffer size from 2 MB demonstrably helps with the bidirectional
+throughput.
+
+Because the highest rate reached is not always the same, these results
+include several runs of benchmark_usb.py.  The maximum rate is based
+on what benchmark_usb.py claimed for five runs, trying to take into
+account that all the higher transfer rates report underruns or
+overruns occasionally.
+
+driver       | xfer | buffer | maximum
+             | size |  size  |  rate
+--------------------------------------
+NetBSD         16k    2M       32
+NetBSD         64k    2M       32
+NetBSD         128k   2M       32
+
+NetBSD         16k    1M       32
+NetBSD         32k    1M       36.57
+NetBSD         64k    1M       36.57
+NetBSD         128k   1M       32
+
+NetBSD         32k    256k     36.57
+NetBSD         64k    256k     42.6
+
+NetBSD         32k    128k     36.57
+NetBSD         64k    128k     42.6
+
+NetBSD         32k    64k      36.57
+NetBSD         64k    64k      36.57
+
+NetBSD         16k    64k      32
+NetBSD         4k     64k      32
+NetBSD         4k     32k      32
+
+It appears that the best performance for these tests is 64k transfers
+and a 256k buffer.  The same is true with the copy removed, although
+larger buffer and transfer sizes show an improvement:
+
+driver       | xfer | buffer | maximum
+             | size |  size  |  rate
+--------------------------------------
+NetBSD -copy   16k    2M       32
+NetBSD -copy   64k    2M       42.6
+NetBSD -copy   128k   2M       42.6
+
+NetBSD -copy   64k    1M       42.6
+NetBSD -copy   128k   1M       42.6
+
+NetBSD -copy   32k    256k     42.6
+NetBSD -copy   64k    256k     42.6
+
+NetBSD -copy   32k    128k     36.57
+NetBSD -copy   64k    128k     42.6
+
+
+Unidirectional Test Results
+===========================
+
+Full results for a run of test_standard_usrp_rx:
+
+driver       | xfer size | decimation | overrun queries | overruns
+------------------------------------------------------------------
+NetBSD         16k         8            41                41
+NetBSD         64k                                        41
+NetBSD         128k                                       41
+NetBSD         16k         10           52                51
+NetBSD         64k                                        1
+NetBSD         128k                                       52
+NetBSD         16k         12           62                0
+NetBSD         64k                                        0
+NetBSD         128k                                       1
+NetBSD         16k         14           73                0
+NetBSD         64k                                        0
+NetBSD         128k                                       0
+NetBSD         16k         16           83                0
+NetBSD         64k                                        0
+NetBSD         128k                                       0
+NetBSD -copy   16k         8            41                41
+NetBSD -copy   64k                                        7
+NetBSD -copy   128k                                       14
+NetBSD -copy   16k         10           52                2
+NetBSD -copy   64k                                        0
+NetBSD -copy   128k                                       0
+NetBSD -copy   16k         12           62                0
+NetBSD -copy   64k                                        0
+NetBSD -copy   128k                                       1
+NetBSD -copy   16k         14           73                0
+NetBSD -copy   64k                                        0
+NetBSD -copy   128k                                       0
+NetBSD -copy   16k         16           83                0
+NetBSD -copy   64k                                        0
+NetBSD -copy   128k                                       0
+Linux          16k         8            41                0
+Linux          16k         10           52                0
+Linux          16k         12           62                0
+Linux          16k         14           73                0
+Linux          16k         16           83                0
+Linux          16k         4            20                20
+Linux          16k         6            31                31
+
+Full results for a run of test_standard_usrp_tx:
+
+It should be noted that the fact that the driver buffers writes from
+user space means that the checks for underruns do not happen at the
+same interval as they do on Linux.  The underrun check is performed
+after a certain number of bytes have been written, and with the ugen
+changes the data is written from user space much faster than it is
+written to the bus.  So the underrun checks are performed much closer
+together in time while the buffer fills, then they are performed at
+similar intervals until the end when no more checks are performed
+while the driver's buffer drains.  If there's an underrun towards the
+very end it won't be counted.
+
+However, if the driver is not keeping up well such that there are a
+lot of underruns, the fact that the checking happens earlier doesn't
+matter much because there's an underrun every time, no matter when
+it's checked.  So comparing the number of underruns is not
+meaningless, but numbers other than nearly 100% or nearly 0% would not
+be as informative.  All of this data is nearly 100% or nearly 0% so is
+probably as representative as the data would be if the checks were
+distributed evenly again.
+
+driver       | write size | interpolation | overrun queries | underruns
+-----------------------------------------------------------------------
+NetBSD         16k          16              41                41
+NetBSD         64k                                            41
+NetBSD         128k                                           41
+NetBSD         16k          20              52                52
+NetBSD         64k                                            0
+NetBSD         128k                                           52
+NetBSD         16k          24              62                0
+NetBSD         64k                                            0
+NetBSD         128k                                           0
+NetBSD         16k          28              73                0
+NetBSD         64k                                            1
+NetBSD         128k                                           0
+NetBSD         16k          32              83                0
+NetBSD         64k                                            0
+NetBSD         128k                                           0
+NetBSD -copy   16k          16              41                41
+NetBSD -copy   64k                                            41
+NetBSD -copy   128k                                           41
+NetBSD -copy   16k          20              52                52
+NetBSD -copy   64k                                            1
+NetBSD -copy   128k                                           1
+NetBSD -copy   16k          24              62                0
+NetBSD -copy   64k                                            0
+NetBSD -copy   128k                                           0
+NetBSD -copy   16k          28              73                0
+NetBSD -copy   64k                                            0
+NetBSD -copy   128k                                           0
+NetBSD -copy   16k          32              83                0
+NetBSD -copy   64k                                            0
+NetBSD -copy   128k                                           0
+Linux          16k          16              41                1
+Linux          16k          20              52                0
+Linux          16k          24              62                0
+Linux          16k          28              73                0
+Linux          16k          32              83                0
+Linux          16k          8               20                20
+Linux          16k          12              31                31
+
+
+Buffer Size Results
+===================
+
+Following are the complete results from varying the three sizes.  The
+"uUuO count" is the total number of overruns and underruns reported,
+and when all the runs for a transfer rate reported 0, the column
+instead includes the count for the next rate up.  These may provide
+some indication of how well the driver is doing for that rate.  (The
+driver now allows at most 1 MB of buffer space allocated each
+direction, so I did not collect new data for 2 MB.)
+
+driver       | xfer | buffer | r/w  | peak | # at | uUuO  (rate if  | maximum
+             | size |  size  | size |      | peak | count not peak) |
+-------------------------------------------------------------------------
+NetBSD         16k    2M       16k                                     32
+NetBSD         64k    2M       16k                                     32
+NetBSD         128k   2M       16k                                     32
+
+NetBSD         16k    1M       16k    36.57  1/5   2,9,13,0,16,2       32
+NetBSD         32k    1M       16k    36.57  4/5   0,2,0,0,0           36.57
+NetBSD         32k    1M       32k    36.57  4/5   0,0,0,1,0           36.57
+NetBSD         32k    1M       64k    36.57  5/5   40,40,40,40,40 (42) 36.57
+NetBSD         64k    1M       16k    42.6   1/5   0,40,40,1,38        36.57
+NetBSD         64k    1M       32k    42.6   3/5   0,1,38,0,0          36.57 ?
+NetBSD         64k    1M       64k    42.6   1/5   0,1,40,40,38        36.57
+NetBSD         128k   1M       16k    36.57  3/5   0,2,0,17,0          32
+NetBSD         128k   1M       32k    32     5/5   2,1,2,1,1 (36)      32
+NetBSD         128k   1M       64k    32     5/5   21,15,2,2,5 (36)    32
+
+NetBSD         32k    256k     16k    36.57  4/5   0,1,0,0,0           36.57
+NetBSD         32k    256k     32k    36.57  5/5   1,22,22,5,8 (42)    36.57
+NetBSD         32k    256k     64k    36.57  4/5   0,1,0,0,0           36.57
+NetBSD         64k    256k     16k    42.6   4/5   0,0,0,0,1           42.6
+NetBSD         64k    256k     32k    42.6   5/5   40,40,40,40,40 (51) 42.6
+NetBSD         64k    256k     64k    42.6   5/5   40,40,40,41,40 (51) 42.6
+
+NetBSD         32k    128k     16k    36.57  4/5   0,0,0,1,0           36.57
+NetBSD         32k    128k     32k    36.57  5/5   8,3,7,1,6 (42)      36.57
+NetBSD         32k    128k     64k    36.57  5/5   17,19,6,13,8 (42)   36.57
+NetBSD         64k    128k     16k    42.6   3/5   3,0,3,0,0           42.6 ?
+NetBSD         64k    128k     32k    42.6   4/5   2,0,0,1,0           42.6
+NetBSD         64k    128k     64k    42.6   4/5   0,0,1,0,0           42.6
+
+NetBSD         32k    64k      16k    36.57  5/5   16,1,16,24,3 (42)   36.57
+NetBSD         32k    64k      32k    36.57  7/10  0,0,0,1,0,0,0,0,2,0 32 ?
+NetBSD         32k    64k      64k    36.57  5/5   16,15,3,9,11 (42)   36.57
+NetBSD         64k    64k      16k    36.57  4/5   0,2,1,0,1           36.57 ?
+NetBSD         64k    64k      32k    36.57  4/5   1,0,0,0,1           36.57
+NetBSD         64k    64k      64k    36.57  4/5   0,1,0,0,0	       36.57
+
+NetBSD         16k    64k      16k    36.57  2/5   1,2,0,0,3           32
+NetBSD         4k     64k      16k    32     4/5   0,2,0,0,0           32 ?
+NetBSD         4k     64k      4k     32     5/5   1,1,1,1,1           32 ?
+NetBSD         4k     32k      16k    32     3/5   0,0,0,3,2           < 32 ?
+NetBSD         4k     32k      4k     32     3/5   1,1,3,2,1           < 32
+
+NetBSD -copy   16k    2M                                               32
+NetBSD -copy   64k    2M                                               42.6
+NetBSD -copy   128k   2M                                               42.6
+
+NetBSD -copy   64k    1M       16k    42.6   4/5   0,0,1,0,0           42.6
+NetBSD -copy   64k    1M       32k    42.6   5/5   40,40,40,40,40 (51) 42.6
+NetBSD -copy   64k    1M       64k    42.6   2/5   1,0,0,1,1           36.57
+NetBSD -copy   128k   1M       16k    42.6   5/5   40,41,40,40,40 (51) 42.6
+NetBSD -copy   128k   1M       32k    42.6   5/5   40,40,40,40,40 (51) 42.6
+NetBSD -copy   128k   1M       64k    42.6   5/5   40,40,40,40,40 (51) 42.6
+
+NetBSD -copy   32k    256k     16k    42.6   4/5   0,1,0,0,0           42.6
+NetBSD -copy   32k    256k     32k    42.6   5/5   41,40,40,40,40 (51) 42.6
+NetBSD -copy   32k    256k     64k    42.6   4/5   0,0,3,0,0           42.6
+NetBSD -copy   64k    256k     16k    42.6   5/5   42,40,40,40,40 (51) 42.6
+NetBSD -copy   64k    256k     32k    42.6   5/5   40,40,40,40,41 (51) 42.6
+NetBSD -copy   64k    256k     64k    42.6   5/5   40,40,40,40,40 (51) 42.6
+
+NetBSD -copy   32k    128k     16k    36.57  3/5   5,1,0,0,3           36.57 ?
+NetBSD -copy   32k    128k     32k    36.57  4/5   0,2,0,0,0           36.57
+NetBSD -copy   32k    128k     64k    42.6   1/5   0,5,2,2,5           36.57
+NetBSD -copy   64k    128k     16k    42.6   4/5   0,0,1,1,0           42.6
+NetBSD -copy   64k    128k     32k    42.6   3/5   0,22,0,1,0          36.57 ?
+NetBSD -copy   64k    128k     64k    42.6   5/5   40,41,40,40,40 (51) 42.6

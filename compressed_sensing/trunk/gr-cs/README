@@ -1,0 +1,46 @@
+Compressed Sensing Toolbox for GNU Radio
+=========================================
+
+This toolbox enhances GNU Radio with features for compressed sensing.
+
+Compressed Sensing (CS) is a recently popularized methodology to aquire or process signals at sub-Nyquist rate. Compression is implemented by a linear projection. For Cognitive Radio (CR) applications, CS holds the promise of allowing new trade-offs between sampling rate and signal to noise ratio for estimation and detection. 
+
+Python usage:
+-------------
+
+Run
+>>> from gnuradio import gr,cs
+to get access to the features.
+
+E.g. cs.circmat_vccb() gives you a processing block which compresses vectors with a circular
+matrix.
+
+
+Specific Documentation:
+-----------------------
+Can be found in the Doxygen docblocks.
+
+
+Feature list:
+-------------
+Compression blocks: Most compression blocks work on vectors, i.e. they take a long
+	vector and output a shorter one. These blocks are marked with a 'v' in their
+	type suffix, e.g. circmat_vccb.
+	The type suffixes are based on the ones in the GNU Radio core, e.g. 'vccf' stands
+	for complex vector in, complex vector out, float compression matrix.
+	The 'b' type compression matrices (e.g. vccb) work a bit differently: They actually
+	take signed chars as compression data. These blocks can be switched to interpret zeros
+	as -1, which comes in handy when creating pseudorandom 0/1 sequences with shift
+	registers that should actually be interpreted as -1/1 sequences. Of course, -1/1
+	sequences can also be directly fed to these blocks, as well as ternary sequences
+	(-1/0/1).
+
+
+Roadmap:
+--------
+In random order:
+
+- Smashed Filters
+- Compression on FPGA
+
+

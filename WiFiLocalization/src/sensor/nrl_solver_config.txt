@@ -1,0 +1,6 @@
+# NRL Solver Params (do not modify this line)
+host megantic.ece.wpi.edu
+port 5749
+X 0
+Y 0
+Z 0

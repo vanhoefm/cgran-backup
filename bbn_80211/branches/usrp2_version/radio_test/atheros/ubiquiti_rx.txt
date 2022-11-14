@@ -1,0 +1,28 @@
+$Id: ubiquiti_rx.txt,v 1.1 2007/01/17 17:33:59 gdt Exp $
+
+Test of Ubiquiti "300 mW" atheros-based card
+200610?
+Greg Troxel
+Bob Vincent
+
+Linksys access point SSID "adroit" (XXX get serial #)
+
+HP 8495A set to 10
+HP 8494 set to 0
+HP 8495A set to 10
+
+100 ft 9913
+
+measured -11.3 dBm on analyzer
+
+So 0 is +8.7 dBm.
+
+Stray note "50 -44 and rising"
+
+Test frequency is 2437 MHz.
+
+See spreadhseet ubiquiti_rx.xls for test results.
+
+representative cell
+
+70+0+0  leads to signal -71 noise -92

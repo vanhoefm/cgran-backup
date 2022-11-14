@@ -1,0 +1,52 @@
+#!/bin/bash
+SRATE=2000000
+PORT=8081
+AFILE=/dev/null
+A1LBL=None
+A2LBL=None
+A3LBL=None
+A4LBL=None
+ATITLE="Analysis Plugin Data"
+ANALYSE=None
+PYTHONPATH=$PYTHONPATH:$HOME/bin
+export PYTHONPATH
+rm -f analysis_fifo
+mkfifo analysis_fifo
+nextarg=0
+
+case $1 in
+	-a*)
+		if [ $1 = "-a:cadence" ]
+		then
+			AFILE=analysis_fifo
+			A1LBL="Avg Cadence"
+			A2LBL="Min Cadence"
+			A3LBL="Max Cadence"
+			A4LBL="Crude SNR"
+			ATITLE="DAB Frame Timing"
+			ANALYSE=cadence
+		fi
+		shift
+		;;
+esac
+
+for arg in $*
+do
+	if [ $arg = "-r" -o $arg = "--srate" ]
+	then
+		nextarg=1
+	elif [ $nextarg -ne 0 ]
+	then
+		SRATE=$arg
+		break
+	fi
+done
+
+if [ $ANALYSE = cadence ]
+then
+	$HOME/bin/cadence $SRATE 100000 $PORT <$AFILE &
+fi
+
+$HOME/bin/gr_iqtx.py $@ --a1label "$A1LBL" --a2label "$A2LBL" --a3label "$A3LBL" \
+	--a4label "$A4LBL" --afile $AFILE --atitle "$ATITLE" --port $PORT \
+	 >gr_iqtx.log 2>&1

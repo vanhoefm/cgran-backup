@@ -1,0 +1,5 @@
+Things that need to happen before it's shipped:
+
+* Better Doxygen (@arg, @return at the minimum)
+* Clean up FIXMEs
+

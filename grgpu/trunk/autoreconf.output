@@ -1,0 +1,5 @@
+
+libtoolize: Remember to add `LT_INIT' to configure.ac.
+libtoolize: Consider adding `AC_CONFIG_MACRO_DIR([m4])' to configure.ac and
+libtoolize: rerunning libtoolize, to keep the correct libtool macros in-tree.
+

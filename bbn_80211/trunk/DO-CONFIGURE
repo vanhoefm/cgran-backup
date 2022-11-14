@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export PKG_CONFIG_PATH=/usr/adroit/lib/pkgconfig
+
+CPPFLAGS="-I/usr/pkg/include" \
+LDFLAGS="-L/usr/pkg/lib -R/usr/pkg/lib" \
+./configure --prefix=/usr/adroit

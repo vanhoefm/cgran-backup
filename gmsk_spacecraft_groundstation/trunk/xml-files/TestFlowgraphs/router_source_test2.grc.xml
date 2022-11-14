@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1226801702.2</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>samp_rate</key>
+      <value>100e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>20</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Default Flow Graph</param>
+        <param>Your Name</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>100</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Fill this flow graph</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>HDLC Router Source</tag>
+      <id>HDLC Router Source0</id>
+      <x_coordinate>81</x_coordinate>
+      <y_coordinate>318</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>17</param>
+        <param>10.0.0.1</param>
+        <param>10.0.0.2</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Throttle</tag>
+      <id>Throttle0</id>
+      <x_coordinate>369</x_coordinate>
+      <y_coordinate>326</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>4</param>
+        <param>$samp_rate</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Null Sink</tag>
+      <id>Null Sink0</id>
+      <x_coordinate>647</x_coordinate>
+      <y_coordinate>334</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>4</param>
+        <param>1</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>Throttle0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>HDLC Router Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+    <connection>
+      <input_signal_block_id>Null Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>Throttle0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

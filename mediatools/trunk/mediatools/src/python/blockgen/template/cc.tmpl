@@ -1,0 +1,40 @@
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <####HEADER####>
+#include <gr_io_signature.h>
+
+####SPTR####
+####MAKE#### (####CONARGLISTWITHTYPES####)
+{
+    return ####SPTR#### (new ####FULL#### (####CONARGLIST####));
+}
+
+static const int MIN_IN = ####MININ####;    // mininum number of input streams
+static const int MAX_IN = ####MAXIN####;    // maximum number of input streams
+static const int MIN_OUT = ####MINOUT####;   // minimum number of output streams
+static const int MAX_OUT = ####MAXOUT####;   // maximum number of output streams
+
+####FULL####::####FULL#### (####CONARGLISTWITHTYPES####) 
+    : ####SUPER#### ("####SHORT####",
+        ####INPUT_SIGNATURE####,
+        ####OUTPUT_SIGNATURE####)
+{
+  // nothing else required in this example
+}
+
+####FULL####::~####FULL#### () 
+{
+  // nothing else required in this example
+}
+
+
+int ####FULL####::####WORK####
+{
+####INDEFS####
+        ####CONSUME####
+        return noutput_items;
+}
+
+####METHODDEFLIST####

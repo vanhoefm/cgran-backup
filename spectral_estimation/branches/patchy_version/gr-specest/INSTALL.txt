@@ -1,0 +1,26 @@
+Requirements
+------------
+
+The following code must be available in the GNU Radio core:
+
+gnuradio-core/src/lib/gengen/gr_moving_average_vff.*
+gnuradio-core/src/lib/general/gr_stream_to_vector_overlap.*
+
+These files have been submitted and are currently (Feb 09) under revision.
+As long as they're not available in the trunk, they are available as patches in the
+'patch' subdir.
+
+You can simply patch your system by calling
+
+$ patch -p0 < gr-specest/patch/patch_*
+
+Building and installing:
+-----------------------
+
+The usual GNU build process applies:
+
+./bootstrap
+./configure
+make
+make check
+sudo make install

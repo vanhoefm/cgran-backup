@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Stream Annotator
+###################################################
+ -->
+<block>
+    <name>Stream Annotator All to All</name>
+    <key>gr_annotator_alltoall</key>
+    <category>/Stream Conversions</category>
+    <import>from gnuradio import gr</import>
+    <make>gr.annotator_alltoall($tag_samp_period, $type.size)</make>
+    <param>
+        <name>Input Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option>
+            <name>Complex</name>
+            <key>complex</key>
+            <opt>size:gr.sizeof_gr_complex</opt>
+        </option>
+        <option>
+            <name>Float</name>
+            <key>float</key>
+            <opt>size:gr.sizeof_float</opt>
+        </option>
+        <option>
+            <name>Int</name>
+            <key>int</key>
+            <opt>size:gr.sizeof_int</opt>
+        </option>
+        <option>
+            <name>Short</name>
+            <key>short</key>
+            <opt>size:gr.sizeof_short</opt>
+        </option>
+        <option>
+            <name>Byte</name>
+            <key>byte</key>
+            <opt>size:gr.sizeof_char</opt>
+        </option>
+    </param>
+    <param>
+        <name>Tag every N Samples</name>
+        <key>tag_samp_period</key>
+        <value>samp_rate</value>
+        <type>real</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>$type</type>
+        <vlen>1</vlen>
+    </sink>
+    <source>
+        <name>out</name>
+        <type>$type</type>
+        <vlen>1</vlen>
+    </source>
+    <doc>
+        All-to-All stream annotator
+    </doc>
+</block>

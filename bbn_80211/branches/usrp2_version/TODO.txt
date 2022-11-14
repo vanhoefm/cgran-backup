@@ -1,0 +1,3 @@
+Fix tap writer to use DBM instead of DB, and to adjust sign.
+
+Fix NetBSD tap driver not to have debug printfs

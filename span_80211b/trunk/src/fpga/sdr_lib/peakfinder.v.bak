@@ -1,0 +1,52 @@
+
+
+module peakfinder(clk, reset, data_conv, strobe_in, strobe_out, maxdata);
+input clk;
+input reset;
+input strobe_in;					//when it is 1 data_conv is valid
+input [15:0] data_conv;		//input data
+output strobe_out;
+output [15:0] maxdata;		
+
+reg [15:0] max_data;
+
+assign maxdata = strobe_out? max_data:maxdata;	//this line causes the first data after reset to be xxxx
+//assign maxdata = max_data;	//replace this line with above one, this is for test only
+
+clock11 myclock11(.clk(clk), .reset(reset), .strobe_in(strobe_in), .out(strobe_out));
+
+always @(posedge clk)
+begin
+	if (reset == 1'b1)
+	   max_data <= 0;
+	else if (strobe_out == 1'b1)
+	   max_data <= 0;
+	else if (strobe_in == 1'b1)
+			 if (data_conv[15] == 0 && max_data[15] == 1)	//data_conv > 0  max_data < 0
+				 if (data_conv > (~max_data))
+					 max_data <= data_conv;
+				 else
+					 max_data <= max_data;
+			 else if(data_conv[15] == 0 && max_data[15] == 0)  //data_conv > 0  max_data > 0
+				 if (data_conv > max_data)
+					 max_data <= data_conv;
+				 else
+					 max_data <= max_data;
+			 else if (data_conv[15] == 1 && max_data[15] ==1)  //data_conv < 0  max_data < 0
+				 if (data_conv < max_data)
+					 max_data <= data_conv;
+				 else
+					 max_data <= max_data;
+	     	 else											//data_conv < 0 max_data > 0
+				  if (max_data < (~data_conv))
+					  max_data <= data_conv;
+				  else
+					  max_data <= max_data;
+	else //strobe_in 
+	   max_data <= max_data;
+				  
+	else //reset
+	   max_data <= 0;
+end
+
+endmodule

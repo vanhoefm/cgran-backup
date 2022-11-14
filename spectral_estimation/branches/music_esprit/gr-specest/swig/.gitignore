@@ -1,0 +1,8 @@
+/.deps
+/.libs
+/Makefile.in
+/Makefile
+/specest_swig.cc
+/specest_swig.py
+/_specest_swig.la
+/_specest_swig_la-specest_swig.lo

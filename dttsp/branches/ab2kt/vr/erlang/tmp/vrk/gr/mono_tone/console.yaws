@@ -1,0 +1,43 @@
+<html>
+<head>
+<title> mtconsole </title>
+</head>
+<body>
+<h1>mono_tone controls</h1>
+
+<form name=init method=POST
+      action=http://localhost:18464/gr/mono_tone/init>
+<input type=submit value=init>
+</form>
+
+<form name=start method=POST
+      action=http://localhost:18464/gr/mono_tone/start>
+<input type=submit value=start>
+</form>
+
+<form name=freq method=POST
+      action=http://localhost:18464/gr/mono_tone/freq>
+frequency
+<input name=value>
+<input type=submit value=apply>
+</form>
+
+<form name=ampl method=POST
+      action=http://localhost:18464/gr/mono_tone/ampl>
+amplitude
+<input type=text name=value>
+<input type=submit value=apply>
+</form>
+
+<form name=stop method=POST
+      action=http://localhost:18464/gr/mono_tone/stop>
+<input type=submit value=stop>
+</form>
+
+<form name=kill method=POST
+      action=http://localhost:18464/gr/mono_tone/kill>
+<input type=submit value=kill>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+qwait=0
+unit=""
+
+while [ $# -gt 0 ]; do
+	if [ "$1" = "-wait" ]; then
+		qwait=1
+	else
+		unit="$1"
+	fi
+	shift
+done
+
+if [ "${unit}" = "" ]; then
+	echo "usage: start_unit [-wait] unit.py"
+	exit 1
+fi
+	
+echo "Running ${unit}"
+
+export PYTHONPATH="../lib:../lib/openrd/.libs:../lib/openrd/sigplotsrc/.libs:../python:$PYTHONPATH"
+
+${unit}
+
+if [ ${qwait} = 1 ]; then
+	echo -n "Done, press Enter"
+	read huh
+fi
+

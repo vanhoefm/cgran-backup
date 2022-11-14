@@ -1,0 +1,564 @@
+Index: usrp/host/lib/legacy/fusb_linux.cc
+===================================================================
+--- usrp/host/lib/legacy/fusb_linux.cc	(revision 9636)
++++ usrp/host/lib/legacy/fusb_linux.cc	(working copy)
+@@ -24,6 +24,7 @@
+ #include "config.h"
+ #endif
+ 
++#include <iostream>
+ #include <fusb_linux.h>
+ #include <usb.h>		// libusb header
+ #include <stdexcept>
+@@ -39,13 +40,18 @@
+ #include <string.h>
+ 
+ #define MINIMIZE_TX_BUFFERING 1		// must be defined to 0 or 1
++#define HOST_TO_KERNEL_DELAY  50000
+ 
+-
+ static const int MAX_BLOCK_SIZE = fusb_sysconfig::max_block_size();		// hard limit
+ static const int DEFAULT_BLOCK_SIZE = MAX_BLOCK_SIZE;
+ static const int DEFAULT_BUFFER_SIZE = 4 * (1L << 20);				// 4 MB / endpoint
+ 
++struct timespec last_timestamp;
++bool first_timestamp;
+ 
++#define TS_SPACING 500000000  // In nanoseconds
++
++
+ // Totally evil and fragile extraction of file descriptor from
+ // guts of libusb.  They don't install usbi.h, which is what we'd need
+ // to do this nicely.
+@@ -111,16 +117,42 @@
+   return urb;
+ }
+ 
++// Subtract X-Y, store in result
++int
++timeval_subtract (struct timespec *result, struct timespec *x, struct timespec *y)
++{
++  result->tv_sec = x->tv_sec - y->tv_sec; 
++  result->tv_nsec = x->tv_nsec - y->tv_nsec;
++  if (result->tv_nsec < 0) {
++          result->tv_sec--;
++          result->tv_nsec += 1000000000; 
++  }
++}
++
++// add nanoseconds to timeval
++int
++timeval_add (struct timespec *timeval, long nanoseconds)
++{
++  timeval->tv_nsec += nanoseconds;
++
++  if(timeval->tv_nsec > 1000000000) {
++    timeval->tv_sec++;
++    timeval->tv_nsec %= 1000000000;
++  }
++}
++
++
+ static void
+ free_urb (usbdevfs_urb *urb)
+ {
+-  // if this was an input urb, free the buffer
+   if (urb->endpoint & 0x80)
+     delete [] ((unsigned char *) urb->buffer);
+ 
+   delete urb;
+ }
+ 
++
++
+ // ------------------------------------------------------------------------
+ // 				device handle
+ // ------------------------------------------------------------------------
+@@ -129,6 +161,7 @@
+   : fusb_devhandle (udh)
+ {
+   // that's all
++  first_timestamp=true;
+ }
+ 
+ fusb_devhandle_linux::~fusb_devhandle_linux ()
+@@ -205,6 +238,45 @@
+ {
+   int	ret;
+ 
++  urb->valid_timestamp=0;
++  struct timespec now;
++  unsigned char check;
++
++  if(urb->buffer!=NULL) {
++    memcpy(&check, (unsigned char *)urb->buffer+9, sizeof(check));
++    if(check==0x6c) {
++      std::cout << "PING OUT IN DRIVER!\n";
++      urb->is_ping=1;
++    }
++  }
++
++  clock_gettime(CLOCK_REALTIME, &now);  // now
++  memcpy(&urb->from_host, &now, sizeof(struct timespec));
++
++  if(first_timestamp) {
++//    std::cout << "@@@@ NOW: "
++//              << now.tv_sec << "(s) "
++//              << now.tv_nsec << "(ns) "
++//              << std::endl;
++    memcpy(&urb->timestamp, &now, sizeof(struct timespec));             // Make 'now' our timestamp
++    timeval_add(&urb->timestamp, HOST_TO_KERNEL_DELAY);                 // add delay to get it to the kernel
++//    std::cout << "@@@@ AFTER_ADD: "
++//              << urb->timestamp.tv_sec << "(s) "
++//              << urb->timestamp.tv_nsec << "(ns) "
++//              << std::endl;
++    memcpy(&last_timestamp, &urb->timestamp, sizeof(struct timespec));  // copy it to our last timestamp
++    first_timestamp=false;
++  } else {
++    timeval_add(&last_timestamp, TS_SPACING);                           // Add our timestamp spacing to our last timestamp
++    memcpy(&urb->timestamp, &last_timestamp, sizeof(struct timespec));  // make this our new timestamp
++  }
++
++//  std::cout << "@@@@ SCHEDULING: "
++//            << urb->timestamp.tv_sec << "(s) "
++//            << urb->timestamp.tv_nsec << "(ns) "
++//            << std::endl;
++  
++
+   ret = ioctl (fd_from_usb_dev_handle (d_udh), USBDEVFS_SUBMITURB, urb);
+   if (ret < 0){
+     perror ("fusb::_submit_urb");
+@@ -281,6 +353,31 @@
+     return false;
+   }
+ 
++  // if this was an input urb, free the buffer
++  struct timespec now, result_submit, result_complete, result_start, result_giveback, result_tx_complete;
++  clock_gettime(CLOCK_REALTIME,&now);
++  timeval_subtract(&result_submit,&now,&urb->from_submit);
++  timeval_subtract(&result_start,&now,&urb->from_start);
++  timeval_subtract(&result_complete,&now,&urb->from_complete);
++  timeval_subtract(&result_giveback, &now, &urb->from_giveback);
++  timeval_subtract(&result_tx_complete, &urb->tx_complete, &urb->from_host);
++  std::cout << "Submit: " 
++            << result_submit.tv_sec << "(s) "
++            << result_submit.tv_nsec << "(ns), "
++            << "Start: "
++            << result_start.tv_sec << "(s) "
++            << result_start.tv_nsec << "(ns), "
++            << "Giveback: "
++            << result_giveback.tv_sec << "(s) "
++            << result_giveback.tv_nsec << "(ns), "
++            << ", Complete: " 
++            << result_complete.tv_sec << "(s) "
++            << result_complete.tv_nsec << "(ns)"
++            << ", TX Complete: " 
++            << result_tx_complete.tv_sec << "(s) "
++            << result_tx_complete.tv_nsec << "(ns)"
++            << std::endl;
++  
+   pending_remove (urb);
+   urb_get_ephandle (urb)->completed_list_add (urb);
+   return true;
+@@ -452,6 +549,8 @@
+     n += m;
+     src += m;
+ 
++    // GEORGE start of submit URB for TX
++
+     if (!submit_urb(urb))
+       return -1;
+ 
+Index: usrp/host/lib/inband/usrp_rx.h
+===================================================================
+--- usrp/host/lib/inband/usrp_rx.h	(revision 9636)
++++ usrp/host/lib/inband/usrp_rx.h	(working copy)
+@@ -51,6 +51,7 @@
+  private:
+   void read_and_respond(pmt_t data);
+   void read_data();
++  int timeval_subtract (struct timespec *result, struct timespec *x, struct timespec *y);
+  
+ };
+   
+Index: usrp/host/lib/inband/usrp_tx.h
+===================================================================
+--- usrp/host/lib/inband/usrp_tx.h	(revision 9636)
++++ usrp/host/lib/inband/usrp_tx.h	(working copy)
+@@ -23,7 +23,10 @@
+ 
+ #include <mb_mblock.h>
+ #include <fstream>
++#include <time.h>
+ 
++extern struct timespec ping_sent;
++
+ class usrp_standard_tx;
+ 
+ /*!
+Index: usrp/host/lib/inband/usrp_rx.cc
+===================================================================
+--- usrp/host/lib/inband/usrp_rx.cc	(revision 9636)
++++ usrp/host/lib/inband/usrp_rx.cc	(working copy)
+@@ -24,6 +24,7 @@
+ #endif
+ 
+ #include <usrp_rx.h>
++#include <usrp_tx.h>
+ 
+ #include <usrp_standard.h>
+ #include <iostream>
+@@ -42,6 +43,7 @@
+ 
+ bool usrp_rx_stop;
+ 
++
+ usrp_rx::usrp_rx(mb_runtime *rt, const std::string &instance_name, pmt_t user_arg)
+   : mb_mblock(rt, instance_name, user_arg),
+     d_disk_write(false),
+@@ -96,6 +98,18 @@
+   }
+ }
+ 
++// Subtract X-Y, store in result
++int
++usrp_rx::timeval_subtract (struct timespec *result, struct timespec *x, struct timespec *y)
++{
++  result->tv_sec = x->tv_sec - y->tv_sec; 
++  result->tv_nsec = x->tv_nsec - y->tv_nsec;
++  if (result->tv_nsec < 0) {
++          result->tv_sec--;
++          result->tv_nsec += 1000000000; 
++  }
++}
++
+ /*!
+  * \brief Performs the actual reading of data from the USB bus, called by
+  * handle_message() when a cmd-usrp-rx-start-reading signal is received.  
+@@ -148,11 +162,23 @@
+                pmt_list3(PMT_NIL, PMT_T, v_pkt));
+     if(verbose && 0)
+       std::cout << "[usrp_rx] Read 1 packet\n";
+-    
++      
++      if(pkt->chan() == CONTROL_CHAN) {
++        struct timespec now, result;
++        clock_gettime(CLOCK_REALTIME, &now);
++        timeval_subtract(&result, &now, &ping_sent);
++        std::cout << "Time: " << result.tv_sec << "(s) "
++                  << result.tv_nsec << "(ns)\n";
++    }
+     if(d_disk_write) {
+-      if(pkt->chan() == CONTROL_CHAN)
++      if(pkt->chan() == CONTROL_CHAN) {
+         d_cs_ofile.write((const char *)pkt, transport_pkt::max_pkt_size());
+-      else {
++        struct timespec now, result;
++        clock_gettime(CLOCK_REALTIME, &now);
++        timeval_subtract(&result, &now, &ping_sent);
++        std::cout << "Time: " << result.tv_sec << "(s) "
++                  << result.tv_nsec << "(ns)\n";
++      } else {
+         if(d_disk_write_pkt) {
+           if(pkt->chan() == 0)
+             d_ofile0.write((const char *)pkt, transport_pkt::max_pkt_size());
+Index: usrp/host/lib/inband/usrp_tx.cc
+===================================================================
+--- usrp/host/lib/inband/usrp_tx.cc	(revision 9636)
++++ usrp/host/lib/inband/usrp_tx.cc	(working copy)
+@@ -31,6 +31,7 @@
+ #include <fpga_regs_common.h>
+ #include <usrp_standard.h>
+ #include <stdio.h>
++#include <time.h>
+ 
+ #include <symbols_usrp_tx_cs.h>
+ 
+@@ -38,12 +39,16 @@
+ 
+ static const bool verbose = false;
+ 
++struct timespec ping_sent;
++int count;
++
+ usrp_tx::usrp_tx(mb_runtime *rt, const std::string &instance_name, pmt_t user_arg)
+   : mb_mblock(rt, instance_name, user_arg),
+     d_disk_write(false)
+ {
+   d_cs = define_port("cs", "usrp-tx-cs", true, mb_port::EXTERNAL);
+   
++  count = 0;
+   //d_disk_write=true;
+   
+   if(d_disk_write) {
+@@ -131,12 +136,23 @@
+     static_cast<long>(std::ceil(n_bytes / (double)transport_pkt::max_pkt_size()));
+ 
+   for(int i=0; i < n_packets; i++) {
++      
++      if(pkts[i].chan() == CONTROL_CHAN) {
++        std::cout << "set!\n";
++        clock_gettime(CLOCK_REALTIME, &ping_sent);
++      }
+     
+     if(d_disk_write) {
+-      if(pkts[i].chan() == CONTROL_CHAN)
++      if(pkts[i].chan() == CONTROL_CHAN) {
+         d_cs_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());
+-      else
++        if(count==1) {
++        std::cout << "set!\n";
++        clock_gettime(CLOCK_REALTIME, &ping_sent);
++        }
++        count++;
++      } else {
+         d_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());
++      }
+ 
+       d_cs_ofile.flush();
+       d_ofile.flush();
+Index: usrp/host/lib/inband/usrp_server.cc
+===================================================================
+--- usrp/host/lib/inband/usrp_server.cc	(revision 9636)
++++ usrp/host/lib/inband/usrp_server.cc	(working copy)
+@@ -853,10 +853,10 @@
+       // We use a vector to store the owner of the ping request and will use it
+       // to send the request on any RX port they own. 
+       d_rids[srid].owner = port->port_symbol();
+-      d_rids[srid].user_rid = urid;
++      d_rids[srid].user_rid = 0x1b;
+         
+       // Adds a ping after the previous command in the pkt
+-      if(!pkt->cs_ping(srid, pingval))
++      if(!pkt->cs_ping(0x1b, pingval))
+       {
+         d_cs_usrp->send(s_cmd_usrp_write, 
+                         pmt_list3(invocation_handle, 
+Index: usrp/host/apps-inband/test_kernel_rtt_wrapper.sh
+===================================================================
+--- usrp/host/apps-inband/test_kernel_rtt_wrapper.sh	(revision 0)
++++ usrp/host/apps-inband/test_kernel_rtt_wrapper.sh	(revision 0)
+@@ -0,0 +1,3 @@
++#!/bin/bash
++./test_usrp_inband_ping &> /dev/null
++first=$(dmesg | grep PINGOUT | tail -n 1 | awk '{print $5}' | awk -F"(" '{print $1}') && second=$(dmesg | grep giveback | tail -n 1 | awk '{print $6}' | awk -F"(" '{print $1}') && echo $second-$first | bc -l
+
+Property changes on: usrp/host/apps-inband/test_kernel_rtt_wrapper.sh
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+Index: usrp/host/apps-inband/test_usrp_inband_ping.cc
+===================================================================
+--- usrp/host/apps-inband/test_usrp_inband_ping.cc	(revision 9636)
++++ usrp/host/apps-inband/test_usrp_inband_ping.cc	(working copy)
+@@ -29,6 +29,7 @@
+ #include <mb_exception.h>
+ #include <mb_msg_queue.h>
+ #include <mb_message.h>
++//#include <mb_mblock_impl.h>
+ #include <mb_msg_accepter.h>
+ #include <mb_class_registry.h>
+ #include <pmt.h>
+@@ -44,7 +45,7 @@
+ #include <symbols_usrp_tx.h>
+ #include <symbols_usrp_rx.h>
+ 
+-static bool verbose = false;
++static bool verbose = true;
+ 
+ class test_usrp_inband_ping : public mb_mblock
+ {
+@@ -66,10 +67,7 @@
+     INIT,
+     OPENING_USRP,
+     ALLOCATING_CHANNELS,
+-    WARMING_USRP,
+-    PINGING,
+-    CLOSING_CHANNELS,
+-    CLOSING_USRP,
++    PING_SENT,
+   };
+   state_t d_state;
+ 
+@@ -82,11 +80,10 @@
+  protected:
+   void opening_usrp();
+   void allocating_channels();
+-  void enter_warming_usrp();
+-  void enter_pinging();
+-  void build_and_send_ping();
+   void closing_channels();
+   void closing_usrp();
++  void enter_receiving();
++  void build_and_send_ping();
+ };
+ 
+ 
+@@ -116,7 +113,7 @@
+   // Specify the RBF to use
+   pmt_dict_set(usrp_dict,
+                pmt_intern("rbf"),
+-               pmt_intern("fixed1.rbf"));
++               pmt_intern("inband_1rxhb_1tx.rbf"));
+ 
+   // Set TX and RX interpolations
+   pmt_dict_set(usrp_dict,
+@@ -211,8 +208,10 @@
+                       << " on channel " << d_tx_chan << std::endl;
+ 
+           // If the RX has also been allocated already, we can continue
+-          if(!pmt_eqv(d_rx_chan, PMT_NIL)) 
+-            enter_warming_usrp();
++          if(!pmt_eqv(d_rx_chan, PMT_NIL)) {
++            enter_receiving();
++            build_and_send_ping();
++          }
+ 
+           return;
+         }
+@@ -238,8 +237,10 @@
+                       << " on channel " << d_rx_chan << std::endl;
+ 
+           // If the TX has also been allocated already, we can continue
+-          if(!pmt_eqv(d_tx_chan, PMT_NIL)) 
+-            enter_warming_usrp();
++          if(!pmt_eqv(d_tx_chan, PMT_NIL)) {
++            enter_receiving();
++            build_and_send_ping();
++          }
+ 
+           return;
+         }
+@@ -251,37 +252,38 @@
+ 
+       goto unhandled;
+ 
+-    //----------------------- WARMING USRP --------------------//
+-    // The FX2 seems to need some amount of data to be buffered
+-    // before it begins reading.  We use this state to simply
+-    // warm up the USRP before benchmarking pings.
+-    case WARMING_USRP:
++    case PING_SENT:
+ 
+-      // We really don't care about the responses from the
+-      // control channel in the warming stage, but once we receive
+-      // the proper number of responses we switch states.
+       if(pmt_eq(event, s_response_from_control_channel)
+-          && pmt_eq(d_rx->port_symbol(), port_id))
++          && pmt_eq(d_tx->port_symbol(), port_id))
+       {
+-        d_warm_recvd++;
++        status = pmt_nth(1, data);
+ 
+-        if(d_warm_recvd > d_warm_msgs)
+-          enter_pinging();
++        // If the read was successful, we extract the subpacket information
++        if(pmt_eq(status, PMT_T)) {
++          
++          pmt_t subp = pmt_nth(2, data);      // subpacket should be the read reg reply
+ 
+-        return;
+-      }
++          pmt_t subp_sig  = pmt_nth(0, subp);
++          pmt_t subp_data = pmt_nth(1, subp);
+ 
+-      goto unhandled;
++          if(!pmt_eqv(subp_sig, s_op_ping_fixed_reply)) {
++            error_msg = "received improper subpacket when expecting reg reply.";
++            goto bail;
++          }
+ 
+-    case PINGING:
+-      goto unhandled;
++          std::cout << "[TEST_USRP_INBAND_REGISTERS] Received ping reply \n";
++          shutdown_all(PMT_T);
++          
++          return;
+ 
+-    case CLOSING_CHANNELS:
++        } else {  // bail on unsuccessful write
++          error_msg = "failed to write to register.";
++          goto bail;
++        }
++      }
+       goto unhandled;
+ 
+-    case CLOSING_USRP:
+-      goto unhandled;
+-
+     case INIT:
+       goto unhandled;
+ 
+@@ -291,12 +293,12 @@
+  bail:
+   std::cerr << error_msg << data
+       	    << "status = " << status << std::endl;
+-  shutdown_all(PMT_F);
++  //shutdown_all(PMT_F);
+   return;
+ 
+  // Received an unhandled message for a specific state
+  unhandled:
+-  if(verbose)
++  if(verbose && !pmt_eq(event, s_response_recv_raw_samples))
+     std::cout << "test_usrp_inband_tx: unhandled msg: " << msg
+               << "in state "<< d_state << std::endl;
+ 
+@@ -331,44 +333,26 @@
+   d_rx->send(s_cmd_allocate_channel, pmt_list2(PMT_T, pmt_from_long(capacity)));
+ }
+ 
+-// The USRP needs some amount of initial data to pass a buffering point such
+-// that it begins to pull and read data from the FX2.  We send an arbitrary
+-// amount of data to start the pipeline, which are just pings.
+ void
+-test_usrp_inband_ping::enter_warming_usrp()
++test_usrp_inband_ping::build_and_send_ping()
+ {
+-  d_state = WARMING_USRP;
+-
+-  for(int i=0; i < d_warm_msgs; i++)
+-    build_and_send_ping();
+-}
+-
+-void
+-test_usrp_inband_ping::enter_pinging()
+-{
+-  d_state = PINGING;
+   
+-  if(verbose)
+-    std::cout << "[TEST_USRP_INBAND_PING] Running ping tests\n";
++  d_tx->send(s_cmd_to_control_channel,
++             pmt_list2(PMT_NIL, pmt_list1(pmt_list2(s_op_ping_fixed,
++                                                    pmt_list2(pmt_from_long(0),
++                                                              pmt_from_long(0))))));
+ 
++  std::cout << "[TEST_USRP_INBAND_CS] Ping sent" << std::endl;
++  d_state = PING_SENT;
+ }
+ 
+-// Pings are sent over the TX channel using the signal 'cmd-to-control-channel'
+-// to the USRP server.  Within this message there can be infinite subpackets
+-// stored as a list (the second parameter) and sent.  The only subpacket we send
+-// is a ping, interpreted by the 'op-ping-fixed' signal.
++// Used to enter the receiving state
+ void
+-test_usrp_inband_ping::build_and_send_ping()
++test_usrp_inband_ping::enter_receiving()
+ {
+-  
+-  d_tx->send(s_cmd_to_control_channel,    // USRP server signal
+-             pmt_list2(PMT_NIL,           // invocation handle 
+-                       pmt_list1(pmt_list3(s_op_ping_fixed, 
+-                                           pmt_from_long(0), 
+-                                           pmt_from_long(0)))));
+-
+-  if(verbose)
+-    std::cout << "[TEST_USRP_INBAND_PING] Ping!!" << std::endl;
++  d_rx->send(s_cmd_start_recv_raw_samples,
++             pmt_list2(PMT_F,
++                       d_rx_chan));
+ }
+ 
+ REGISTER_MBLOCK_CLASS(test_usrp_inband_ping);

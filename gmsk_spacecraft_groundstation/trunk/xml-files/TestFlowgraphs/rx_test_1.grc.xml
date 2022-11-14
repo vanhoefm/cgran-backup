@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow_graph>
+  <timestamp>1227631210.79</timestamp>
+  <hostname>ais-mini-2</hostname>
+  <version>0.70</version>
+  <valid>True</valid>
+  <window_width>1600</window_width>
+  <window_height>1200</window_height>
+  <vars>
+    <var>
+      <key>samp_rate</key>
+      <value>512e3</value>
+      <min/>
+      <max/>
+      <step/>
+    </var>
+    <var>
+      <key>frequency</key>
+      <value>2305e6</value>
+      <min>2290e6</min>
+      <max>2310e6</max>
+      <step>1e6</step>
+    </var>
+  </vars>
+  <signal_blocks>
+    <signal_block>
+      <tag>About</tag>
+      <id>About0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>20</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Default Flow Graph</param>
+        <param>Your Name</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>Note</tag>
+      <id>Note0</id>
+      <x_coordinate>20</x_coordinate>
+      <y_coordinate>100</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>Fill this flow graph</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>FFT Sink</tag>
+      <id>FFT Sink0</id>
+      <x_coordinate>552</x_coordinate>
+      <y_coordinate>482</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+        <param>FFT</param>
+        <param>$samp_rate</param>
+        <param>20</param>
+        <param>80</param>
+        <param>512</param>
+        <param>15</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+    <signal_block>
+      <tag>USRP Source</tag>
+      <id>USRP Source0</id>
+      <x_coordinate>107</x_coordinate>
+      <y_coordinate>473</y_coordinate>
+      <rotation>0</rotation>
+      <params>
+        <param>0</param>
+        <param>0</param>
+        <param>2</param>
+        <param>$frequency</param>
+        <param>64e6/$samp_rate</param>
+        <param>104</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+      </params>
+    </signal_block>
+  </signal_blocks>
+  <connections>
+    <connection>
+      <input_signal_block_id>FFT Sink0</input_signal_block_id>
+      <input_socket_index>0</input_socket_index>
+      <output_signal_block_id>USRP Source0</output_signal_block_id>
+      <output_socket_index>0</output_socket_index>
+    </connection>
+  </connections>
+</flow_graph>

@@ -1,0 +1,175 @@
+Flow report for usrp_std
+Mon Mar 10 22:54:04 2008
+Quartus II Version 7.2 Build 175 11/20/2007 Service Pack 1 SJ Web Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Flow Summary
+  3. Flow Settings
+  4. Flow Non-Default Global Settings
+  5. Flow Elapsed Time
+  6. Flow Log
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2007 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Flow Summary                                                            ;
++--------------------------+----------------------------------------------+
+; Flow Status              ; Successful - Mon Mar 10 22:54:03 2008        ;
+; Quartus II Version       ; 7.2 Build 175 11/20/2007 SP 1 SJ Web Edition ;
+; Revision Name            ; usrp_std                                     ;
+; Top-level Entity Name    ; usrp_std                                     ;
+; Family                   ; Cyclone                                      ;
+; Device                   ; EP1C12Q240C8                                 ;
+; Timing Models            ; Final                                        ;
+; Met timing requirements  ; Yes                                          ;
+; Total logic elements     ; 8,986 / 12,060 ( 75 % )                      ;
+; Total pins               ; 173 / 173 ( 100 % )                          ;
+; Total virtual pins       ; 0                                            ;
+; Total memory bits        ; 65,536 / 239,616 ( 27 % )                    ;
+; DSP block 9-bit elements ; N/A until Partition Merge                    ;
+; Total PLLs               ; 0 / 2 ( 0 % )                                ;
+; Total DLLs               ; N/A until Partition Merge                    ;
++--------------------------+----------------------------------------------+
+
+
++-----------------------------------------+
+; Flow Settings                           ;
++-------------------+---------------------+
+; Option            ; Setting             ;
++-------------------+---------------------+
+; Start date & time ; 03/10/2008 22:49:15 ;
+; Main task         ; Compilation         ;
+; Revision Name     ; usrp_std            ;
++-------------------+---------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                                                                 ;
++--------------------------------------------------+---------------------------------------------------------+--------------------------------+-----------------------+------------+
+; Assignment Name                                  ; Value                                                   ; Default Value                  ; Entity Name           ; Section Id ;
++--------------------------------------------------+---------------------------------------------------------+--------------------------------+-----------------------+------------+
+; ACLK_CAT                                         ; Off                                                     ; --                             ; --                    ; --         ;
+; ACLK_RULE_IMSZER_ADOMAIN                         ; Off                                                     ; --                             ; --                    ; --         ;
+; ACLK_RULE_NO_SZER_ACLK_DOMAIN                    ; Off                                                     ; --                             ; --                    ; --         ;
+; ACLK_RULE_SZER_BTW_ACLK_DOMAIN                   ; Off                                                     ; --                             ; --                    ; --         ;
+; APEX20K_OPTIMIZATION_TECHNIQUE                   ; Speed                                                   ; Balanced                       ; --                    ; --         ;
+; ASSG_CAT                                         ; Off                                                     ; On                             ; --                    ; --         ;
+; ASSG_RULE_MISSING_FMAX                           ; Off                                                     ; On                             ; --                    ; --         ;
+; ASSG_RULE_MISSING_TIMING                         ; Off                                                     ; On                             ; --                    ; --         ;
+; AUTO_ENABLE_SMART_COMPILE                        ; On                                                      ; --                             ; --                    ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; lc_tdl_en             ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; lc_tdl_mr             ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; lc_tdl_strat          ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; lc_tdl_strat_cen      ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; mlu_nd_lc             ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd                  ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_cen              ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_lpm              ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_lpm_cen          ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_lpm_reg_top_cen  ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_reg_top          ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; sadd_reg_top_cen      ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tdl_da_lc             ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd                 ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd_lpm             ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd_lpm_cen         ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd_lpm_reg_top_cen ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd_reg_top         ; --         ;
+; AUTO_SHIFT_REGISTER_RECOGNITION                  ; Off                                                     ; Auto                           ; tsadd_reg_top_cen     ; --         ;
+; CLK_CAT                                          ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_CLKNET_CLKSPINES                        ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_COMB_CLOCK                              ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_GATING_SCHEME                           ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_INPINS_CLKNET                           ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_INV_CLOCK                               ; Off                                                     ; --                             ; --                    ; --         ;
+; CLK_RULE_MIX_EDGES                               ; Off                                                     ; --                             ; --                    ; --         ;
+; DRC_REPORT_FANOUT_EXCEEDING                      ; Off                                                     ; --                             ; --                    ; --         ;
+; DRC_REPORT_TOP_FANOUT                            ; Off                                                     ; --                             ; --                    ; --         ;
+; DSP_BLOCK_BALANCING                              ; Logic Elements                                          ; Auto                           ; BarkerFIR_st          ; --         ;
+; ENABLE_SIGNALTAP                                 ; Off                                                     ; --                             ; --                    ; --         ;
+; HCPY_CAT                                         ; Off                                                     ; --                             ; --                    ; --         ;
+; HCPY_VREF_PINS                                   ; Off                                                     ; --                             ; --                    ; --         ;
+; INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS ; Off                                                     ; --                             ; --                    ; --         ;
+; INC_PLC_MODE                                     ; Off                                                     ; --                             ; --                    ; --         ;
+; IO_PLACEMENT_OPTIMIZATION                        ; Off                                                     ; On                             ; --                    ; --         ;
+; MAX_SCC_SIZE                                     ; 50                                                      ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_CAT                               ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_ASYN_RAM                     ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_COMBLOOP                     ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_COMB_DRIVES_RAM_WE           ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_DELAY_CHAIN                  ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_ILLEGAL_PULSE_GEN            ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_LATCH_UNIDENTIFIED           ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_MULTI_VIBRATOR               ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_REG_LOOP                     ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_RIPPLE_CLK                   ; Off                                                     ; --                             ; --                    ; --         ;
+; NONSYNCHSTRUCT_RULE_SRLATCH                      ; Off                                                     ; --                             ; --                    ; --         ;
+; OPTIMIZE_HOLD_TIMING                             ; Off                                                     ; IO Paths and Minimum TPD Paths ; --                    ; --         ;
+; PARTITION_COLOR                                  ; 2147039                                                 ; --                             ; --                    ; Top        ;
+; PARTITION_NETLIST_TYPE                           ; SOURCE                                                  ; --                             ; --                    ; Top        ;
+; RESERVE_PIN                                      ; As input tri-stated                                     ; --                             ; --                    ; --         ;
+; RESET_CAT                                        ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_COMB_ASYNCH_RESET                     ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_IMSYNCH_ASYNCH_DOMAIN                 ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_IMSYNCH_EXRESET                       ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_INPINS_RESETNET                       ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_UNSYNCH_ASYNCH_DOMAIN                 ; Off                                                     ; --                             ; --                    ; --         ;
+; RESET_RULE_UNSYNCH_EXRESET                       ; Off                                                     ; --                             ; --                    ; --         ;
+; ROUTING_BACK_ANNOTATION_MODE                     ; Off                                                     ; --                             ; --                    ; --         ;
+; SAVE_DISK_SPACE                                  ; Off                                                     ; On                             ; --                    ; --         ;
+; SIGNALRACE_CAT                                   ; Off                                                     ; --                             ; --                    ; --         ;
+; STRATIX_OPTIMIZATION_TECHNIQUE                   ; Speed                                                   ; Balanced                       ; --                    ; --         ;
+; TIMING_CAT                                       ; Off                                                     ; --                             ; --                    ; --         ;
+; TIMING_RULE_COIN_CLKEDGE                         ; Off                                                     ; On                             ; --                    ; --         ;
+; TIMING_RULE_SHIFT_REG                            ; Off                                                     ; On                             ; --                    ; --         ;
+; USER_LIBRARIES                                   ; C:/altera/72/ip/fir_compiler/lib;e:\usrp\fpga\megacells ; --                             ; --                    ; --         ;
+; VHDL_SHOW_LMF_MAPPING_MESSAGES                   ; Off                                                     ; --                             ; --                    ; --         ;
++--------------------------------------------------+---------------------------------------------------------+--------------------------------+-----------------------+------------+
+
+
++------------------------------------------------------------------+
+; Flow Elapsed Time                                                ;
++-------------------------+--------------+-------------------------+
+; Module Name             ; Elapsed Time ; Average Processors Used ;
++-------------------------+--------------+-------------------------+
+; Analysis & Synthesis    ; 00:01:35     ; 1.0                     ;
+; Fitter                  ; 00:02:47     ; 1.0                     ;
+; Assembler               ; 00:00:04     ; 1.0                     ;
+; Classic Timing Analyzer ; 00:00:10     ; 1.0                     ;
+; Total                   ; 00:04:36     ; --                      ;
++-------------------------+--------------+-------------------------+
+
+
+------------
+; Flow Log ;
+------------
+quartus_map --read_settings_files=on --write_settings_files=off usrp_std -c usrp_std
+quartus_fit --read_settings_files=off --write_settings_files=off usrp_std -c usrp_std
+quartus_asm --read_settings_files=off --write_settings_files=off usrp_std -c usrp_std
+quartus_tan --read_settings_files=off --write_settings_files=off usrp_std -c usrp_std --timing_analysis_only
+
+
+

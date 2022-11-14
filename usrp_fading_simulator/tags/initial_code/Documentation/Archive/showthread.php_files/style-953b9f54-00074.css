@@ -1,0 +1,1936 @@
+/* vBulletin 3 CSS For Style 'Default Style UF2.5' (styleid: 74) */
+body
+{
+	background: #d3caaa url(http://ubuntuforums.org/imagesorig/ub2/bgrepeat.jpg) repeat-x;
+	color: #000000;
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+}
+a:link, body_alink
+{
+	color: #000000;
+	text-decoration: none;
+}
+a:visited, body_avisited
+{
+	color: #000000;
+	text-decoration: none;
+}
+a:hover, a:active, body_ahover
+{
+	color: #656565;
+	text-decoration: underline;
+}
+.page
+{
+	background: #FFFFFF;
+	color: #000000;
+}
+td, th, p, li
+{
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.tborder
+{
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #FFFFFF;
+}
+.tcat
+{
+	background: #FFFFFF;
+	color: #c00;
+	font: normal 1.6em 'Trebuchet MS', Verdana, Sans-Serif;
+	letter-spacing: -1px;
+	border-bottom: 1px solid #816647;
+}
+.tcat a:link, .tcat_alink
+{
+	color: #c00;
+	text-decoration: none;
+}
+.tcat a:visited, .tcat_avisited
+{
+	color: #c00;
+	text-decoration: none;
+}
+.tcat a:hover, .tcat a:active, .tcat_ahover
+{
+	color: #000000;
+	text-decoration: none;
+}
+.thead
+{
+	background: #FFFFFF;
+	color: #656565;
+	font: bold 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.thead a:link, .thead_alink
+{
+	color: #656565;
+	text-decoration: none;
+}
+.thead a:visited, .thead_avisited
+{
+	color: #656565;
+	text-decoration: none;
+}
+.thead a:hover, .thead a:active, .thead_ahover
+{
+	color: #000000;
+	text-decoration: underline;
+}
+.tfoot
+{
+	background: #FFFFFF;
+	color: #666;
+	font-family: Tahoma, Sans, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	font-variant: normal;
+	text-transform: lowercase;
+}
+.alt1, .alt1Active
+{
+	background: #FFFFFF;
+	color: #000000;
+}
+.alt2, .alt2Active
+{
+	background: #F8F8F3;
+	color: #000000;
+}
+td.inlinemod
+{
+	background: #e6e6bb;
+	color: #816647;
+}
+.wysiwyg
+{
+	background: #FFFFFF;
+	color: #666;
+	font: 10pt Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+textarea, .bginput
+{
+	font: 11px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.button
+{
+	font: 11px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+select
+{
+	font: 11px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+option, optgroup
+{
+	font-size: 11px;
+	font-family: Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.smallfont
+{
+	color: #000;
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+	margin-top: 2px;
+}
+.time
+{
+	color: #777777;
+}
+.navbar
+{
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.highlight
+{
+	color: #FF0000;
+	font-weight: bold;
+}
+.fjsel
+{
+	background: #E7e7D1;
+	color: #666;
+}
+.fjdpth0
+{
+	background: #f8f8f3;
+	color: #000000;
+}
+.panel
+{
+	background: #FFFFFF;
+	color: #666;
+	padding: 10px;
+}
+.panelsurround
+{
+	color: #444;
+}
+legend
+{
+	color: #444;
+	font-size: 11px;
+}
+.vbmenu_control
+{
+	color: #333333;
+	font: bold 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+	padding: 3px 6px 3px 6px;
+	white-space: nowrap;
+	
+}
+.vbmenu_control a:link, .vbmenu_control_alink
+{
+	color: #333333;
+	text-decoration: none;
+}
+.vbmenu_control a:visited, .vbmenu_control_avisited
+{
+	color: #333333;
+	text-decoration: none;
+}
+.vbmenu_control a:hover, .vbmenu_control a:active, .vbmenu_control_ahover
+{
+	color: #c00;
+	text-decoration: underline;
+}
+.vbmenu_popup
+{
+	background: #eaeada;
+	color: #000000;
+	border: 1px solid #816647;
+}
+.vbmenu_option
+{
+	background: #FFFFFF;
+	color: #000000;
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_option a:link, .vbmenu_option_alink
+{
+	color: #000000;
+	text-decoration: none;
+}
+.vbmenu_option a:visited, .vbmenu_option_avisited
+{
+	color: #000000;
+	text-decoration: none;
+}
+.vbmenu_option a:hover, .vbmenu_option a:active, .vbmenu_option_ahover
+{
+	color: #555;
+	text-decoration: none;
+}
+.vbmenu_hilite
+{
+	background: #E7e7D1;
+	color: #666;
+	font: 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_hilite a:link, .vbmenu_hilite_alink
+{
+	color: #888888;
+	text-decoration: none;
+}
+.vbmenu_hilite a:visited, .vbmenu_hilite_avisited
+{
+	color: #888888;
+	text-decoration: none;
+}
+.vbmenu_hilite a:hover, .vbmenu_hilite a:active, .vbmenu_hilite_ahover
+{
+	color: #555;
+	text-decoration: none;
+}
+/* ***** styling for 'big' usernames on postbit etc. ***** */
+.bigusername { font-size: 14pt; }
+
+/* ***** small padding on 'thead' elements ***** */
+td.thead, div.thead { padding: 4px; }
+
+/* ***** basic styles for multi-page nav elements */
+.pagenav a { text-decoration: none; }
+.pagenav td { padding: 2px 4px 2px 4px; }
+
+/* ***** define margin and font-size for elements inside panels ***** */
+.fieldset { margin-bottom: 6px; }
+.fieldset, .fieldset td, .fieldset p, .fieldset li { font-size: 11px; }
+
+/* ***** don't change the following ***** */
+form { display: inline; }
+label { cursor: default; }
+.normal { font-weight: normal; }
+.inlineimg { vertical-align: middle; }
+#container {
+position:relative;
+background-color:#fff;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/page-border-left-repeat.jpg);
+background-repeat:repeat-y;
+background-position:left;
+margin:0 1%;
+padding:0 0 0 14px;
+}
+
+#content {
+min-height:665px;
+background-color:#fff;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/page-border-right-repeat.jpg);
+background-repeat:repeat-y;
+background-position:right;
+margin:0;
+padding:0 13px 0 0;
+}
+
+#top {
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/top.jpg);
+background-repeat:repeat-x;
+background-position:top;
+padding-top:10px;
+width:100%;
+position:relative;
+height:90px;
+}
+
+#bg-left {
+position:absolute;
+top:0;
+left:0;
+width:14px;
+height:665px;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/page-border-left.jpg);
+background-repeat:no-repeat;
+background-position:top left;
+z-index:6;
+}
+
+#bg-right {
+position:absolute;
+top:0;
+right:0;
+width:13px;
+height:665px;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/page-border-right.jpg);
+background-repeat:no-repeat;
+background-position:top right;
+z-index:6;
+}
+
+#bottom-left {
+width:14px;
+height:34px;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/footerbg-left.jpg);
+position:absolute;
+bottom:0;
+left:0;
+z-index:7;
+}
+
+#bottom-right {
+width:13px;
+height:34px;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/footerbg-right.jpg);
+position:absolute;
+bottom:0;
+right:0;
+z-index:7;
+}
+
+#bodyouter {
+overflow:hidden;
+margin:0;
+}
+
+* html #bodyouter {
+height:1%;
+}
+
+#leftsidebar {
+width:205px;
+float:right;
+margin-left:-205px;
+}
+
+#bodyinner {
+width:100%;
+border-left:205px solid #FFF;
+margin-left:-205px;
+}
+
+#contentpadding {
+padding-left:0;
+}
+
+#footer {
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/footerbg.jpg);
+background-repeat:repeat-x;
+background-position:bottom;
+padding:0;
+}
+
+#footer .wrapper {
+color:#656565;
+font-size:10px;
+padding:0 15px 5px;
+}
+
+#footer .wrapper a {
+color:#656565;
+text-decoration:none;
+}
+
+#footer .wrapper p {
+float:left;
+font-size:10px;
+}
+
+#footer .wrapper ul {
+width:30%;
+float:right;
+}
+
+#footer .wrapper li {
+display:block;
+float:left;
+border-right:1px solid #656565;
+padding:0 10px;
+}
+
+#footer .wrapper li.last {
+border-right-style:none;
+padding-right:0;
+}
+
+#top a {
+color:#656565;
+text-decoration:none;
+font-size:11px;
+border-bottom:1px dotted #fff;
+}
+
+#top li a:hover {
+border-bottom:1px dotted #656565;
+}
+
+#top ul {
+display:block;
+position:absolute;
+top:20px;
+right:20px;
+border-bottom:1px solid #D6D6D6;
+margin:0;
+padding:0 0 .5em;
+}
+
+#top ul ul {
+padding-bottom:0;
+}
+
+#top li {
+display:block;
+float:left;
+text-indent:13px;
+padding-bottom:0;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/bullet-triangle.png);
+background-repeat:no-repeat;
+background-position:left center;
+line-height:1.1em;
+position:relative;
+margin:0 18px 0 0;
+}
+
+#top li.last {
+margin:0;
+}
+
+#top li ul {
+position:absolute;
+background-color:#fff;
+border:1px solid #D3CAAA;
+width:10em;
+left:-999em;
+top:1.1em;
+z-index:100;
+font-size:10px;
+}
+
+#top li:hover ul {
+left:0;
+z-index:1000;
+}
+
+#top li ul li {
+background-image:none;
+text-indent:0;
+width:100%;
+margin:0;
+padding:0;
+}
+
+#top li ul li a {
+display:block;
+width:100%;
+text-indent:.2em;
+padding:.2em 0;
+}
+
+#top li ul li a:hover {
+color:#FFF;
+background-color:#D3CAAA;
+}
+
+#top img {
+border-style:none;
+margin:0;
+padding:0;
+}
+
+#top img.rule {
+border-top:1.7em solid #FFF;
+}
+
+#ubuntulogo {
+position:absolute;
+top:22px;
+left:0;
+}
+
+#searchbox {
+width:50%;
+height:25px;
+text-align:right;
+line-height:60px;
+position:absolute;
+top:6.5em;
+right:9px;
+}
+
+#searchbox p {
+line-height:1.1em;
+position:absolute;
+bottom:0;
+right:0;
+}
+
+#searchbox button {
+background-color:#fff;
+background-image:url(http://ubuntuforums.org/imagesorig/ub2/icon-search.png);
+width:34px;
+background-repeat:no-repeat;
+background-position:center;
+border-style:none;
+}
+
+#searchbox button span {
+display:block;
+text-indent:-100px;
+overflow:hidden;
+}
+
+#searchbox input {
+border:1px solid #C6C6C6;
+color:#777;
+font-size:12px;
+padding:2px;
+}
+
+.rule {
+clear:both;
+margin:0 auto;
+}
+
+img.rule {
+width:100%;
+}
+
+.clear {
+clear:both;
+}
+
+.ubuntu_sticky_grey {
+font:normal 1.2em Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#393733;
+font-weight:700;
+}
+
+.forumhome_stats {
+font:normal 11px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#656565;
+font-weight:400;
+}
+
+.ubuntu_userpostbit {
+background-color:#eaeada;
+border-left:6px solid #ddddc5;
+}
+
+.ubuntu_userpostbit_b {
+background-color:#eaeada;
+border-left:6px solid #ddddc5;
+border-bottom:1px solid #ddddc5;
+}
+
+.ubuntu_userpostbit_date {
+background-color:#eaeada;
+border-left:6px solid #ddddc5;
+border-top:1px solid #ddddc5;
+white-space:nowrap;
+}
+
+.ubuntu_userpostbit_topbar {
+background-color:#eaeada;
+border-right:6px solid #ddddc5;
+border-top:1px solid #ddddc5;
+}
+
+.ubuntu_navbar {
+background:#eaeada;
+color:#000;
+font-weight:700;
+white-space:nowrap;
+font-size:12px;
+left:0;
+padding:3px 6px;
+}
+
+.ubuntu_navbar a:hover,.ubuntu_navbar a:active,.ubuntu_navbar_ahover {
+color:#656565;
+text-decoration:underline;
+}
+
+.ubuntu_newthread {
+color:#666;
+font-weight:700;
+font:normal 1.6em Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.ubuntu_newreply {
+color:#816647;
+font-weight:700;
+font:normal 1.6em Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.ubuntu_messagebody {
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#000;
+}
+
+.ubuntu_messagebody a:hover {
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:maroon;
+border-bottom-style:none;
+text-decoration:underline;
+}
+
+.ubuntu_quotebackground {
+background:#F8F8F3;
+border-right:1px solid #ddddc5;
+border-top:1px solid #ddddc5;
+border-left:6px solid #ddddc5;
+border-bottom:1px solid #ddddc5;
+}
+
+.alt4a {
+background:#FFF;
+border-bottom:2px solid #ddddc5;
+}
+
+.alt4b {
+background:#f5f5ee;
+border-right:6px solid #ddddc5;
+border-bottom:1px solid #ddddc5;
+border-left:1px solid #ddddc5;
+}
+
+.ubuntu_roundalt1 * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#F8F8F3;
+}
+
+.ubuntu_roundalt11 {
+border-right:1px solid #fbfbf9;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #fbfbf9;
+padding-left:1px;
+margin-left:3px;
+background:#f9f9f6;
+}
+
+.ubuntu_roundalt12 {
+border-right:1px solid #fefefd;
+border-left:1px solid #fefefd;
+background:#f9f9f5;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_roundalt13 {
+border-right:1px solid #f9f9f5;
+border-left:1px solid #f9f9f5;
+margin:0 1px;
+}
+
+.ubuntu_roundalt14 {
+border-right:1px solid #fbfbf9;
+border-left:1px solid #fbfbf9;
+}
+
+.ubuntu_roundalt15 {
+border-right:1px solid #f9f9f6;
+border-left:1px solid #f9f9f6;
+}
+
+.ubuntu_roundalt1_content {
+background:#F8F8F3;
+padding:0 5px;
+}
+
+.ubuntu_newpostbox * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#ddddc5;
+}
+
+.ubuntu_newpostbox1 {
+border-right:1px solid #f0f0e6;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #f0f0e6;
+padding-left:1px;
+margin-left:3px;
+background:#e5e5d3;
+}
+
+.ubuntu_newpostbox2 {
+border-right:1px solid #fbfbf9;
+border-left:1px solid #fbfbf9;
+background:#e3e3d0;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_newpostbox3 {
+border-right:1px solid #e3e3d0;
+border-left:1px solid #e3e3d0;
+margin:0 1px;
+}
+
+.ubuntu_newpostbox4 {
+border-right:1px solid #f0f0e6;
+border-left:1px solid #f0f0e6;
+}
+
+.ubuntu_newpostbox5 {
+border-right:1px solid #e5e5d3;
+border-left:1px solid #e5e5d3;
+}
+
+.ubuntu_newpostbox_content {
+background:#ddddc5;
+padding:0 5px;
+}
+
+.ubuntu_postbit_bottom {
+border-bottom:2px solid #ddddc5;
+}
+
+.ubuntu_codebackground {
+font-weight:700;
+font:normal 1em Tahoma, Sans, Arial, Helvetica, sans-serif;
+background:#F8F8F3;
+border-right:1px solid #ddddc5;
+border-top:1px solid #ddddc5;
+border-left:6px solid #ddddc5;
+border-bottom:1px solid #ddddc5;
+}
+
+.user_postbitround * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#f5f5ee;
+}
+
+.user_postbitround1 {
+border-right:1px solid #fafaf7;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #fafaf7;
+padding-left:1px;
+margin-left:3px;
+background:#f7f7f2;
+}
+
+.user_postbitround2 {
+border-right:1px solid #fefefd;
+border-left:1px solid #fefefd;
+background:#f6f6f1;
+margin:0 1px;
+padding:0 1px;
+}
+
+.user_postbitround3 {
+border-right:1px solid #f6f6f1;
+border-left:1px solid #f6f6f1;
+margin:0 1px;
+}
+
+.user_postbitround4 {
+border-right:1px solid #fafaf7;
+border-left:1px solid #fafaf7;
+}
+
+.user_postbitround5 {
+border-right:1px solid #f7f7f2;
+border-left:1px solid #f7f7f2;
+}
+
+.user_postbitround_content {
+background:#f5f5ee;
+padding:0 5px;
+}
+
+.ubuntu_threadheader {
+background:#FFF6BF;
+border-top:2px solid #FFD324;
+border-bottom:2px solid #FFD324;
+text-align:left;
+margin:10px auto;
+padding:5px 20px;
+}
+
+.ubuntu_welcome_msg {
+color:#403223;
+font-weight:400;
+font:normal 1.2em Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.ubuntu_welcome_msg a:hover,.ubuntu_welcome_msg a:active,.ubuntu_welcome_msg_ahover {
+color:#656565;
+font-weight:700;
+font:normal 1.3em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:underline;
+}
+
+.ubuntu_currentver * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#fdff99;
+}
+
+.ubuntu_currentver1 {
+border-right:1px solid #feffd3;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #feffd3;
+padding-left:1px;
+margin-left:3px;
+background:#fdffb2;
+}
+
+.ubuntu_currentver2 {
+border-right:1px solid #fefff4;
+border-left:1px solid #fefff4;
+background:#fdffac;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_currentver3 {
+border-right:1px solid #fdffac;
+border-left:1px solid #fdffac;
+margin:0 1px;
+}
+
+.ubuntu_currentver4 {
+border-right:1px solid #feffd3;
+border-left:1px solid #feffd3;
+}
+
+.ubuntu_currentver5 {
+border-right:1px solid #fdffb2;
+border-left:1px solid #fdffb2;
+}
+
+.ubuntu_currentver_content {
+background:#fdff99;
+padding:0 5px;
+}
+
+.ubuntu_currentver_header {
+background:#fdff99;
+color:#816647;
+font-weight:700;
+font:normal 1.8em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+padding:0 5px;
+}
+
+.ubuntu_box1_header {
+color:#816647;
+font-weight:700;
+font:normal 1.8em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+background:#ace;
+padding:0 5px;
+}
+
+.ubuntu_box2_header {
+color:#816647;
+font-weight:700;
+font:normal 1.8em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+background:#cf9;
+padding:0 5px;
+}
+
+.ubuntu_box3_content {
+background:#fdd99b;
+padding:0 5px;
+}
+
+.ubuntu_box3_header {
+color:#816647;
+font-weight:700;
+font:normal 1.8em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+background:#fdd99b;
+padding:0 5px;
+}
+
+.ubuntu_box4 * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#b3defd;
+}
+
+.ubuntu_box41 {
+border-right:1px solid #def0fe;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #def0fe;
+padding-left:1px;
+margin-left:3px;
+background:#c6e6fd;
+}
+
+.ubuntu_box42 {
+border-right:1px solid #f7fbfe;
+border-left:1px solid #f7fbfe;
+background:#c1e4fd;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_box43 {
+border-right:1px solid #c1e4fd;
+border-left:1px solid #c1e4fd;
+margin:0 1px;
+}
+
+.ubuntu_box44 {
+border-right:1px solid #def0fe;
+border-left:1px solid #def0fe;
+}
+
+.ubuntu_box45 {
+border-right:1px solid #c6e6fd;
+border-left:1px solid #c6e6fd;
+}
+
+.ubuntu_box4_content {
+background:#b3defd;
+padding:0 5px;
+}
+
+.ubuntu_box4_header {
+color:#816647;
+font-weight:700;
+font:normal 1.8em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+background:#b3defd;
+padding:0 5px;
+}
+
+.tagborder {
+border:1px solid #ddddc5;
+}
+
+.ubuntuthread_header {
+color:#666;
+font:normal 2em 'Trebuchet MS', Verdana, Sans-Serif;
+letter-spacing:-1px;
+border-bottom:1px solid #ddddc5;
+}
+
+.ubuntu_topicheaders {
+color:#5A3320;
+font-weight:400;
+font:normal 1.2em Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.ubuntu_topicheaders a:hover,.ubuntu_topicheaders a:active,.ubuntu_topicheaders_ahover {
+color:#5A3320;
+text-decoration:underline;
+}
+
+.announcement {
+background-color:#d7e7f6;
+color:#000;
+}
+
+.sticky {
+background-color:#fbf7db;
+border-bottom:1px solid #FFF;
+color:#000;
+}
+
+.moderated {
+background-color:#f9f0ed;
+color:#000;
+}
+
+.subscribed {
+background-color:#ffefef;
+color:#000;
+}
+
+.deleted {
+background-color:#e5e8eb;
+color:#283A5E;
+}
+
+.poll {
+background-color:#e7fbe4;
+}
+
+.last_visit {
+background-color:#edf3f9;
+color:#000;
+}
+
+.ubuntu_navbits_info * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#A6926B;
+}
+
+.ubuntu_navbits_info1 {
+border-right:1px solid #d8d0bf;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #d8d0bf;
+padding-left:1px;
+margin-left:3px;
+background:#bcad90;
+}
+
+.ubuntu_navbits_info2 {
+border-right:1px solid #f6f4f0;
+border-left:1px solid #f6f4f0;
+background:#b6a687;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_navbits_info3 {
+border-right:1px solid #b6a687;
+border-left:1px solid #b6a687;
+margin:0 1px;
+}
+
+.ubuntu_navbits_info4 {
+border-right:1px solid #d8d0bf;
+border-left:1px solid #d8d0bf;
+}
+
+.ubuntu_navbits_info5 {
+border-right:1px solid #bcad90;
+border-left:1px solid #bcad90;
+}
+
+.ubuntu_navbits_info_content {
+background:#A6926B;
+color:#FFF;
+padding:0 5px;
+}
+
+.spacer_small {
+padding:2px 0;
+}
+
+div.hr {
+height:1px;
+background:url(../../images/uf/misc/hr.gif) repeat scroll center;
+}
+
+.ubuntu_poll * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#FFC;
+}
+
+.ubuntu_poll1 {
+border-right:1px solid #ffffe9;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #ffffe9;
+padding-left:1px;
+margin-left:3px;
+background:#ffffd8;
+}
+
+.ubuntu_poll2 {
+border-right:1px solid #fffff9;
+border-left:1px solid #fffff9;
+background:#ffffd5;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_poll3 {
+border-right:1px solid #ffffd5;
+border-left:1px solid #ffffd5;
+margin:0 1px;
+}
+
+.ubuntu_poll4 {
+border-right:1px solid #ffffe9;
+border-left:1px solid #ffffe9;
+}
+
+.ubuntu_poll5 {
+border-right:1px solid #ffffd8;
+border-left:1px solid #ffffd8;
+}
+
+.ubuntu_poll_content {
+background:#FFC;
+padding:0 5px;
+}
+
+.ubuntu_bot_fdbits_tcat {
+color:#816647;
+font:normal 1.8em 'Trebuchet MS', Verdana, Sans-Serif;
+border-bottom:1px solid #816647;
+letter-spacing:-1px;
+}
+
+.ubuntu_bot_fdbits_thead {
+color:#bd5900;
+font:bold 11px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.threadbit {
+border-bottom:1px solid #E7e7D1;
+}
+
+.ubuntu_announcement * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#d7e7f6;
+}
+
+.ubuntu_announcement1 {
+border-right:1px solid #edf4fb;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #edf4fb;
+padding-left:1px;
+margin-left:3px;
+background:#e1edf8;
+}
+
+.ubuntu_announcement2 {
+border-right:1px solid #fbfcfe;
+border-left:1px solid #fbfcfe;
+background:#deebf7;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_announcement3 {
+border-right:1px solid #deebf7;
+border-left:1px solid #deebf7;
+margin:0 1px;
+}
+
+.ubuntu_announcement4 {
+border-right:1px solid #edf4fb;
+border-left:1px solid #edf4fb;
+}
+
+.ubuntu_announcement5 {
+border-right:1px solid #e1edf8;
+border-left:1px solid #e1edf8;
+}
+
+.ubuntu_announcement_content {
+background:#d7e7f6;
+padding:0 5px;
+}
+
+.ubuntu_buttons {
+display:block;
+width:130px;
+}
+
+.ubuntu_buttons_content {
+background:#fdd99b;
+width:130px;
+}
+
+.ubuntu_unapbutton * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#FDD99B;
+}
+
+.ubuntu_unapbutton1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #cbb07f;
+border-right:1px solid #cbb07f;
+background:#e7c78f;
+}
+
+.ubuntu_unapbutton2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #ae996f;
+border-right:1px solid #ae996f;
+background:#eccb91;
+}
+
+.ubuntu_unapbutton3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #eccb91;
+border-right:1px solid #eccb91;
+}
+
+.ubuntu_unapbutton4 {
+border-left:1px solid #cbb07f;
+border-right:1px solid #cbb07f;
+}
+
+.ubuntu_unapbutton5 {
+border-left:1px solid #e7c78f;
+border-right:1px solid #e7c78f;
+}
+
+.ubuntu_unapbuttonfg {
+background:#FDD99B;
+}
+
+.theadgal {
+color:#000;
+font:bold 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.theadgal a:hover,.theadgal a:active,.theadgal_ahover {
+color:#bd5900;
+text-decoration:underline;
+}
+
+.ubuntu_welcome {
+color:#c00;
+font:normal 1.8em 'Trebuchet MS', Verdana, Sans-Serif;
+letter-spacing:-1px;
+}
+
+.ubunu_loginbox * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#ccc1a3;
+}
+
+.ubunu_loginbox1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #ddd8c2;
+border-right:1px solid #ddd8c2;
+background:#d3cbb0;
+}
+
+.ubunu_loginbox2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #e7e5d4;
+border-right:1px solid #e7e5d4;
+background:#d1c8ad;
+}
+
+.ubunu_loginbox3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #d1c8ad;
+border-right:1px solid #d1c8ad;
+}
+
+.ubunu_loginbox4 {
+border-left:1px solid #ddd8c2;
+border-right:1px solid #ddd8c2;
+}
+
+.ubunu_loginbox5 {
+border-left:1px solid #d3cbb0;
+border-right:1px solid #d3cbb0;
+}
+
+.ubunu_loginboxfg {
+background:#ccc1a3;
+padding:3px;
+}
+
+.ubuntu_signature a:hover {
+text-decoration:underline;
+color:#656565;
+}
+
+.ubuntu_lastpost * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#f6f5f0;
+}
+
+.ubuntu_lastpost1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #fbfaf8;
+border-right:1px solid #fbfaf8;
+background:#f8f7f3;
+}
+
+.ubuntu_lastpost2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #fefefd;
+border-right:1px solid #fefefd;
+background:#f7f6f2;
+}
+
+.ubuntu_lastpost3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #f7f6f2;
+border-right:1px solid #f7f6f2;
+}
+
+.ubuntu_lastpost4 {
+border-left:1px solid #fbfaf8;
+border-right:1px solid #fbfaf8;
+}
+
+.ubuntu_lastpost5 {
+border-left:1px solid #f8f7f3;
+border-right:1px solid #f8f7f3;
+}
+
+.ubuntu_lastpostfg {
+background:#f6f5f0;
+color:#000;
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+padding:5px;
+}
+
+.ubuntu_hlite a:hover {
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#656565;
+font-weight:700;
+text-decoration:underline;
+}
+
+.ubuntu_announce * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#CCC1A3;
+}
+
+.ubuntu_announce1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #e9e4d7;
+border-right:1px solid #e9e4d7;
+background:#d8d0ba;
+}
+
+.ubuntu_announce2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #f9f8f5;
+border-right:1px solid #f9f8f5;
+background:#d5ccb4;
+}
+
+.ubuntu_announce3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #d5ccb4;
+border-right:1px solid #d5ccb4;
+}
+
+.ubuntu_announce4 {
+border-left:1px solid #e9e4d7;
+border-right:1px solid #e9e4d7;
+}
+
+.ubuntu_announce5 {
+border-left:1px solid #d8d0ba;
+border-right:1px solid #d8d0ba;
+}
+
+.ubuntu_announcefg {
+background:#CCC1A3;
+}
+
+.ubuntu_tags * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#C3D9FF;
+}
+
+.ubuntu_tags1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #e5eeff;
+border-right:1px solid #e5eeff;
+background:#d2e2ff;
+}
+
+.ubuntu_tags2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #f9fbff;
+border-right:1px solid #f9fbff;
+background:#cee0ff;
+}
+
+.ubuntu_tags3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #cee0ff;
+border-right:1px solid #cee0ff;
+}
+
+.ubuntu_tags4 {
+border-left:1px solid #e5eeff;
+border-right:1px solid #e5eeff;
+}
+
+.ubuntu_tags5 {
+border-left:1px solid #d2e2ff;
+border-right:1px solid #d2e2ff;
+}
+
+.ubuntu_tagsfg {
+background:#C3D9FF;
+}
+
+.ubuntu_forumhomelayout * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#FFC;
+}
+
+.ubuntu_forumhomelayout1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #ffffe9;
+border-right:1px solid #ffffe9;
+background:#ffffd8;
+}
+
+.ubuntu_forumhomelayout2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #fffff9;
+border-right:1px solid #fffff9;
+background:#ffffd5;
+}
+
+.ubuntu_forumhomelayout3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #ffffd5;
+border-right:1px solid #ffffd5;
+}
+
+.ubuntu_forumhomelayout4 {
+border-left:1px solid #ffffe9;
+border-right:1px solid #ffffe9;
+}
+
+.ubuntu_forumhomelayout5 {
+border-left:1px solid #ffffd8;
+border-right:1px solid #ffffd8;
+}
+
+.ubuntu_forumhomelayoutfg {
+background:#FFC;
+padding:5px;
+}
+
+.h1navbar {
+font-family:Tahoma, Sans, Arial, Helvetica, sans-serif;
+font-size:14px;
+font-weight:700;
+display:inline;
+margin:0;
+}
+
+.uf_normal_round * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#eaeada;
+}
+
+.uf_normal_round1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #f5f5ef;
+border-right:1px solid #f5f5ef;
+background:#efefe3;
+}
+
+.uf_normal_round2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #fcfcfb;
+border-right:1px solid #fcfcfb;
+background:#edede1;
+}
+
+.uf_normal_round3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #edede1;
+border-right:1px solid #edede1;
+}
+
+.uf_normal_round4 {
+border-left:1px solid #f5f5ef;
+border-right:1px solid #f5f5ef;
+}
+
+.uf_normal_round5 {
+border-left:1px solid #efefe3;
+border-right:1px solid #efefe3;
+}
+
+.uf_normal_roundfg {
+background:#eaeada;
+padding: 5px;
+}
+
+.ubuntu_feisty_a * {
+display:block;
+height:1px;
+overflow:hidden;
+font-size:.01em;
+background:#ff7a35;
+}
+
+.ubuntu_feisty_a1 {
+margin-left:3px;
+margin-right:3px;
+padding-left:1px;
+padding-right:1px;
+border-left:1px solid #ffc5a8;
+border-right:1px solid #ffc5a8;
+background:#ff9b67;
+}
+
+.ubuntu_feisty_a2 {
+margin-left:1px;
+margin-right:1px;
+padding-right:1px;
+padding-left:1px;
+border-left:1px solid #fff1ea;
+border-right:1px solid #fff1ea;
+background:#ff935b;
+}
+
+.ubuntu_feisty_a3 {
+margin-left:1px;
+margin-right:1px;
+border-left:1px solid #ff935b;
+border-right:1px solid #ff935b;
+}
+
+.ubuntu_feisty_a4 {
+border-left:1px solid #ffc5a8;
+border-right:1px solid #ffc5a8;
+}
+
+.ubuntu_feisty_a5 {
+border-left:1px solid #ff9b67;
+border-right:1px solid #ff9b67;
+}
+
+.ubuntu_feisty_afg {
+background:#ff7a35;
+}
+
+.ubuntu_feisty_afg a:hover {
+color:#FF8;
+font:bold 14px Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:underline;
+}
+
+#searchbox label,div.hr hr {
+display:none;
+}
+
+.mnemonic,.ubuntu_signature a:link,.ubuntu_signature a:visited,.ubuntu_signature a:active {
+text-decoration:underline;
+}
+
+.ubuntu_navbar a:link,.ubuntu_navbar_alink,.ubuntu_navbar a:visited,.ubuntu_navbar_avisited {
+color:#000;
+text-decoration:none;
+}
+
+.ubuntu_newthread a:link,.ubuntu_newthread_alink,.ubuntu_newthread a:visited,.ubuntu_newthread_avisited,.ubuntu_newreply a:hover,.ubuntu_newreply a:active,.ubuntu_newreply_ahover {
+color:#666;
+text-decoration:none;
+}
+
+.ubuntu_newthread a:hover,.ubuntu_newthread a:active,.ubuntu_newthread_ahover,.ubuntu_newreply a:link,.ubuntu_newreply_alink,.ubuntu_newreply a:visited,.ubuntu_newreply_avisited {
+color:#816647;
+text-decoration:none;
+}
+
+.ubuntu_messagebody a:link,.ubuntu_messagebody a:visited {
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#bd5900;
+text-decoration:underline;
+}
+
+.ubuntu_roundalt1,.ubuntu_roundnavbar,.ubuntu_newpostbox,.ubuntu_postbit,.user_postbitround,.ubuntu_quicksearch,.ubuntu_extrabar,.ubuntu_currentver,ubuntu_box1,.ubuntu_box2,.ubuntu_box3,.ubuntu_box4,.ubuntu_navbits_info,.ubuntu_poll,.ubuntu_announcement,.ubuntu_unapbutton,.ubunu_loginbox,.ubuntu_lastpost,.ubuntu_announce,.ubuntu_tags,.ubuntu_forumhomelayout,.uf_normal_round,.ubuntu_feisty_a {
+display:block;
+}
+
+.ubuntu_roundnavbar *,.ubuntu_postbit * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#eaeada;
+}
+
+.ubuntu_roundnavbar1,.ubuntu_postbit1 {
+border-right:1px solid #f5f5ef;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #f5f5ef;
+padding-left:1px;
+margin-left:3px;
+background:#efefe3;
+}
+
+.ubuntu_roundnavbar2,.ubuntu_postbit2 {
+border-right:1px solid #fcfcfb;
+border-left:1px solid #fcfcfb;
+background:#edede1;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_roundnavbar3,.ubuntu_postbit3 {
+border-right:1px solid #edede1;
+border-left:1px solid #edede1;
+margin:0 1px;
+}
+
+.ubuntu_roundnavbar4,.ubuntu_postbit4 {
+border-right:1px solid #f5f5ef;
+border-left:1px solid #f5f5ef;
+}
+
+.ubuntu_roundnavbar5,.ubuntu_postbit5 {
+border-right:1px solid #efefe3;
+border-left:1px solid #efefe3;
+}
+
+.ubuntu_roundnavbar_content,.ubuntu_postbit_content {
+background:#eaeada;
+padding:0 5px;
+}
+
+.ubuntu_welcome_msg a:link,.ubuntu_welcome_msg_alink,.ubuntu_welcome_msg a:visited,.ubuntu_welcome_msg_avisited {
+color:#c00;
+font-weight:700;
+font:normal 1.3em Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:none;
+}
+
+.ubuntu_quicksearch *,.ubuntu_box1 * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#ace;
+}
+
+.ubuntu_quicksearch1,.ubuntu_box11 {
+border-right:1px solid #dae9f7;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #dae9f7;
+padding-left:1px;
+margin-left:3px;
+background:#bfd8f2;
+}
+
+.ubuntu_quicksearch2,.ubuntu_box12 {
+border-right:1px solid #f6f9fd;
+border-left:1px solid #f6f9fd;
+background:#bad5f1;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_quicksearch3,.ubuntu_box13 {
+border-right:1px solid #bad5f1;
+border-left:1px solid #bad5f1;
+margin:0 1px;
+}
+
+.ubuntu_quicksearch4,.ubuntu_box14 {
+border-right:1px solid #dae9f7;
+border-left:1px solid #dae9f7;
+}
+
+.ubuntu_quicksearch5,.ubuntu_box15 {
+border-right:1px solid #bfd8f2;
+border-left:1px solid #bfd8f2;
+}
+
+.ubuntu_quicksearch_content,.ubuntu_box1_content {
+background:#ace;
+padding:0 5px;
+}
+
+.ubuntu_extrabar *,.ubuntu_box2 * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#cf9;
+}
+
+.ubuntu_extrabar1,.ubuntu_box21 {
+border-right:1px solid #e9ffd3;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #e9ffd3;
+padding-left:1px;
+margin-left:3px;
+background:#d8ffb2;
+}
+
+.ubuntu_extrabar2,.ubuntu_box22 {
+border-right:1px solid #f9fff4;
+border-left:1px solid #f9fff4;
+background:#d5ffac;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_extrabar3,.ubuntu_box23 {
+border-right:1px solid #d5ffac;
+border-left:1px solid #d5ffac;
+margin:0 1px;
+}
+
+.ubuntu_extrabar4,.ubuntu_box24 {
+border-right:1px solid #e9ffd3;
+border-left:1px solid #e9ffd3;
+}
+
+.ubuntu_extrabar5,.ubuntu_box25 {
+border-right:1px solid #d8ffb2;
+border-left:1px solid #d8ffb2;
+}
+
+.ubuntu_extrabar_content,.ubuntu_box2_content {
+background:#cf9;
+padding:0 5px;
+}
+
+.ubuntu_box3 *,.ubuntu_buttons * {
+display:block;
+height:1px;
+overflow:hidden;
+background:#fdd99b;
+}
+
+.ubuntu_box31,.ubuntu_buttons1 {
+border-right:1px solid #feeed4;
+padding-right:1px;
+margin-right:3px;
+border-left:1px solid #feeed4;
+padding-left:1px;
+margin-left:3px;
+background:#fde2b4;
+}
+
+.ubuntu_box32,.ubuntu_buttons2 {
+border-right:1px solid #fefbf5;
+border-left:1px solid #fefbf5;
+background:#fde0ae;
+margin:0 1px;
+padding:0 1px;
+}
+
+.ubuntu_box33,.ubuntu_buttons3 {
+border-right:1px solid #fde0ae;
+border-left:1px solid #fde0ae;
+margin:0 1px;
+}
+
+.ubuntu_box34,.ubuntu_buttons4 {
+border-right:1px solid #feeed4;
+border-left:1px solid #feeed4;
+}
+
+.ubuntu_box35,.ubuntu_buttons5 {
+border-right:1px solid #fde2b4;
+border-left:1px solid #fde2b4;
+}
+
+.ubuntu_topicheaders a:link,.ubuntu_topicheaders_alink,.ubuntu_topicheaders a:visited,.ubuntu_topicheaders_avisited {
+color:#5A3320;
+text-decoration:none;
+}
+
+.header_box_guest,.header_box {
+background-color:#FFC;
+color:#000;
+border:1px dotted #816647;
+width:300px;
+padding:7px;
+}
+
+.cat_spacer,.spacer {
+padding:5px 0;
+}
+
+.theadgal a:link,.theadgal_alink,.theadgal a:visited,.theadgal_avisited {
+color:#bd5900;
+text-decoration:none;
+}
+
+.ubuntu_hlite,.ubuntu_hlite a:link,.ubuntu_hlite a:visited {
+font:12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+color:#c00;
+font-weight:700;
+}
+
+.ubuntu_feisty_afg a:link,.ubuntu_feisty_afg a:visited {
+color:#FFF;
+font:bold 14px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+.uf_announce{display:block}
+.uf_announce *{
+  display:block;
+  height:1px;
+  overflow:hidden;
+  font-size:.01em;
+  background:#ccff99}
+.uf_announce1{
+  margin-left:3px;
+  margin-right:3px;
+  padding-left:1px;
+  padding-right:1px;
+  border-left:1px solid #e9ffd3;
+  border-right:1px solid #e9ffd3;
+  background:#d8ffb2}
+.uf_announce2{
+  margin-left:1px;
+  margin-right:1px;
+  padding-right:1px;
+  padding-left:1px;
+  border-left:1px solid #f9fff4;
+  border-right:1px solid #f9fff4;
+  background:#d5ffac}
+.uf_announce3{
+  margin-left:1px;
+  margin-right:1px;
+  border-left:1px solid #d5ffac;
+  border-right:1px solid #d5ffac;}
+.uf_announce4{
+  border-left:1px solid #e9ffd3;
+  border-right:1px solid #e9ffd3}
+.uf_announce5{
+  border-left:1px solid #d8ffb2;
+  border-right:1px solid #d8ffb2}
+.uf_announcefg{
+  background:#ccff99}
+
+.ubuntu_amsg {
+color:#403223;
+font-weight:400;
+font:normal 12px Tahoma, Sans, Arial, Helvetica, sans-serif;
+}
+
+.ubuntu_amsg a:link,.ubuntu_amsg a:active{
+color:#656565;
+font-weight:700;
+font:normal 14px Tahoma, Sans, Arial, Helvetica, sans-serif;
+text-decoration:underline;
+}

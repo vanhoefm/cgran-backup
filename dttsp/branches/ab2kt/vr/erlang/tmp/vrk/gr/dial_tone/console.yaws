@@ -1,0 +1,29 @@
+<html>
+<head>
+<title> dtconsole </title>
+</head>
+<body>
+<h1>dial_tone controls</h1>
+
+<form name=init method=POST
+      action=http://localhost:18464/gr/dial_tone/init>
+<input type=submit value=init>
+</form>
+
+<form name=start method=POST
+      action=http://localhost:18464/gr/dial_tone/start>
+<input type=submit value=start>
+</form>
+
+<form name=stop method=POST
+      action=http://localhost:18464/gr/dial_tone/stop>
+<input type=submit value=stop>
+</form>
+
+<form name=kill method=POST
+      action=http://localhost:18464/gr/dial_tone/kill>
+<input type=submit value=kill>
+</form>
+
+</body>
+</html>

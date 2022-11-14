@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Check parameter
+if [ $# != 1 ] ; then
+  echo "    Usage: $0 <path-to-GnuRadio-source-tree-root>"
+  exit
+fi
+
+# Get root of GnuRadio 3.1.3 source tree
+ROOTDIRPATH=$1
+
+# Check it to be sure it's GnuRadio 3.1.3
+NAME=`basename $ROOTDIRPATH`
+if ! [[ $NAME =~ "gnuradio-3.1.3" ]] ; then
+  echo
+  echo "    Supplied path does not point to root of GnuRadio 3.1.3 source."
+  echo "    This script can ONLY be applied to GnuRadio 3.1.3!!!"
+  echo "    Install aborted."
+  echo
+  exit
+fi
+
+# Check for existence of ROOTDIRPATH
+if ! [[ -d $ROOTDIRPATH ]]; then
+  echo
+  echo "    $ROOTDIRPATH does not exist or is not a directory."
+  echo "    Install aborted."
+  echo
+  exit
+fi
+
+# Setup full path to gnuradio-core/src/lib/general
+FULLPATH=$ROOTDIRPATH/gnuradio-core/src/lib/general
+
+# Check if script has already been run
+if [[ -e $FULLPATH/general.i.bak ]]; then
+  echo
+  echo "    This Install script has already been run."
+  echo "    Install aborted."
+  echo
+  exit
+fi
+
+# Install soft links to .cc , .h , and .i files in
+# gnuradio-core/src/lib/general.
+ln -s $PWD/NewBlocks/*.cc $FULLPATH/
+ln -s $PWD/NewBlocks/*.h  $FULLPATH/
+ln -s $PWD/NewBlocks/*.i  $FULLPATH/
+
+# Make backup copies of general.i and Makefile.am
+# in gnuradio-core/src/lib/general.
+mv $FULLPATH/general.i   $FULLPATH/general.i.bak
+mv $FULLPATH/Makefile.am $FULLPATH/Makefile.am.bak
+
+# Copy in modified files
+cp ./ModifiedFiles/general.i   $FULLPATH/
+cp ./ModifiedFiles/Makefile.am $FULLPATH/
+
+# Done!
+echo
+echo "Install completed."
+echo "Now, cd to $ROOTDIRPATH and do:"
+echo "   make"
+echo "   make check"
+echo "   sudo make install"
+echo
+
+
+
+

@@ -1,0 +1,10 @@
+<html>
+<h1>Load mono_tone waveform</h1>
+<erl>
+out(_Arg) ->
+    grape:expression("import sys"),
+    grape:expression("import mono_tone"),
+    grape:expression("mtb = mono_tone.my_top_block()"),
+    {html,f("mono_tone loaded~n",[])}.
+</erl>
+</html>
